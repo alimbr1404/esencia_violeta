@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // ========================================
-    //  1. MENÚ HAMBURGUESA - OPTIMIZADO
+    //  1. MENÚ HAMBURGUESA - CORREGIDO
     // ========================================
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mainNav = document.getElementById('mainNav');
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (hamburgerBtn && mainNav) {
         let menuOpen = false;
 
-        // Función para alternar menú
         function toggleMenu() {
             menuOpen = !menuOpen;
             mainNav.classList.toggle('open', menuOpen);
@@ -25,14 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburgerBtn.setAttribute('aria-label', menuOpen ? 'Cerrar menú' : 'Abrir menú');
         }
 
-        // Evento click del botón hamburguesa
         hamburgerBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             toggleMenu();
         });
 
-        // Cerrar menú al hacer click en un enlace
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
                 if (menuOpen && window.innerWidth <= 992) {
@@ -41,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Cerrar menú al hacer click fuera
         document.addEventListener('click', function(e) {
             if (menuOpen && window.innerWidth <= 992) {
                 const isClickInside = mainNav.contains(e.target) || hamburgerBtn.contains(e.target);
@@ -51,29 +47,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Cerrar menú al redimensionar a desktop
         window.addEventListener('resize', function() {
             if (window.innerWidth > 992 && menuOpen) {
                 toggleMenu();
             }
         });
-
-        // Prevenir scroll cuando el menú está abierto en móvil
-        document.addEventListener('touchmove', function(e) {
-            if (menuOpen && window.innerWidth <= 992) {
-                const target = e.target;
-                if (!mainNav.contains(target) && target !== hamburgerBtn) {
-                    e.preventDefault();
-                }
-            }
-        }, { passive: false });
     }
 
     // ========================================
-    //  2. EFECTO DE HUMO FUCSIA - OPTIMIZADO PARA MÓVIL
+    //  2. EFECTO DE HUMO FUCSIA - OPTIMIZADO
     // ========================================
     const createSmokeEffect = function() {
-        // Detectar si es móvil para reducir partículas
         const isMobile = window.innerWidth <= 768;
         const isSmallMobile = window.innerWidth <= 480;
         const maxParticles = isSmallMobile ? 4 : (isMobile ? 6 : 10);
@@ -97,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let mouseY = window.innerHeight / 2;
         let isMouseOver = false;
 
-        // Crear partículas de humo fucsia
         for (let i = 0; i < maxParticles; i++) {
             const particle = document.createElement('div');
             const size = isSmallMobile ? 100 + Math.random() * 150 : (isMobile ? 120 + Math.random() * 200 : 150 + Math.random() * 300);
@@ -133,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Seguir el mouse/touch
         function handlePointerMove(e) {
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
@@ -152,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
             isMouseOver = false;
         });
 
-        // Animar partículas
         function animateParticles() {
             const time = Date.now() / 1000;
 
@@ -188,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                     }
                 } else {
-                    // Movimiento orgánico cuando no hay mouse
                     const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
                     const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
                     p.x += waveX;
@@ -197,11 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                 }
 
-                // Limitar dentro de la pantalla
                 p.x = Math.max(-100, Math.min(window.innerWidth + 100, p.x));
                 p.y = Math.max(-100, Math.min(window.innerHeight + 100, p.y));
 
-                // Cambiar color sutilmente
                 if (isMouseOver && p.opacity > 0.05) {
                     const hueShift = Math.sin(time * 0.3 + p.phase) * 15;
                     const currentHue = p.hue + hueShift;
@@ -214,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
             requestAnimationFrame(animateParticles);
         }
 
-        // Guardar posiciones originales
         particles.forEach((p, index) => {
             p.originalX = window.innerWidth * (0.1 + (index / particles.length) * 0.8);
             p.originalY = window.innerHeight * (0.1 + (index / particles.length) * 0.8);
@@ -224,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         animateParticles();
         
-        // Ajustar en resize
         window.addEventListener('resize', function() {
             particles.forEach((p, index) => {
                 p.originalX = window.innerWidth * (0.1 + (index / particles.length) * 0.8);
@@ -233,11 +209,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Iniciar efecto de humo fucsia (con delay para no bloquear)
     setTimeout(createSmokeEffect, 300);
 
     // ========================================
-    //  3. POLVO DE HADAS - OPTIMIZADO PARA MÓVIL
+    //  3. POLVO DE HADAS - OPTIMIZADO
     // ========================================
     const createFairyDust = function() {
         const isMobile = window.innerWidth <= 768;
@@ -347,14 +322,13 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createFairyDust, 500);
 
     // ========================================
-    //  4. ELEMENTOS ESOTÉRICOS - OPTIMIZADOS PARA MÓVIL
+    //  4. DECORACIONES FLOTANTES
     // ========================================
     const createFloatingDecorations = function() {
-        // Reducir en móviles
         const isMobile = window.innerWidth <= 768;
         const isSmallMobile = window.innerWidth <= 480;
         
-        if (isSmallMobile) return; // No mostrar en móviles muy pequeños
+        if (isSmallMobile) return;
 
         const decorElements = [
             '🐈‍⬛', '✧', '☿', '♀', '♃', '☽', '♄', '♅', '♆', '♇',
@@ -412,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createFloatingDecorations, 600);
 
     // ========================================
-    //  5. PIEDRAS DECORATIVAS - OPTIMIZADAS PARA MÓVIL
+    //  5. PIEDRAS DECORATIVAS
     // ========================================
     const createFloatingGems = function() {
         const isMobile = window.innerWidth <= 768;
@@ -471,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createFloatingGems, 800);
 
     // ========================================
-    //  6. PUNTITOS PASTEL - OPTIMIZADOS PARA MÓVIL
+    //  6. PUNTITOS PASTEL
     // ========================================
     const createPastelDots = function() {
         const aboutSection = document.querySelector('.about-brief');
@@ -625,7 +599,6 @@ document.addEventListener('DOMContentLoaded', function() {
             text.textContent = message;
             notification.appendChild(text);
 
-            // Menos sparkles en móvil
             const sparkleCount = isMobile ? 3 : 8;
             for (let i = 0; i < sparkleCount; i++) {
                 const sparkle = document.createElement('span');
@@ -889,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  10. BÚSQUEDA - OPTIMIZADA PARA MÓVIL
+    //  10. BÚSQUEDA - CORREGIDA
     // ========================================
     const searchButton = document.getElementById('searchBtn');
     
@@ -1013,7 +986,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
-                    const offset = 80; // Altura del header
+                    const offset = 80;
                     const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
                     window.scrollTo({
                         top: targetPosition,
@@ -1043,7 +1016,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  13. ANIMACIONES AL SCROLL - OPTIMIZADAS
+    //  13. ANIMACIONES AL SCROLL
     // ========================================
     const animateOnScroll = function() {
         const isMobile = window.innerWidth <= 480;
@@ -1080,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  14. ESTRELLAS EN EL BANNER - OPTIMIZADAS
+    //  14. ESTRELLAS EN EL BANNER
     // ========================================
     const createMagicalStars = function() {
         const hero = document.querySelector('.hero');
@@ -1140,7 +1113,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }); // Fin DOMContentLoaded
 
 // ========================================
-//  ESTILOS DE ANIMACIÓN ADICIONALES
+//  ESTILOS DE ANIMACIÓN
 // ========================================
 const magicalStyles = document.createElement('style');
 magicalStyles.textContent = `
@@ -1187,13 +1160,6 @@ magicalStyles.textContent = `
         90% { transform: translate(-12px, 18px) rotate(-5deg) scale(0.88); }
     }
 
-    @keyframes floatDot {
-        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-        25% { transform: translate(var(--moveX1), var(--moveY1)) scale(var(--scale1)); opacity: 1; }
-        50% { transform: translate(var(--moveX2), var(--moveY2)) scale(var(--scale2)); opacity: 0.2; }
-        75% { transform: translate(var(--moveX3), var(--moveY3)) scale(var(--scale3)); opacity: 0.8; }
-    }
-
     .cart-badge {
         display: none;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1203,7 +1169,6 @@ magicalStyles.textContent = `
         display: flex;
     }
 
-    /* Scrollbar personalizada */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: linear-gradient(180deg, #1C0F2E, #2A1A3D); }
     ::-webkit-scrollbar-thumb {
