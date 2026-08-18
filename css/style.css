@@ -945,7 +945,15 @@ h6 {
     position: relative;
     z-index: 1;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.social-icon--facebook svg {
     fill: currentColor;
+}
+
+.social-icon--instagram svg {
+    fill: none;
+    stroke: currentColor;
 }
 
 .social-icon:hover {
