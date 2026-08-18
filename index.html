@@ -32,11 +32,11 @@
             <nav class="header__nav" aria-label="Menú principal">
                 <ul class="nav__list">
                     <li><a href="#" class="active">Inicio</a></li>
-                    <li><a href="#">Tienda</a></li>
-                    <li><a href="#">Sobre mí</a></li>
-                    <li><a href="#">Experiencias</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#tienda">Tienda</a></li>
+                    <li><a href="#sobre-mi">Sobre mí</a></li>
+                    <li><a href="#experiencias">Experiencias</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </nav>
 
@@ -63,11 +63,11 @@
     <!-- ============================ -->
     <!--  HERO / BANNER MÁGICO        -->
     <!-- ============================ -->
-    <section class="hero">
+    <section class="hero" id="inicio">
         <div class="container hero__content">
             <h1 class="hero__title">✦ Esencia Violeta ✦</h1>
             <p class="hero__subtitle">Mazos de tarot y artículos esotéricos con alma</p>
-            <a href="#" class="btn btn--primary btn--large">✦ Explorar tienda ✦</a>
+            <a href="#tienda" class="btn btn--primary btn--large">✦ Explorar tienda ✦</a>
         </div>
     </section>
 
@@ -85,7 +85,7 @@
     <!-- ============================ -->
     <!--  CATEGORÍAS DESTACADAS       -->
     <!-- ============================ -->
-    <section class="categories">
+    <section class="categories" id="tienda">
         <div class="container">
             <h2 class="section-title">✦ Categorías destacadas ✦</h2>
             <div class="categories__grid">
@@ -156,8 +156,7 @@
     <!-- ============================ -->
     <!--  SOBRE MÍ (BREVE) MÁGICO     -->
     <!-- ============================ -->
-    <section class="about-brief">
-        <!-- Puntitos pastel (generados por JS) -->
+    <section class="about-brief" id="sobre-mi">
         <div class="container about-brief__inner">
             <div class="about-brief__image">
                 <img src="img/amuletos y piedras.jpg" alt="Ali, fundadora de Esencia Violeta" />
@@ -183,7 +182,7 @@
     <!-- ============================ -->
     <!--  EXPERIENCIAS (HOME)         -->
     <!-- ============================ -->
-    <section class="experiences-home">
+    <section class="experiences-home" id="experiencias">
         <div class="container">
             <h2 class="section-title">✦ Experiencias compartidas ✦</h2>
             <div class="experiences__grid">
@@ -222,7 +221,7 @@
     <!-- ============================ -->
     <!--  BLOG (HOME)                 -->
     <!-- ============================ -->
-    <section class="blog-home">
+    <section class="blog-home" id="blog">
         <div class="container">
             <h2 class="section-title">✦ Últimos artículos ✦</h2>
             <div class="blog__grid">
@@ -264,6 +263,27 @@
     </section>
 
     <!-- ============================ -->
+    <!--  CONTACTO                    -->
+    <!-- ============================ -->
+    <section class="contact" id="contacto" style="padding: 5rem 0; background: linear-gradient(180deg, #FFFFFF 0%, #F8F5FA 100%);">
+        <div class="container">
+            <h2 class="section-title">✦ Contacto ✦</h2>
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 1.1rem; color: #4A4A4E; margin-bottom: 2rem;">
+                    ¿Tienes alguna pregunta o necesitas ayuda? Escríbeme y te responderé lo antes posible.
+                </p>
+                <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <input type="text" name="nombre" placeholder="✦ Tu nombre" required style="padding: 0.9rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: 1rem; transition: all 0.3s ease; background: #FFFFFF;">
+                    <input type="email" name="correo" placeholder="✦ Tu correo electrónico" required style="padding: 0.9rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: 1rem; transition: all 0.3s ease; background: #FFFFFF;">
+                    <input type="text" name="asunto" placeholder="✦ Asunto" required style="padding: 0.9rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: 1rem; transition: all 0.3s ease; background: #FFFFFF;">
+                    <textarea name="mensaje" placeholder="✦ Tu mensaje..." rows="5" required style="padding: 0.9rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: 1rem; transition: all 0.3s ease; background: #FFFFFF; resize: vertical;"></textarea>
+                    <button type="submit" class="btn btn--primary" style="width: 100%;">✦ Enviar mensaje ✦</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ -->
     <!--  FOOTER MÁGICO               -->
     <!-- ============================ -->
     <footer class="footer">
@@ -275,11 +295,12 @@
 
             <nav class="footer__nav" aria-label="Menú del pie">
                 <ul>
-                    <li><a href="#">✦ Tienda ✦</a></li>
-                    <li><a href="#">✦ Sobre mí ✦</a></li>
-                    <li><a href="#">✦ Experiencias ✦</a></li>
-                    <li><a href="#">✦ Blog ✦</a></li>
-                    <li><a href="#">✦ Contacto ✦</a></li>
+                    <li><a href="#inicio">✦ Inicio ✦</a></li>
+                    <li><a href="#tienda">✦ Tienda ✦</a></li>
+                    <li><a href="#sobre-mi">✦ Sobre mí ✦</a></li>
+                    <li><a href="#experiencias">✦ Experiencias ✦</a></li>
+                    <li><a href="#blog">✦ Blog ✦</a></li>
+                    <li><a href="#contacto">✦ Contacto ✦</a></li>
                     <li><a href="#">✦ Política de privacidad ✦</a></li>
                 </ul>
             </nav>
