@@ -305,31 +305,35 @@ h6 {
 }
 
 /* ========================================
-   HERO / BANNER
+   HERO / BANNER - CON IMAGEN DE FONDO
    ======================================== */
 .hero {
     background: linear-gradient(135deg, #1C0F2E 0%, #2A1A3D 30%, #5B3A7A 60%, #3B1E54 80%, #1C0F2E 100%);
-    padding: clamp(2.5rem, 11vw, 4.5rem) 0;
-    min-height: clamp(300px, 62vh, 480px);
+    padding: 0;
+    min-height: clamp(400px, 70vh, 600px);
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
 }
 
-.hero::before {
+/* Imagen de fondo del Hero */
+.hero__background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.85;
+}
+
+/* Overlay oscuro para legibilidad */
+.hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(2px 2px at 15% 25%, #FF00FF, transparent),
-        radial-gradient(2px 2px at 35% 65%, #C9A87C, transparent),
-        radial-gradient(2px 2px at 55% 15%, #C9A7EB, transparent),
-        radial-gradient(2px 2px at 75% 55%, #FF00FF, transparent),
-        radial-gradient(2px 2px at 10% 75%, #C9A87C, transparent),
-        radial-gradient(2px 2px at 90% 35%, #C9A7EB, transparent),
-        radial-gradient(ellipse 300px 200px at 70% 80%, rgba(255, 0, 255, 0.05), transparent 70%);
-    pointer-events: none;
+    background: rgba(28, 15, 46, 0.5);
     z-index: 1;
 }
 
@@ -340,7 +344,7 @@ h6 {
     color: #FFFFFF;
     max-width: 750px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 3rem 16px;
 }
 
 .hero__title {
@@ -349,7 +353,7 @@ h6 {
     font-weight: 700;
     color: #FFFFFF;
     margin-bottom: 0.6rem;
-    text-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
     animation: fadeInUp 0.8s ease;
 }
 
@@ -359,10 +363,12 @@ h6 {
     margin-bottom: 1.8rem;
     font-weight: 300;
     animation: fadeInUp 0.8s ease 0.15s both;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Botón del Hero - Oculto */
 .hero .btn {
-    animation: fadeInUp 0.8s ease 0.3s both;
+    display: none;
 }
 
 @keyframes fadeInUp {
@@ -1030,8 +1036,7 @@ h6 {
 }
 
 /* ========================================
-   MENÚ HAMBURGUESA
-   ======================================== */
+   MENÚ HAMBURGUESA   ======================================== */
 .hamburger-btn {
     display: none;
     background: rgba(255, 255, 255, 0.03);
@@ -1178,6 +1183,10 @@ h6 {
     .contact__wrapper {
         padding: 0 8px;
     }
+
+    .hero {
+        min-height: clamp(300px, 50vh, 400px);
+    }
 }
 
 /* Móviles */
@@ -1230,8 +1239,8 @@ h6 {
     }
 
     .hero {
-        min-height: clamp(240px, 42vh, 300px);
-        padding: clamp(1.5rem, 4.5vw, 2.2rem) 0;
+        min-height: clamp(250px, 45vh, 320px);
+        padding: 0;
     }
 
     .hero__title {
@@ -1241,11 +1250,6 @@ h6 {
     .hero__subtitle {
         font-size: clamp(0.8rem, 2.2vw, 0.95rem);
         margin-bottom: 1.2rem;
-    }
-
-    .hero .btn {
-        padding: 0.6rem 1.4rem;
-        font-size: clamp(0.8rem, 2.2vw, 0.9rem);
     }
 
     .section-title {
