@@ -22,6 +22,7 @@ body {
     cursor: default;
     position: relative;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 img {
@@ -33,10 +34,15 @@ img {
 a {
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 ul {
     list-style: none;
+}
+
+button {
+    cursor: pointer;
 }
 
 .container {
@@ -45,228 +51,6 @@ ul {
     padding: 0 20px;
     position: relative;
     z-index: 2;
-}
-
-/* ========================================
-   EFECTO DE HUMO FUCSIA AL MOVER EL CURSOR
-   ======================================== */
-.smoke-effect {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    overflow: hidden;
-}
-
-.smoke-particle {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 0, 255, 0.15), rgba(255, 0, 255, 0.05), transparent 70%);
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    filter: blur(40px);
-    transition: all 0.1s ease;
-}
-
-.smoke-particle::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 0, 255, 0.1), transparent 60%);
-    animation: pulseSmoke 2s ease-in-out infinite alternate;
-}
-
-@keyframes pulseSmoke {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(1.5); opacity: 0.3; }
-}
-
-/* ========================================
-   ELEMENTOS DECORATIVOS FLOTANTES (NEGRO)
-   ======================================== */
-.floating-decor {
-    position: fixed;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.04;
-    font-size: 3.5rem;
-    animation: floatDecor 25s ease-in-out infinite;
-    color: #000000;
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
-}
-
-.floating-decor:nth-child(1) {
-    top: 5%;
-    left: 3%;
-    animation-delay: 0s;
-    font-size: 4rem;
-}
-
-.floating-decor:nth-child(2) {
-    top: 20%;
-    right: 2%;
-    animation-delay: -6s;
-    font-size: 5rem;
-}
-
-.floating-decor:nth-child(3) {
-    bottom: 15%;
-    left: 4%;
-    animation-delay: -12s;
-    font-size: 4.5rem;
-}
-
-.floating-decor:nth-child(4) {
-    bottom: 30%;
-    right: 3%;
-    animation-delay: -18s;
-    font-size: 3.8rem;
-}
-
-.floating-decor:nth-child(5) {
-    top: 45%;
-    left: 50%;
-    animation-delay: -3s;
-    font-size: 6rem;
-    opacity: 0.025;
-}
-
-.floating-decor:nth-child(6) {
-    top: 65%;
-    left: 8%;
-    animation-delay: -9s;
-    font-size: 3.2rem;
-}
-
-.floating-decor:nth-child(7) {
-    top: 80%;
-    right: 6%;
-    animation-delay: -15s;
-    font-size: 4.2rem;
-}
-
-.floating-decor:nth-child(8) {
-    top: 35%;
-    left: 7%;
-    animation-delay: -21s;
-    font-size: 3rem;
-}
-
-@keyframes floatDecor {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    20% {
-        transform: translate(25px, -35px) rotate(8deg) scale(1.15);
-    }
-    40% {
-        transform: translate(-20px, 25px) rotate(-6deg) scale(0.85);
-    }
-    60% {
-        transform: translate(15px, -20px) rotate(4deg) scale(1.1);
-    }
-    80% {
-        transform: translate(-15px, 30px) rotate(-8deg) scale(0.9);
-    }
-}
-
-/* ========================================
-   PIEDRAS DECORATIVAS FLOTANTES
-   ======================================== */
-.floating-gem {
-    position: fixed;
-    pointer-events: none;
-    z-index: 1;
-    font-size: 2rem;
-    opacity: 0.06;
-    animation: floatGem 30s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.1));
-}
-
-.floating-gem:nth-child(1) {
-    top: 12%;
-    left: 15%;
-    animation-delay: 0s;
-    font-size: 2.5rem;
-}
-
-.floating-gem:nth-child(2) {
-    top: 45%;
-    right: 12%;
-    animation-delay: -7s;
-    font-size: 3rem;
-}
-
-.floating-gem:nth-child(3) {
-    bottom: 25%;
-    left: 20%;
-    animation-delay: -14s;
-    font-size: 2.2rem;
-}
-
-.floating-gem:nth-child(4) {
-    top: 75%;
-    right: 18%;
-    animation-delay: -21s;
-    font-size: 2.8rem;
-}
-
-.floating-gem:nth-child(5) {
-    top: 30%;
-    left: 25%;
-    animation-delay: -5s;
-    font-size: 2rem;
-}
-
-.floating-gem:nth-child(6) {
-    bottom: 45%;
-    right: 25%;
-    animation-delay: -12s;
-    font-size: 3.2rem;
-}
-
-.floating-gem:nth-child(7) {
-    top: 55%;
-    left: 10%;
-    animation-delay: -18s;
-    font-size: 2.6rem;
-}
-
-.floating-gem:nth-child(8) {
-    bottom: 10%;
-    right: 8%;
-    animation-delay: -24s;
-    font-size: 3.5rem;
-}
-
-@keyframes floatGem {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg) scale(1) skew(0deg);
-    }
-    15% {
-        transform: translate(30px, -40px) rotate(10deg) scale(1.2) skew(2deg);
-    }
-    30% {
-        transform: translate(-25px, 30px) rotate(-8deg) scale(0.8) skew(-2deg);
-    }
-    45% {
-        transform: translate(20px, -25px) rotate(6deg) scale(1.1) skew(1deg);
-    }
-    60% {
-        transform: translate(-20px, 35px) rotate(-10deg) scale(0.9) skew(-3deg);
-    }
-    75% {
-        transform: translate(15px, -30px) rotate(8deg) scale(1.15) skew(2deg);
-    }
-    90% {
-        transform: translate(-15px, 20px) rotate(-5deg) scale(0.85) skew(-1deg);
-    }
 }
 
 /* ========================================
@@ -469,6 +253,7 @@ h6 {
     font-size: 0.95rem;
     transition: all 0.3s ease;
     position: relative;
+    cursor: pointer;
 }
 
 .header__nav .nav__list a::before {
@@ -605,20 +390,6 @@ h6 {
         radial-gradient(circle 120px at 85% 85%, rgba(201, 168, 124, 0.05), transparent 70%);
     pointer-events: none;
     z-index: 1;
-}
-
-.hero::after {
-    content: '🐈‍⬛ ✧ ☿ ♀ ♃ 🌙 ⭐ 🔮 🧿 ☯';
-    position: absolute;
-    right: 5%;
-    bottom: 5%;
-    font-size: 6rem;
-    opacity: 0.04;
-    transform: rotate(-5deg);
-    z-index: 1;
-    pointer-events: none;
-    letter-spacing: 10px;
-    color: #000000;
 }
 
 .hero__content {
@@ -934,148 +705,7 @@ h6 {
     background: linear-gradient(135deg, #1C0F2E 0%, #2A1A3D 30%, #3B1E54 60%, #2A1A3D 100%);
     position: relative;
     overflow: hidden;
-}
-
-/* Fondo de puntitos pastel animados */
-.about-brief::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(8px 8px at 10% 20%, rgba(255, 182, 193, 0.15), transparent),
-        radial-gradient(6px 6px at 25% 45%, rgba(176, 224, 230, 0.12), transparent),
-        radial-gradient(10px 10px at 40% 70%, rgba(255, 218, 185, 0.10), transparent),
-        radial-gradient(7px 7px at 55% 30%, rgba(216, 191, 216, 0.13), transparent),
-        radial-gradient(9px 9px at 70% 60%, rgba(255, 228, 196, 0.11), transparent),
-        radial-gradient(5px 5px at 85% 40%, rgba(188, 224, 238, 0.14), transparent),
-        radial-gradient(11px 11px at 15% 80%, rgba(255, 182, 193, 0.08), transparent),
-        radial-gradient(6px 6px at 45% 90%, rgba(176, 224, 230, 0.10), transparent),
-        radial-gradient(8px 8px at 75% 85%, rgba(255, 218, 185, 0.12), transparent),
-        radial-gradient(7px 7px at 90% 15%, rgba(216, 191, 216, 0.09), transparent);
-    animation: dotsMove 20s linear infinite;
-    pointer-events: none;
-    z-index: 1;
-}
-
-@keyframes dotsMove {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-10px, 10px); }
-    50% { transform: translate(10px, -10px); }
-    75% { transform: translate(-5px, 5px); }
-    100% { transform: translate(0, 0); }
-}
-
-/* Puntitos pastel adicionales flotantes */
-.about-brief .pastel-dot {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 1;
-    animation: floatDot 8s ease-in-out infinite;
-}
-
-.pastel-dot:nth-child(1) {
-    width: 12px;
-    height: 12px;
-    background: rgba(255, 182, 193, 0.15);
-    top: 10%;
-    left: 5%;
-    animation-delay: 0s;
-}
-
-.pastel-dot:nth-child(2) {
-    width: 18px;
-    height: 18px;
-    background: rgba(176, 224, 230, 0.12);
-    top: 25%;
-    right: 8%;
-    animation-delay: -2s;
-}
-
-.pastel-dot:nth-child(3) {
-    width: 14px;
-    height: 14px;
-    background: rgba(255, 218, 185, 0.14);
-    bottom: 30%;
-    left: 10%;
-    animation-delay: -4s;
-}
-
-.pastel-dot:nth-child(4) {
-    width: 20px;
-    height: 20px;
-    background: rgba(216, 191, 216, 0.10);
-    bottom: 15%;
-    right: 12%;
-    animation-delay: -6s;
-}
-
-.pastel-dot:nth-child(5) {
-    width: 10px;
-    height: 10px;
-    background: rgba(255, 228, 196, 0.13);
-    top: 50%;
-    left: 3%;
-    animation-delay: -1s;
-}
-
-.pastel-dot:nth-child(6) {
-    width: 16px;
-    height: 16px;
-    background: rgba(188, 224, 238, 0.11);
-    top: 40%;
-    right: 4%;
-    animation-delay: -3s;
-}
-
-.pastel-dot:nth-child(7) {
-    width: 22px;
-    height: 22px;
-    background: rgba(255, 182, 193, 0.08);
-    bottom: 45%;
-    left: 15%;
-    animation-delay: -5s;
-}
-
-.pastel-dot:nth-child(8) {
-    width: 8px;
-    height: 8px;
-    background: rgba(176, 224, 230, 0.15);
-    top: 70%;
-    right: 15%;
-    animation-delay: -7s;
-}
-
-@keyframes floatDot {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-        opacity: 0.8;
-    }
-    25% {
-        transform: translate(15px, -20px) scale(1.5);
-        opacity: 1;
-    }
-    50% {
-        transform: translate(-10px, 15px) scale(0.8);
-        opacity: 0.5;
-    }
-    75% {
-        transform: translate(10px, -10px) scale(1.2);
-        opacity: 0.9;
-    }
-}
-
-.about-brief::after {
-    content: '🐈‍⬛ ✧ ☿ ♀ ♃';
-    position: absolute;
-    right: 3%;
-    top: 10%;
-    font-size: 5rem;
-    opacity: 0.03;
-    transform: rotate(10deg);
-    z-index: 1;
-    pointer-events: none;
-    color: #000000;
+    min-height: 500px;
 }
 
 .about-brief__inner {
@@ -1162,6 +792,7 @@ h6 {
     border-left: 5px solid #B48AD9;
     box-shadow: 0 6px 30px rgba(42, 26, 61, 0.04);
     transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
 }
 
 .experience-card::before {
@@ -1266,6 +897,7 @@ h6 {
     border: 1px solid rgba(214, 200, 224, 0.12);
     box-shadow: 0 6px 30px rgba(42, 26, 61, 0.04);
     transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
 }
 
 .blog-card::before {
@@ -1276,6 +908,7 @@ h6 {
     font-size: 1.8rem;
     color: #C9A7EB;
     opacity: 0.05;
+    z-index: 1;
 }
 
 .blog-card:hover {
@@ -1394,6 +1027,7 @@ h6 {
     transition: all 0.3s ease;
     font-size: 0.95rem;
     position: relative;
+    cursor: pointer;
 }
 
 .footer__nav a::before {
@@ -1428,6 +1062,7 @@ h6 {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(214, 200, 224, 0.05);
     position: relative;
+    cursor: pointer;
 }
 
 .footer__social a::before {
@@ -1499,9 +1134,9 @@ h6 {
    SELECCIÓN DE TEXTO MÁGICA
    ======================================== */
 ::selection {
-    background: rgba(255, 0, 255, 0.2);
+    background: rgba(255, 0, 255, 0.15);
     color: #2A1A3D;
-    text-shadow: 0 0 20px rgba(180, 138, 217, 0.2);
+    text-shadow: 0 0 30px rgba(180, 138, 217, 0.2);
 }
 
 /* ========================================
@@ -1554,19 +1189,6 @@ h6 {
     .hero {
         min-height: 450px;
         padding: 3.5rem 0;
-    }
-
-    .floating-decor,
-    .floating-gem {
-        display: none;
-    }
-
-    .about-brief::before {
-        background: none;
-    }
-
-    .about-brief .pastel-dot {
-        display: none;
     }
 }
 
@@ -1629,19 +1251,6 @@ h6 {
     .experiences__actions {
         flex-direction: column;
         align-items: center;
-    }
-
-    .floating-decor,
-    .floating-gem {
-        display: none;
-    }
-
-    .about-brief::before {
-        background: none;
-    }
-
-    .about-brief .pastel-dot {
-        display: none;
     }
 }
 
