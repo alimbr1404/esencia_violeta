@@ -305,16 +305,16 @@ h6 {
 }
 
 /* ========================================
-   HERO / BANNER - CON IMAGEN DE FONDO
+   HERO / BANNER - SOLO IMAGEN
    ======================================== */
 .hero {
-    background: linear-gradient(135deg, #1C0F2E 0%, #2A1A3D 30%, #5B3A7A 60%, #3B1E54 80%, #1C0F2E 100%);
     padding: 0;
-    min-height: clamp(400px, 70vh, 600px);
+    min-height: clamp(300px, 60vh, 550px);
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
+    background: #1C0F2E;
 }
 
 /* Imagen de fondo del Hero */
@@ -325,7 +325,6 @@ h6 {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    opacity: 0.85;
 }
 
 /* Overlay oscuro para legibilidad */
@@ -333,7 +332,7 @@ h6 {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(28, 15, 46, 0.5);
+    background: rgba(28, 15, 46, 0.2);
     z-index: 1;
 }
 
@@ -344,7 +343,8 @@ h6 {
     color: #FFFFFF;
     max-width: 750px;
     margin: 0 auto;
-    padding: 3rem 16px;
+    padding: 2rem 16px;
+    display: none; /* Oculto - la imagen del Hero tiene su propio texto */
 }
 
 .hero__title {
@@ -366,7 +366,6 @@ h6 {
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Botón del Hero - Oculto */
 .hero .btn {
     display: none;
 }
@@ -1036,7 +1035,8 @@ h6 {
 }
 
 /* ========================================
-   MENÚ HAMBURGUESA   ======================================== */
+   MENÚ HAMBURGUESA
+   ======================================== */
 .hamburger-btn {
     display: none;
     background: rgba(255, 255, 255, 0.03);
@@ -1143,6 +1143,10 @@ h6 {
     .footer__social {
         justify-content: center;
     }
+
+    .hero {
+        min-height: clamp(280px, 50vh, 400px);
+    }
 }
 
 /* Móviles grandes */
@@ -1185,7 +1189,7 @@ h6 {
     }
 
     .hero {
-        min-height: clamp(300px, 50vh, 400px);
+        min-height: clamp(250px, 45vh, 350px);
     }
 }
 
@@ -1239,17 +1243,7 @@ h6 {
     }
 
     .hero {
-        min-height: clamp(250px, 45vh, 320px);
-        padding: 0;
-    }
-
-    .hero__title {
-        font-size: clamp(1.6rem, 5vw, 2rem);
-    }
-
-    .hero__subtitle {
-        font-size: clamp(0.8rem, 2.2vw, 0.95rem);
-        margin-bottom: 1.2rem;
+        min-height: clamp(200px, 40vh, 280px);
     }
 
     .section-title {
@@ -1453,14 +1447,6 @@ h6 {
         min-width: 30px;
     }
 
-    .hero__title {
-        font-size: 1.4rem;
-    }
-
-    .hero__subtitle {
-        font-size: 0.75rem;
-    }
-
     .section-title {
         font-size: 1rem;
     }
@@ -1473,6 +1459,10 @@ h6 {
     .social-icon svg {
         width: 16px;
         height: 16px;
+    }
+
+    .hero {
+        min-height: clamp(180px, 35vh, 240px);
     }
 }
 
