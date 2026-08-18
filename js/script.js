@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // ========================================
-    //  1. EFECTO DE HUMO FUCSIA AL MOVER EL CURSOR
+    //  1. EFECTO DE HUMO FUCSIA - OPTIMIZADO
     // ========================================
     const createSmokeEffect = function() {
         const container = document.createElement('div');
@@ -25,17 +25,17 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(container);
 
         let particles = [];
-        const maxParticles = 15;
+        const maxParticles = 10; // Reducido para mejor rendimiento
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
-        let isMouseOver = true;
+        let isMouseOver = false;
 
         // Crear partículas de humo fucsia
         for (let i = 0; i < maxParticles; i++) {
             const particle = document.createElement('div');
-            const size = 150 + Math.random() * 400;
+            const size = 150 + Math.random() * 300;
             const hue = 280 + Math.random() * 40;
-            const intensity = 0.04 + Math.random() * 0.08;
+            const intensity = 0.04 + Math.random() * 0.06;
             
             particle.style.cssText = `
                 position: absolute;
@@ -47,7 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 transform: translate(-50%, -50%);
                 filter: blur(40px);
                 opacity: 0;
-                transition: opacity 0.3s ease;
+                transition: opacity 0.2s ease;
+                will-change: transform, opacity;
             `;
             container.appendChild(particle);
             
@@ -55,13 +56,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 el: particle,
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                speed: 0.3 + Math.random() * 0.6,
+                speed: 0.3 + Math.random() * 0.4,
                 size: size,
                 phase: Math.random() * Math.PI * 2,
                 hue: hue,
+                opacity: 0,
                 targetX: 0,
-                targetY: 0,
-                opacity: 0
+                targetY: 0
             });
         }
 
@@ -81,60 +82,54 @@ document.addEventListener('DOMContentLoaded', function() {
             const time = Date.now() / 1000;
 
             particles.forEach((p, index) => {
-                // Cada partícula tiene un retraso para crear efecto de estela
-                const delay = index * 0.05;
+                const delay = index * 0.03;
                 const effectiveTime = time - delay;
 
                 if (isMouseOver) {
-                    // Movimiento hacia el mouse con efecto de arrastre
                     const dx = mouseX - p.x;
                     const dy = mouseY - p.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
                     
-                    if (distance < 1000) {
-                        // Velocidad de seguimiento
-                        const speed = p.speed * (1 + (1000 - distance) / 1000);
-                        const moveX = (dx / distance) * speed * 1.5;
-                        const moveY = (dy / distance) * speed * 1.5;
+                    if (distance < 800) {
+                        const speed = p.speed * (1 + (800 - distance) / 800);
+                        const moveX = (dx / distance) * speed * 2;
+                        const moveY = (dy / distance) * speed * 2;
                         p.x += moveX;
                         p.y += moveY;
                         
-                        // Opacidad según distancia
-                        const opacity = Math.max(0, 1 - (distance / 1000));
-                        p.opacity = opacity * 0.45;
+                        const opacity = Math.max(0, 1 - (distance / 800));
+                        p.opacity = opacity * 0.5;
                         p.el.style.opacity = p.opacity;
                         
-                        // Escala y rotación según distancia
-                        const scale = 1 + (1 - distance / 1000) * 0.8;
-                        const rotation = (1 - distance / 1000) * 20;
+                        const scale = 1 + (1 - distance / 800) * 0.6;
+                        const rotation = (1 - distance / 800) * 15;
                         p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`;
                     } else {
-                        // Volver a posición original lentamente
-                        p.x += (p.originalX - p.x) * 0.01;
-                        p.y += (p.originalY - p.y) * 0.01;
+                        p.x += (p.originalX - p.x) * 0.02;
+                        p.y += (p.originalY - p.y) * 0.02;
                         p.opacity = 0;
                         p.el.style.opacity = 0;
                         p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                     }
                 } else {
                     // Movimiento orgánico cuando no hay mouse
-                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * 0.8;
-                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * 0.8;
+                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * 0.5;
+                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * 0.5;
                     p.x += waveX;
                     p.y += waveY;
-                    p.el.style.opacity = 0.02;
+                    p.el.style.opacity = 0.01;
                     p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                 }
 
                 // Limitar dentro de la pantalla
-                p.x = Math.max(-200, Math.min(window.innerWidth + 200, p.x));
-                p.y = Math.max(-200, Math.min(window.innerHeight + 200, p.y));
+                p.x = Math.max(-100, Math.min(window.innerWidth + 100, p.x));
+                p.y = Math.max(-100, Math.min(window.innerHeight + 100, p.y));
 
-                // Cambiar color sutilmente
+                // Cambiar color sutilmente más rápido
                 if (isMouseOver && p.opacity > 0.05) {
-                    const hueShift = Math.sin(time * 0.1 + p.phase) * 15;
+                    const hueShift = Math.sin(time * 0.3 + p.phase) * 15;
                     const currentHue = p.hue + hueShift;
-                    const intensity = 0.04 + Math.sin(time * 0.2 + p.phase) * 0.02 + 0.04;
+                    const intensity = 0.04 + Math.sin(time * 0.4 + p.phase) * 0.02 + 0.04;
                     const opacity = p.opacity * 1.5;
                     p.el.style.background = `radial-gradient(circle, hsla(${currentHue}, 100%, 75%, ${intensity * opacity}), hsla(${currentHue + 30}, 100%, 65%, ${intensity * 0.4 * opacity}), transparent 70%)`;
                 }
@@ -145,22 +140,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Guardar posiciones originales
         particles.forEach((p, index) => {
-            p.originalX = p.x;
-            p.originalY = p.y;
-            // Distribuir partículas en diferentes posiciones iniciales
-            p.x = (index / particles.length) * window.innerWidth * 0.8 + window.innerWidth * 0.1;
-            p.y = (index / particles.length) * window.innerHeight * 0.8 + window.innerHeight * 0.1;
-            p.originalX = p.x;
-            p.originalY = p.y;
+            p.originalX = window.innerWidth * (0.1 + (index / particles.length) * 0.8);
+            p.originalY = window.innerHeight * (0.1 + (index / particles.length) * 0.8);
+            p.x = p.originalX;
+            p.y = p.originalY;
         });
 
         animateParticles();
         
         // Ajustar en resize
         window.addEventListener('resize', function() {
-            particles.forEach(p => {
-                p.x = Math.min(p.x, window.innerWidth);
-                p.y = Math.min(p.y, window.innerHeight);
+            particles.forEach((p, index) => {
+                p.originalX = window.innerWidth * (0.1 + (index / particles.length) * 0.8);
+                p.originalY = window.innerHeight * (0.1 + (index / particles.length) * 0.8);
             });
         });
     };
@@ -169,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createSmokeEffect();
 
     // ========================================
-    //  2. POLVO DE HADAS (FAIRY DUST)
+    //  2. POLVO DE HADAS - OPTIMIZADO
     // ========================================
     const createFairyDust = function() {
         const container = document.createElement('div');
@@ -186,25 +178,22 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(container);
 
         const dustParticles = [];
-        const numParticles = 30;
+        const numParticles = 20; // Reducido para mejor rendimiento
 
-        // Colores mágicos
         const colors = [
-            'rgba(255, 182, 193, 0.6)',  // Rosa
-            'rgba(176, 224, 230, 0.6)',  // Celeste
-            'rgba(216, 191, 216, 0.6)',  // Lila
-            'rgba(255, 218, 185, 0.6)',  // Melocotón
-            'rgba(255, 228, 196, 0.6)',  // Amarillo
-            'rgba(188, 224, 238, 0.6)',  // Azul
-            'rgba(255, 192, 203, 0.6)',  // Rosa claro
-            'rgba(201, 167, 235, 0.6)',  // Lila claro
-            'rgba(255, 215, 0, 0.5)',    // Dorado
-            'rgba(255, 105, 180, 0.5)'   // Fucsia
+            'rgba(255, 182, 193, 0.6)',
+            'rgba(176, 224, 230, 0.6)',
+            'rgba(216, 191, 216, 0.6)',
+            'rgba(255, 218, 185, 0.6)',
+            'rgba(255, 228, 196, 0.6)',
+            'rgba(188, 224, 238, 0.6)',
+            'rgba(255, 192, 203, 0.6)',
+            'rgba(201, 167, 235, 0.6)'
         ];
 
         for (let i = 0; i < numParticles; i++) {
             const dust = document.createElement('div');
-            const size = 3 + Math.random() * 8;
+            const size = 3 + Math.random() * 6;
             const color = colors[Math.floor(Math.random() * colors.length)];
             
             dust.style.cssText = `
@@ -215,7 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 background: ${color};
                 box-shadow: 0 0 ${size * 2}px ${color};
                 pointer-events: none;
-                opacity: ${0.2 + Math.random() * 0.5};
+                opacity: ${0.2 + Math.random() * 0.4};
+                will-change: transform, opacity;
             `;
             container.appendChild(dust);
 
@@ -223,12 +213,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 el: dust,
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 0.8,
-                vy: (Math.random() - 0.5) * 0.8,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
                 size: size,
                 color: color,
                 phase: Math.random() * Math.PI * 2,
-                speed: 0.2 + Math.random() * 0.4
+                speed: 0.2 + Math.random() * 0.3
             });
         }
 
@@ -236,42 +226,30 @@ document.addEventListener('DOMContentLoaded', function() {
             const time = Date.now() / 1000;
 
             dustParticles.forEach(p => {
-                // Movimiento suave y orgánico
-                p.x += p.vx + Math.sin(time * p.speed + p.phase) * 0.3;
-                p.y += p.vy + Math.cos(time * p.speed * 0.7 + p.phase) * 0.3;
+                p.x += p.vx + Math.sin(time * p.speed + p.phase) * 0.2;
+                p.y += p.vy + Math.cos(time * p.speed * 0.7 + p.phase) * 0.2;
 
-                // Flotación
-                const floatY = Math.sin(time * 0.5 + p.phase) * 0.2;
+                const floatY = Math.sin(time * 0.5 + p.phase) * 0.15;
                 p.y += floatY;
 
-                // Rebote en bordes
                 if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
                 if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
 
-                // Movimiento en espiral ocasional
-                if (Math.random() < 0.001) {
-                    p.vx += (Math.random() - 0.5) * 0.2;
-                    p.vy += (Math.random() - 0.5) * 0.2;
-                }
-
-                // Limitar velocidad
-                const maxSpeed = 1.5;
+                const maxSpeed = 1;
                 const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
                 if (speed > maxSpeed) {
                     p.vx = (p.vx / speed) * maxSpeed;
                     p.vy = (p.vy / speed) * maxSpeed;
                 }
 
-                // Brillo pulsante
                 const pulse = 0.5 + Math.sin(time * 1.5 + p.phase) * 0.5;
-                p.el.style.opacity = (0.3 + Math.random() * 0.2) * pulse;
-                p.el.style.transform = `translate(${p.x}px, ${p.y}px) scale(${0.8 + pulse * 0.4})`;
+                p.el.style.opacity = (0.3 + Math.random() * 0.1) * pulse;
+                p.el.style.transform = `translate(${p.x}px, ${p.y}px) scale(${0.8 + pulse * 0.3})`;
                 
-                // Cambiar color sutilmente
-                const hue = Math.sin(time * 0.2 + p.phase) * 20 + 300;
+                const hue = Math.sin(time * 0.3 + p.phase) * 20 + 300;
                 const intensity = 0.3 + Math.sin(time * 0.5 + p.phase) * 0.2;
-                p.el.style.background = `hsla(${hue}, 100%, 70%, ${intensity * 0.5})`;
-                p.el.style.boxShadow = `0 0 ${p.size * 3}px hsla(${hue}, 100%, 70%, ${intensity * 0.3})`;
+                p.el.style.background = `hsla(${hue}, 100%, 70%, ${intensity * 0.4})`;
+                p.el.style.boxShadow = `0 0 ${p.size * 2.5}px hsla(${hue}, 100%, 70%, ${intensity * 0.2})`;
             });
 
             requestAnimationFrame(animateDust);
@@ -279,7 +257,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         animateDust();
 
-        // Ajustar en resize
         window.addEventListener('resize', function() {
             dustParticles.forEach(p => {
                 p.x = Math.min(p.x, window.innerWidth);
@@ -288,173 +265,126 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Iniciar polvo de hadas
     createFairyDust();
 
     // ========================================
-    //  3. ELEMENTOS DECORATIVOS FLOTANTES (NEGRO)
+    //  3. ELEMENTOS ESOTÉRICOS EN NEGRO - DISTRIBUIDOS EN EL CONTENIDO
     // ========================================
     const createFloatingDecorations = function() {
-        // Elementos esotéricos en color negro
         const decorElements = [
-            '🐈‍⬛',  // Gato negro
-            '✧',    // Tetragramatron
-            '☿',    // Símbolo zodiacal Mercurio
-            '♀',    // Símbolo zodiacal Venus
-            '♃',    // Símbolo zodiacal Júpiter
-            '☽',    // Luna creciente
-            '♄',    // Símbolo zodiacal Saturno
-            '♅',    // Símbolo zodiacal Urano
-            '♆',    // Símbolo zodiacal Neptuno
-            '♇',    // Símbolo zodiacal Plutón
-            '☯',    // Yin-Yang
-            '☥',    // Ankh
-            '☸',    // Rueda del Dharma
-            '⚛',    // Átomo
-            '🜁',    // Alquimia - Aire
-            '🜂',    // Alquimia - Fuego
-            '🜃',    // Alquimia - Tierra
-            '🜄',    // Alquimia - Agua
+            '🐈‍⬛', '✧', '☿', '♀', '♃', '☽', '♄', '♅', '♆', '♇',
+            '☯', '☥', '☸', '⚛', '🜁', '🜂', '🜃', '🜄'
         ];
 
-        // Seleccionar elementos aleatorios (10-14 elementos)
+        // Seleccionar elementos aleatorios
         const count = 10 + Math.floor(Math.random() * 5);
         const shuffled = decorElements.sort(() => Math.random() - 0.5);
         const selectedDecor = shuffled.slice(0, count);
 
-        // Posiciones estratégicas
-        const positions = [
-            { top: '3%', left: '2%' },
-            { top: '5%', right: '2%' },
-            { top: '15%', left: '1%' },
-            { bottom: '20%', right: '1%' },
-            { bottom: '8%', left: '4%' },
-            { top: '28%', left: '2%' },
-            { top: '45%', right: '1%' },
-            { top: '60%', left: '3%' },
-            { bottom: '12%', right: '3%' },
-            { top: '38%', left: '50%' },
-            { bottom: '30%', left: '1%' },
-            { top: '75%', right: '2%' },
-            { top: '85%', left: '2%' },
-            { bottom: '45%', right: '4%' }
-        ];
+        // Obtener todas las secciones principales
+        const sections = document.querySelectorAll('section');
+        const mainContent = document.querySelector('main') || document.body;
 
         selectedDecor.forEach((icon, index) => {
             const decor = document.createElement('div');
             decor.className = 'floating-decor';
             decor.textContent = icon;
-            decor.style.color = '#000000';
+            decor.style.cssText = `
+                position: absolute;
+                color: #000000;
+                font-size: ${2.5 + Math.random() * 4}rem;
+                opacity: ${0.03 + Math.random() * 0.04};
+                pointer-events: none;
+                z-index: 0;
+                font-weight: bold;
+                text-shadow: 0 0 20px rgba(0,0,0,0.05);
+                animation: floatDecor ${20 + Math.random() * 20}s ease-in-out infinite;
+                animation-delay: ${Math.random() * 20}s;
+                user-select: none;
+            `;
+
+            // Colocar en una sección aleatoria
+            let targetSection;
+            if (sections.length > 0) {
+                targetSection = sections[Math.floor(Math.random() * sections.length)];
+            } else {
+                targetSection = mainContent;
+            }
+
+            // Posición relativa dentro de la sección
+            const topPos = 5 + Math.random() * 85;
+            const leftPos = 5 + Math.random() * 85;
             
-            const pos = positions[index % positions.length];
-            if (pos.top) decor.style.top = pos.top;
-            if (pos.bottom) decor.style.bottom = pos.bottom;
-            if (pos.left) decor.style.left = pos.left;
-            if (pos.right) decor.style.right = pos.right;
-            
-            // Tamaños variados
-            const size = 2.5 + Math.random() * 4.5;
-            decor.style.fontSize = size + 'rem';
-            decor.style.opacity = 0.03 + Math.random() * 0.05;
-            decor.style.animationDelay = (Math.random() * 20) + 's';
-            decor.style.animationDuration = (20 + Math.random() * 20) + 's';
-            decor.style.fontWeight = 'bold';
-            decor.style.textShadow = '0 0 20px rgba(0,0,0,0.05)';
-            
-            document.body.appendChild(decor);
+            decor.style.top = topPos + '%';
+            decor.style.left = leftPos + '%';
+
+            // Asegurar que el contenedor de la sección tenga position: relative
+            if (targetSection) {
+                const computedStyle = window.getComputedStyle(targetSection);
+                if (computedStyle.position === 'static') {
+                    targetSection.style.position = 'relative';
+                }
+                targetSection.appendChild(decor);
+            }
         });
     };
 
-    // Iniciar decoraciones flotantes
-    createFloatingDecorations();
+    // Iniciar decoraciones esotéricas después de que el DOM esté listo
+    setTimeout(createFloatingDecorations, 100);
 
     // ========================================
-    //  4. PIEDRAS DECORATIVAS (AMATISTA, OJO DE TIGRE, ETC)
+    //  4. PIEDRAS DECORATIVAS - DISTRIBUIDAS EN EL CONTENIDO
     // ========================================
     const createFloatingGems = function() {
-        // Piedras y cristales mágicos
-        const gemElements = [
-            '🔮',   // Amatista / Bola de cristal
-            '🧿',   // Ojo de Tigre / Nazar
-            '💎',   // Diamante / Cristal
-            '💗',   // Cuarzo Rosa
-            '🌀',   // Ágata / Espiral
-            '⚪',   // Cristal de Cuarzo
-            '🟣',   // Amatista
-            '🟠',   // Ojo de Tigre
-            '🔴',   // Rubí
-            '🟢',   // Esmeralda
-            '🔵',   // Zafiro
-            '🟡',   // Ámbar
-            '⚡',   // Cristal de energía
-            '💜',   // Amatista
-            '💠',   // Cristal
-            '🔶',   // Ojo de Tigre
-        ];
+        const gemElements = ['🔮', '🧿', '💎', '💗', '🌀', '⚪', '🟣', '🟠', '🔴', '🟢', '🔵', '🟡', '⚡', '💜', '💠', '🔶'];
 
-        // Seleccionar 8-10 piedras
-        const count = 8 + Math.floor(Math.random() * 3);
+        const count = 6 + Math.floor(Math.random() * 3);
         const shuffled = gemElements.sort(() => Math.random() - 0.5);
         const selectedGems = shuffled.slice(0, count);
 
-        // Posiciones para piedras
-        const gemPositions = [
-            { top: '8%', left: '10%' },
-            { top: '20%', right: '8%' },
-            { bottom: '30%', left: '6%' },
-            { bottom: '15%', right: '12%' },
-            { top: '45%', left: '4%' },
-            { top: '35%', right: '4%' },
-            { bottom: '40%', left: '15%' },
-            { top: '65%', right: '18%' },
-            { top: '80%', left: '8%' },
-            { bottom: '55%', right: '6%' }
-        ];
+        const sections = document.querySelectorAll('section');
 
         selectedGems.forEach((gem, index) => {
             const gemElement = document.createElement('div');
             gemElement.className = 'floating-gem';
             gemElement.textContent = gem;
-            
-            const pos = gemPositions[index % gemPositions.length];
-            if (pos.top) gemElement.style.top = pos.top;
-            if (pos.bottom) gemElement.style.bottom = pos.bottom;
-            if (pos.left) gemElement.style.left = pos.left;
-            if (pos.right) gemElement.style.right = pos.right;
-            
-            // Tamaños variados
-            const size = 2 + Math.random() * 3.5;
-            gemElement.style.fontSize = size + 'rem';
-            gemElement.style.opacity = 0.05 + Math.random() * 0.06;
-            gemElement.style.animationDelay = (Math.random() * 25) + 's';
-            gemElement.style.animationDuration = (25 + Math.random() * 25) + 's';
-            
-            // Colores personalizados según la piedra
-            const gemType = gem;
-            if (gemType === '🔮' || gemType === '💜' || gemType === '🟣') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(180, 138, 217, 0.2))';
-            } else if (gemType === '🧿' || gemType === '🟠' || gemType === '🔶') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(201, 168, 124, 0.2))';
-            } else if (gemType === '💗') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(255, 182, 193, 0.2))';
-            } else if (gemType === '🔴') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(255, 0, 0, 0.15))';
-            } else if (gemType === '🟢') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(0, 255, 0, 0.15))';
-            } else if (gemType === '🔵') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(0, 0, 255, 0.15))';
-            } else if (gemType === '🟡') {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(255, 215, 0, 0.15))';
+            gemElement.style.cssText = `
+                position: absolute;
+                font-size: ${2 + Math.random() * 3}rem;
+                opacity: ${0.04 + Math.random() * 0.04};
+                pointer-events: none;
+                z-index: 0;
+                animation: floatGem ${25 + Math.random() * 25}s ease-in-out infinite;
+                animation-delay: ${Math.random() * 25}s;
+                user-select: none;
+                filter: drop-shadow(0 0 30px rgba(180, 138, 217, 0.1));
+            `;
+
+            // Colocar en una sección aleatoria
+            let targetSection;
+            if (sections.length > 0) {
+                targetSection = sections[Math.floor(Math.random() * sections.length)];
             } else {
-                gemElement.style.filter = 'drop-shadow(0 0 40px rgba(201, 167, 235, 0.15))';
+                targetSection = document.body;
             }
+
+            const topPos = 10 + Math.random() * 80;
+            const leftPos = 10 + Math.random() * 80;
             
-            document.body.appendChild(gemElement);
+            gemElement.style.top = topPos + '%';
+            gemElement.style.left = leftPos + '%';
+
+            if (targetSection) {
+                const computedStyle = window.getComputedStyle(targetSection);
+                if (computedStyle.position === 'static') {
+                    targetSection.style.position = 'relative';
+                }
+                targetSection.appendChild(gemElement);
+            }
         });
     };
 
-    // Iniciar piedras flotantes
-    createFloatingGems();
+    setTimeout(createFloatingGems, 200);
 
     // ========================================
     //  5. PUNTITOS PASTEL EN "SOBRE MÍ"
@@ -463,97 +393,73 @@ document.addEventListener('DOMContentLoaded', function() {
         const aboutSection = document.querySelector('.about-brief');
         if (!aboutSection) return;
 
-        // Colores pastel
         const pastelColors = [
-            'rgba(255, 182, 193, 0.2)',
-            'rgba(176, 224, 230, 0.18)',
-            'rgba(255, 218, 185, 0.2)',
-            'rgba(216, 191, 216, 0.2)',
-            'rgba(255, 228, 196, 0.18)',
-            'rgba(188, 224, 238, 0.2)',
-            'rgba(255, 192, 203, 0.15)',
-            'rgba(169, 204, 227, 0.18)',
-            'rgba(255, 235, 205, 0.2)',
-            'rgba(221, 160, 221, 0.15)'
+            'rgba(255, 182, 193, 0.2)', 'rgba(176, 224, 230, 0.18)',
+            'rgba(255, 218, 185, 0.2)', 'rgba(216, 191, 216, 0.2)',
+            'rgba(255, 228, 196, 0.18)', 'rgba(188, 224, 238, 0.2)',
+            'rgba(255, 192, 203, 0.15)', 'rgba(169, 204, 227, 0.18)'
         ];
 
-        // Crear 15-20 puntitos
-        const dotCount = 15 + Math.floor(Math.random() * 6);
+        const dotCount = 12 + Math.floor(Math.random() * 5);
         
         for (let i = 0; i < dotCount; i++) {
             const dot = document.createElement('div');
-            dot.className = 'pastel-dot';
-            
-            // Tamaño aleatorio
-            const size = 6 + Math.random() * 20;
-            dot.style.width = size + 'px';
-            dot.style.height = size + 'px';
-            dot.style.borderRadius = '50%';
-            dot.style.position = 'absolute';
-            dot.style.pointerEvents = 'none';
-            
-            // Color aleatorio
+            const size = 6 + Math.random() * 18;
             const color = pastelColors[i % pastelColors.length];
-            dot.style.background = color;
-            
-            // Posición aleatoria dentro de la sección
             const top = 5 + Math.random() * 90;
             const left = 5 + Math.random() * 90;
-            dot.style.top = top + '%';
-            dot.style.left = left + '%';
+            const duration = 6 + Math.random() * 8;
+            const delay = Math.random() * 10;
             
-            // Animación personalizada
-            const duration = 6 + Math.random() * 10;
-            const delay = Math.random() * 12;
-            dot.style.animationDuration = duration + 's';
-            dot.style.animationDelay = delay + 's';
+            dot.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                border-radius: 50%;
+                background: ${color};
+                top: ${top}%;
+                left: ${left}%;
+                pointer-events: none;
+                z-index: 1;
+                animation: floatDot ${duration}s ease-in-out ${delay}s infinite;
+                will-change: transform, opacity;
+            `;
             
-            // Crear animación única para cada dot
-            const dotId = 'dot-' + i;
-            dot.style.animation = `${dotId} ${duration}s ease-in-out ${delay}s infinite`;
+            const dotId = 'dot-' + Date.now() + '-' + i;
+            const moveX1 = 10 + Math.random() * 30;
+            const moveY1 = -15 - Math.random() * 25;
+            const moveX2 = -10 - Math.random() * 20;
+            const moveY2 = 10 + Math.random() * 20;
+            const moveX3 = 8 + Math.random() * 25;
+            const moveY3 = -8 - Math.random() * 15;
+            const scale1 = 1.2 + Math.random() * 1.5;
+            const scale2 = 0.6 + Math.random() * 0.6;
+            const scale3 = 1.0 + Math.random() * 1.2;
             
             const style = document.createElement('style');
-            const moveX1 = 10 + Math.random() * 35;
-            const moveY1 = -15 - Math.random() * 30;
-            const moveX2 = -10 - Math.random() * 25;
-            const moveY2 = 10 + Math.random() * 25;
-            const moveX3 = 8 + Math.random() * 30;
-            const moveY3 = -8 - Math.random() * 20;
-            const scale1 = 1.2 + Math.random() * 1.8;
-            const scale2 = 0.6 + Math.random() * 0.8;
-            const scale3 = 1.0 + Math.random() * 1.4;
-            
             style.textContent = `
-                @keyframes ${dotId} {
-                    0%, 100% {
-                        transform: translate(0, 0) scale(1);
-                        opacity: 0.5;
-                    }
-                    25% {
-                        transform: translate(${moveX1}px, ${moveY1}px) scale(${scale1});
-                        opacity: 1;
-                    }
-                    50% {
-                        transform: translate(${moveX2}px, ${moveY2}px) scale(${scale2});
-                        opacity: 0.2;
-                    }
-                    75% {
-                        transform: translate(${moveX3}px, ${moveY3}px) scale(${scale3});
-                        opacity: 0.8;
-                    }
+                @keyframes floatDot${i} {
+                    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+                    25% { transform: translate(${moveX1}px, ${moveY1}px) scale(${scale1}); opacity: 1; }
+                    50% { transform: translate(${moveX2}px, ${moveY2}px) scale(${scale2}); opacity: 0.2; }
+                    75% { transform: translate(${moveX3}px, ${moveY3}px) scale(${scale3}); opacity: 0.8; }
                 }
             `;
             document.head.appendChild(style);
             
+            dot.style.animation = `floatDot${i} ${duration}s ease-in-out ${delay}s infinite`;
             aboutSection.appendChild(dot);
         }
     };
 
-    // Iniciar puntitos pastel
-    setTimeout(createPastelDots, 500);
+    setTimeout(createPastelDots, 300);
 
     // ========================================
-    //  6. CARRITO DE COMPRAS MÁGICO
+    //  RESTAURAR FUNCIONALIDADES EXISTENTES
+    // ========================================
+    
+    // ========================================
+    //  6. CARRITO DE COMPRAS
     // ========================================
     const cart = {
         items: [],
@@ -588,7 +494,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.badge.textContent = totalItems;
                 this.badge.style.display = totalItems > 0 ? 'flex' : 'none';
                 
-                // Animación mágica
                 this.badge.style.transform = 'scale(1.4) rotate(10deg)';
                 this.badge.style.boxShadow = '0 0 40px rgba(255, 0, 255, 0.5)';
                 setTimeout(() => {
@@ -632,7 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
             text.textContent = message;
             notification.appendChild(text);
 
-            // Partículas de brillo
             for (let i = 0; i < 8; i++) {
                 const sparkle = document.createElement('span');
                 sparkle.textContent = '✦';
@@ -886,7 +790,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  9. BÚSQUEDA MÁGICA
+    //  9. BÚSQUEDA
     // ========================================
     const searchButton = document.querySelector('.header__actions .action-btn:first-child');
     
@@ -904,7 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                animation: fadeIn 0.4s ease;
+                animation: fadeIn 0.3s ease;
             `;
 
             const searchBox = document.createElement('div');
@@ -968,15 +872,6 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             searchBox.querySelector('#closeSearchBtn').addEventListener('click', closeSearch);
-            searchBox.querySelector('#closeSearchBtn').onmouseover = function() {
-                this.style.borderColor = '#B48AD9';
-                this.style.color = '#2E1A47';
-            };
-            searchBox.querySelector('#closeSearchBtn').onmouseout = function() {
-                this.style.borderColor = 'rgba(214, 200, 224, 0.3)';
-                this.style.color = '#4A4A4E';
-            };
-
             overlay.addEventListener('click', function(e) {
                 if (e.target === overlay) closeSearch();
             });
@@ -999,16 +894,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  10. MENÚ DE NAVEGACIÓN - FUNCIONALIDAD
+    //  10. MENÚ DE NAVEGACIÓN
     // ========================================
-    // Hacer que todos los enlaces del menú naveguen correctamente
     const allNavLinks = document.querySelectorAll('.nav__list a, .footer__nav a');
     
     allNavLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             
-            // Si es un enlace interno (empieza con #)
             if (href && href.startsWith('#')) {
                 e.preventDefault();
                 const targetId = href.substring(1);
@@ -1019,13 +912,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         block: 'start'
                     });
                 }
-            } else if (href && href !== '#') {
-                // Enlaces externos - permitir navegación
-                // No prevenir el comportamiento por defecto
-                return true;
             } else if (href === '#') {
                 e.preventDefault();
-                // Scroll al inicio de la página
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
@@ -1035,12 +923,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  11. MENÚ MÓVIL MÁGICO
+    //  11. MENÚ MÓVIL
     // ========================================
     const headerNav = document.querySelector('.header__nav');
     
     if (headerNav) {
-        // Crear botón hamburguesa si no existe
         let hamburgerBtn = document.querySelector('.hamburger-btn');
         if (!hamburgerBtn && window.innerWidth <= 992) {
             hamburgerBtn = document.createElement('button');
@@ -1068,7 +955,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (hamburgerBtn) {
             let menuOpen = false;
             
-            // Asegurar que el nav esté oculto en móvil inicialmente
             if (window.innerWidth <= 992) {
                 headerNav.style.display = 'none';
                 headerNav.style.width = '100%';
@@ -1088,7 +974,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Cerrar menú al hacer clic en un enlace
             headerNav.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', function() {
                     if (window.innerWidth <= 992) {
@@ -1102,7 +987,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            // Manejar cambio de tamaño de ventana
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 992) {
                     headerNav.style.display = 'flex';
@@ -1136,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  13. ANIMACIONES AL SCROLL MÁGICAS
+    //  13. ANIMACIONES AL SCROLL
     // ========================================
     const animateOnScroll = function() {
         const elements = document.querySelectorAll('.category-card, .product-card, .experience-card, .blog-card, .about-brief__content');
@@ -1144,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    const delay = index * 60;
+                    const delay = index * 50;
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0) scale(1)';
@@ -1160,26 +1044,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         elements.forEach((el) => {
             el.style.opacity = '0';
-            el.style.transform = 'translateY(50px) scale(0.95)';
-            el.style.filter = 'blur(5px)';
-            el.style.transition = `all 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
+            el.style.transform = 'translateY(40px) scale(0.95)';
+            el.style.filter = 'blur(3px)';
+            el.style.transition = `all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
             observer.observe(el);
         });
     };
 
     if ('IntersectionObserver' in window) {
-        setTimeout(animateOnScroll, 300);
-    } else {
-        document.querySelectorAll('.category-card, .product-card, .experience-card, .blog-card, .about-brief__content')
-            .forEach(el => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0) scale(1)';
-                el.style.filter = 'blur(0)';
-            });
+        setTimeout(animateOnScroll, 200);
     }
 
     // ========================================
-    //  14. ESTRELLAS MÁGICAS EN EL BANNER
+    //  14. ESTRELLAS EN EL BANNER - RÁPIDAS
     // ========================================
     const createMagicalStars = function() {
         const hero = document.querySelector('.hero');
@@ -1187,13 +1064,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const starColors = ['#C9A87C', '#C9A7EB', '#B48AD9', '#FF00FF', '#FFFFFF', '#FF69B4', '#7B68EE'];
         
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 60; i++) {
             const star = document.createElement('div');
-            const size = Math.random() * 6 + 1;
+            const size = Math.random() * 5 + 1;
             const x = Math.random() * 100;
             const y = Math.random() * 100;
-            const duration = Math.random() * 5 + 2;
-            const delay = Math.random() * 4;
+            const duration = 1.5 + Math.random() * 2;
+            const delay = Math.random() * 2;
             const color = starColors[Math.floor(Math.random() * starColors.length)];
 
             star.style.cssText = `
@@ -1204,11 +1081,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 border-radius: 50%;
                 top: ${y}%;
                 left: ${x}%;
-                opacity: ${Math.random() * 0.8 + 0.1};
+                opacity: ${Math.random() * 0.6 + 0.1};
                 animation: twinkle ${duration}s ease-in-out ${delay}s infinite alternate;
                 pointer-events: none;
                 z-index: 1;
-                box-shadow: 0 0 ${size * 5}px ${color}44;
+                box-shadow: 0 0 ${size * 4}px ${color}44;
+                will-change: transform, opacity;
             `;
 
             hero.appendChild(star);
@@ -1223,20 +1101,18 @@ document.addEventListener('DOMContentLoaded', function() {
     cart.updateBadge();
 
     // ========================================
-    //  16. MENSAJE DE CONSOLA MÁGICO
+    //  16. MENSAJE DE CONSOLA
     // ========================================
     console.log('%c✨✦✧ Esencia Violeta ✧✦✨', 'font-size: 24px; font-weight: bold; color: #2A1A3D; text-shadow: 0 0 40px rgba(180, 138, 217, 0.3);');
     console.log('%cMazos de tarot y artículos esotéricos con alma ✨', 'font-size: 16px; color: #5B3A7A;');
     console.log('%c🔮 Que la luna guíe tu camino 🌙', 'font-size: 14px; color: #B48AD9;');
     console.log('%c🐈‍⬛ El gato negro te observa desde las sombras...', 'font-size: 13px; color: #000000;');
     console.log('%c💎 Amatista, Ojo de Tigre y Cuarzo Rosa te acompañan ✨', 'font-size: 13px; color: #4A4A4E;');
-    console.log('%c🛒 Haz clic en el carrito para ver tus compras mágicas', 'font-size: 13px; color: #4A4A4E;');
-    console.log('%c✧✦✧ Bienvenida a la experiencia mágica ✧✦✧', 'font-size: 14px; color: #C9A7EB;');
 
 }); // Fin DOMContentLoaded
 
 // ========================================
-//  ESTILOS DE ANIMACIÓN MÁGICA
+//  ESTILOS DE ANIMACIÓN
 // ========================================
 const magicalStyles = document.createElement('style');
 magicalStyles.textContent = `
@@ -1246,25 +1122,13 @@ magicalStyles.textContent = `
     }
 
     @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(-15px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes twinkle {
-        0% { 
-            opacity: 0.1; 
-            transform: scale(0.3);
-        }
-        100% { 
-            opacity: 1; 
-            transform: scale(1.8);
-        }
+        0% { opacity: 0.1; transform: scale(0.3); }
+        100% { opacity: 1; transform: scale(1.5); }
     }
 
     @keyframes gradientShift {
@@ -1273,14 +1137,26 @@ magicalStyles.textContent = `
     }
 
     @keyframes sparkleFloat {
-        0%, 100% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0.3;
-        }
-        50% {
-            transform: translate(10px, -15px) scale(1.5);
-            opacity: 1;
-        }
+        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+        50% { transform: translate(8px, -12px) scale(1.4); opacity: 1; }
+    }
+
+    @keyframes floatDecor {
+        0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        20% { transform: translate(20px, -25px) rotate(8deg) scale(1.1); }
+        40% { transform: translate(-15px, 20px) rotate(-6deg) scale(0.9); }
+        60% { transform: translate(12px, -18px) rotate(4deg) scale(1.05); }
+        80% { transform: translate(-12px, 25px) rotate(-7deg) scale(0.95); }
+    }
+
+    @keyframes floatGem {
+        0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        15% { transform: translate(25px, -30px) rotate(10deg) scale(1.15); }
+        30% { transform: translate(-20px, 25px) rotate(-8deg) scale(0.85); }
+        45% { transform: translate(18px, -20px) rotate(6deg) scale(1.1); }
+        60% { transform: translate(-15px, 28px) rotate(-9deg) scale(0.9); }
+        75% { transform: translate(12px, -25px) rotate(7deg) scale(1.12); }
+        90% { transform: translate(-12px, 18px) rotate(-5deg) scale(0.88); }
     }
 
     .cart-badge {
@@ -1294,22 +1170,14 @@ magicalStyles.textContent = `
     }
 
     @media (max-width: 992px) {
-        .hamburger-btn {
-            display: block;
-        }
-        
-        .header__nav {
-            order: 3;
-            width: 100%;
-        }
-        
+        .hamburger-btn { display: block; }
+        .header__nav { order: 3; width: 100%; }
         .header__nav .nav__list {
             flex-direction: column;
             gap: 0.8rem;
             padding: 1rem 0;
             align-items: center;
         }
-        
         .header__nav .nav__list a {
             font-size: 1.1rem;
             padding: 0.4rem 0;
@@ -1317,27 +1185,16 @@ magicalStyles.textContent = `
     }
 
     @media (max-width: 600px) {
-        .hamburger-btn {
-            font-size: 1.5rem;
-            padding: 0.4rem 0.8rem;
-        }
+        .hamburger-btn { font-size: 1.5rem; padding: 0.4rem 0.8rem; }
     }
 
-    /* Scrollbar mágica */
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: linear-gradient(180deg, #1C0F2E, #2A1A3D);
-    }
-
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: linear-gradient(180deg, #1C0F2E, #2A1A3D); }
     ::-webkit-scrollbar-thumb {
         background: linear-gradient(180deg, #B48AD9, #C9A7EB, #B48AD9);
         border-radius: 10px;
         box-shadow: 0 0 30px rgba(180, 138, 217, 0.2);
     }
-
     ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(180deg, #C9A7EB, #FF00FF, #C9A7EB);
         box-shadow: 0 0 50px rgba(255, 0, 255, 0.2);
