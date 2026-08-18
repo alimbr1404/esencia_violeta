@@ -305,7 +305,7 @@ h6 {
 }
 
 /* ========================================
-   HERO / BANNER - SOLO IMAGEN
+   HERO / BANNER - BRILLANTE
    ======================================== */
 .hero {
     padding: 0;
@@ -327,12 +327,12 @@ h6 {
     z-index: 0;
 }
 
-/* Overlay oscuro para legibilidad */
+/* Overlay más suave para que se vea brillante */
 .hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(28, 15, 46, 0.2);
+    background: rgba(28, 15, 46, 0.1);
     z-index: 1;
 }
 
@@ -344,41 +344,48 @@ h6 {
     max-width: 750px;
     margin: 0 auto;
     padding: 2rem 16px;
-    display: none; /* Oculto - la imagen del Hero tiene su propio texto */
-}
-
-.hero__title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 7.5vw, 4rem);
-    font-weight: 700;
-    color: #FFFFFF;
-    margin-bottom: 0.6rem;
-    text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
-    animation: fadeInUp 0.8s ease;
-}
-
-.hero__subtitle {
-    font-size: clamp(1rem, 3.2vw, 1.4rem);
-    color: #D6C8E0;
-    margin-bottom: 1.8rem;
-    font-weight: 300;
-    animation: fadeInUp 0.8s ease 0.15s both;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-}
-
-.hero .btn {
     display: none;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* ========================================
+   ELEMENTOS DECORATIVOS OSCUROS (Tarot, Lunas, Gatos)
+   ======================================== */
+.decor-item {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    color: rgba(0, 0, 0, 0.06);
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    user-select: none;
+    animation: floatDecor 15s ease-in-out infinite;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+.decor-item:hover {
+    opacity: 0.8;
+}
+
+.decor-item--moon {
+    color: rgba(0, 0, 0, 0.07);
+    animation-duration: 18s;
+}
+
+.decor-item--cat {
+    color: rgba(0, 0, 0, 0.08);
+    animation-duration: 22s;
+}
+
+.decor-item--tarot {
+    color: rgba(0, 0, 0, 0.06);
+    animation-duration: 20s;
+}
+
+@keyframes floatDecor {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    25% { transform: translate(15px, -20px) rotate(5deg) scale(1.1); }
+    50% { transform: translate(-10px, 15px) rotate(-5deg) scale(0.9); }
+    75% { transform: translate(10px, -10px) rotate(3deg) scale(1.05); }
 }
 
 /* ========================================
@@ -400,6 +407,8 @@ h6 {
     line-height: 1.7;
     font-weight: 400;
     padding: 0 16px;
+    position: relative;
+    z-index: 2;
 }
 
 .welcome__text::before {
@@ -426,12 +435,15 @@ h6 {
 .categories {
     padding: clamp(2.5rem, 6.5vw, 4rem) 0;
     background: linear-gradient(180deg, #FFFFFF 0%, #F8F5FA 100%);
+    position: relative;
 }
 
 .categories__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 32vw, 280px), 1fr));
     gap: clamp(1.2rem, 3.2vw, 2.2rem);
+    position: relative;
+    z-index: 2;
 }
 
 .category-card {
@@ -483,6 +495,7 @@ h6 {
 .featured-products {
     padding: clamp(2.5rem, 6.5vw, 4rem) 0;
     background: linear-gradient(180deg, #F8F5FA 0%, #FFFFFF 100%);
+    position: relative;
 }
 
 .products__grid {
@@ -490,6 +503,8 @@ h6 {
     grid-template-columns: repeat(auto-fit, minmax(clamp(170px, 30vw, 240px), 1fr));
     gap: clamp(1rem, 2.2vw, 2.2rem);
     margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .product-card {
@@ -617,6 +632,7 @@ h6 {
 .experiences-home {
     padding: clamp(2.5rem, 6.5vw, 4rem) 0;
     background: linear-gradient(180deg, #FFFFFF 0%, #F8F5FA 100%);
+    position: relative;
 }
 
 .experiences__grid {
@@ -624,6 +640,8 @@ h6 {
     grid-template-columns: repeat(auto-fit, minmax(clamp(270px, 42vw, 300px), 1fr));
     gap: clamp(1.2rem, 3.2vw, 2.2rem);
     margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .experience-card {
@@ -710,6 +728,7 @@ h6 {
 .blog-home {
     padding: clamp(2.5rem, 6.5vw, 4rem) 0;
     background: linear-gradient(180deg, #F8F5FA 0%, #FFFFFF 100%);
+    position: relative;
 }
 
 .blog__grid {
@@ -717,6 +736,8 @@ h6 {
     grid-template-columns: repeat(auto-fit, minmax(clamp(270px, 42vw, 300px), 1fr));
     gap: clamp(1.2rem, 3.2vw, 2.2rem);
     margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .blog-card {
@@ -775,12 +796,15 @@ h6 {
 .contact {
     padding: clamp(2.5rem, 6.5vw, 4rem) 0;
     background: linear-gradient(180deg, #FFFFFF 0%, #F8F5FA 100%);
+    position: relative;
 }
 
 .contact__wrapper {
     max-width: 600px;
     margin: 0 auto;
     padding: 0 16px;
+    position: relative;
+    z-index: 2;
 }
 
 .contact__text {
@@ -836,7 +860,7 @@ h6 {
 }
 
 /* ========================================
-   FOOTER - SOCIAL ICONS CON ANIMACIÓN
+   FOOTER
    ======================================== */
 .footer {
     background: linear-gradient(135deg, #1C0F2E, #2A1A3D);
@@ -889,7 +913,6 @@ h6 {
     align-items: center;
 }
 
-/* ICONOS SOCIALES CON ANIMACIÓN MEJORADA */
 .social-icon {
     display: flex;
     align-items: center;
@@ -925,7 +948,6 @@ h6 {
     fill: currentColor;
 }
 
-/* Animación al hover */
 .social-icon:hover {
     transform: translateY(-5px) scale(1.1);
     border-color: #B48AD9;
@@ -941,7 +963,6 @@ h6 {
     transform: rotate(10deg) scale(1.15);
 }
 
-/* Animación de pulso */
 .social-icon::after {
     content: '';
     position: absolute;
@@ -961,7 +982,6 @@ h6 {
     opacity: 1;
 }
 
-/* Colores específicos para cada red social */
 .social-icon--facebook:hover {
     border-color: #1877F2;
     box-shadow: 0 8px 40px rgba(24, 119, 242, 0.3);
@@ -981,23 +1001,11 @@ h6 {
 }
 
 @keyframes pulseRing {
-    0% {
-        transform: scale(1);
-        opacity: 0.6;
-    }
-    50% {
-        transform: scale(1.15);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0.6;
-    }
+    0% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 0; }
+    100% { transform: scale(1); opacity: 0.6; }
 }
 
-/* ========================================
-   FOOTER BOTTOM
-   ======================================== */
 .footer__bottom {
     padding: clamp(1rem, 2.2vw, 1.4rem) 0;
     text-align: center;
@@ -1067,7 +1075,6 @@ h6 {
    RESPONSIVE
    ======================================== */
 
-/* Tablets */
 @media (max-width: 992px) {
     .hamburger-btn {
         display: block;
@@ -1149,7 +1156,6 @@ h6 {
     }
 }
 
-/* Móviles grandes */
 @media (max-width: 768px) {
     .container {
         padding: 0 12px;
@@ -1193,7 +1199,6 @@ h6 {
     }
 }
 
-/* Móviles */
 @media (max-width: 480px) {
     .container {
         padding: 0 10px;
@@ -1391,7 +1396,6 @@ h6 {
     }
 }
 
-/* Móviles muy pequeños */
 @media (max-width: 360px) {
     .container {
         padding: 0 8px;
@@ -1512,9 +1516,6 @@ h6 {
     90% { transform: translate(-12px, 18px) rotate(-5deg) scale(0.88); }
 }
 
-/* ========================================
-   DECORACIONES FLOTANTES
-   ======================================== */
 .floating-decor,
 .floating-gem {
     display: none;
