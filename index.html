@@ -1,1 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Esencia Violeta · Tarot y artículos esotéricos</title>
 
+    <!-- Fuentes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" 
+        rel="stylesheet" 
+    />
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <!-- ============================ -->
+    <!--  HEADER                       -->
+    <!-- ============================ -->
+    <header class="header">
+        <div class="container header__inner">
+            <!-- Logo -->
+            <div class="header__logo">
+                <a href="#" class="logo">Esencia Violeta</a>
+            </div>
+
+            <!-- Navegación -->
+            <nav class="header__nav" aria-label="Menú principal">
+                <ul class="nav__list">
+                    <li><a href="#" class="active">Inicio</a></li>
+                    <li><a href="#">Tienda</a></li>
+                    <li><a href="#">Sobre mí</a></li>
+                    <li><a href="#">Experiencias</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <!-- Iconos (carrito + buscador) -->
+            <div class="header__actions">
+                <button class="action-btn" aria-label="Buscar">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                </button>
+                <button class="action-btn" aria-label="Carrito">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================ -->
+    <!--  HERO / BANNER PRINCIPAL     -->
+    <!-- ============================ -->
+    <section class="hero">
+        <div class="container hero__content">
+            <h1 class="hero__title">Esencia Violeta</h1>
+            <p class="hero__subtitle">Mazos de tarot y artículos esotéricos con alma</p>
+            <a href="#" class="btn btn--primary btn--large">Explorar tienda</a>
+        </div>
+        <!-- El fondo con degradado, manos, estrellas y humo se aplica con CSS -->
+    </section>
+
+    <!-- ============================ -->
+    <!--  FRASE DE BIENVENIDA         -->
+    <!-- ============================ -->
+    <section class="welcome">
+        <div class="container">
+            <blockquote class="welcome__text">
+                “Bienvenida a Esencia Violeta, un rincón donde la magia se encuentra con la elegancia. Cada mazo, cada vela y cada amuleto están elegidos con la intención de acompañarte en tu camino espiritual. Que la luna te guíe.”
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- ============================ -->
+    <!--  CATEGORÍAS DESTACADAS       -->
+    <!-- ============================ -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Categorías destacadas</h2>
+            <div class="categories__grid">
+                <!-- Tarot -->
+                <div class="category-card">
+                    <div class="category-card__image" style="background-image: url('https://via.placeholder.com/400x300/2A1A3D/FFFFFF?text=Mazos+de+Tarot');"></div>
+                    <h3 class="category-card__name">Mazos de Tarot</h3>
+                    <a href="#" class="btn btn--secondary">Ver más</a>
+                </div>
+                <!-- Inciensos y Velas -->
+                <div class="category-card">
+                    <div class="category-card__image" style="background-image: url('https://via.placeholder.com/400x300/2A1A3D/FFFFFF?text=Inciensos+y+Velas');"></div>
+                    <h3 class="category-card__name">Inciensos y Velas</h3>
+                    <a href="#" class="btn btn--secondary">Ver más</a>
+                </div>
+                <!-- Amuletos y Piedras -->
+                <div class="category-card">
+                    <div class="category-card__image" style="background-image: url('https://via.placeholder.com/400x300/2A1A3D/FFFFFF?text=Amuletos+y+Piedras');"></div>
+                    <h3 class="category-card__name">Amuletos y Piedras</h3>
+                    <a href="#" class="btn btn--secondary">Ver más</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ -->
+    <!--  PRODUCTOS DESTACADOS        -->
+    <!-- ============================ -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title">Productos destacados</h2>
+            <div class="products__grid">
+                <!-- Producto 1 -->
+                <article class="product-card">
+                    <div class="product-card__image" style="background-image: url('https://via.placeholder.com/300x300/2A1A3D/FFFFFF?text=Mazo+1');"></div>
+                    <h3 class="product-card__name">Mazo de Tarot Luna</h3>
+                    <span class="product-card__price">€25,00</span>
+                    <button class="btn btn--primary btn--small">Añadir al carrito</button>
+                </article>
+                <!-- Producto 2 -->
+                <article class="product-card">
+                    <div class="product-card__image" style="background-image: url('https://via.placeholder.com/300x300/2A1A3D/FFFFFF?text=Mazo+2');"></div>
+                    <h3 class="product-card__name">Mazo de Tarot Estrella</h3>
+                    <span class="product-card__price">€28,50</span>
+                    <button class="btn btn--primary btn--small">Añadir al carrito</button>
+                </article>
+                <!-- Producto 3 -->
+                <article class="product-card">
+                    <div class="product-card__image" style="background-image: url('https://via.placeholder.com/300x300/2A1A3D/FFFFFF?text=Mazo+3');"></div>
+                    <h3 class="product-card__name">Mazo de Tarot Sol</h3>
+                    <span class="product-card__price">€22,00</span>
+                    <button class="btn btn--primary btn--small">Añadir al carrito</button>
+                </article>
+                <!-- Producto 4 -->
+                <article class="product-card">
+                    <div class="product-card__image" style="background-image: url('https://via.placeholder.com/300x300/2A1A3D/FFFFFF?text=Mazo+4');"></div>
+                    <h3 class="product-card__name">Mazo de Tarot Místico</h3>
+                    <span class="product-card__price">€30,00</span>
+                    <button class="btn btn--primary btn--small">Añadir al carrito</button>
+                </article>
+            </div>
+            <div class="featured-products__footer">
+                <a href="#" class="btn btn--secondary">Ver toda la tienda</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ -->
+    <!--  SOBRE MÍ (BREVE)            -->
+    <!-- ============================ -->
+    <section class="about-brief">
+        <div class="container about-brief__inner">
+            <div class="about-brief__image">
+                <img src="https://via.placeholder.com/400x400/2A1A3D/FFFFFF?text=Ali" alt="Ali, fundadora de Esencia Violeta" />
+            </div>
+            <div class="about-brief__content">
+                <h2 class="section-title">Sobre mí</h2>
+                <p>
+                    Hola, soy Ali. Hace años busqué mi primer mazo de tarot y no lo encontré en ningún lado. 
+                    Esa frustración se convirtió en mi motor. Creé Esencia Violeta para que tú, con tus dones 
+                    y talentos especiales, tengas un lugar donde sentirte comprendida. Aquí cada producto tiene 
+                    una energía pensada para ti.
+                </p>
+                <a href="#" class="btn btn--primary">Conóceme más</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ -->
+    <!--  EXPERIENCIAS (HOME)         -->
+    <!-- ============================ -->
+    <section class="experiences-home">
+        <div class="container">
+            <h2 class="section-title">Experiencias compartidas</h2>
+            <div class="experiences__grid">
+                <!-- Historia 1 -->
+                <article class="experience-card">
+                    <span class="experience-card__category">Sueño especial</span>
+                    <h3 class="experience-card__alias">— Luna</h3>
+                    <time class="experience-card__date">12 de abril, 2026</time>
+                    <p class="experience-card__excerpt">Soñé que volaba entre constelaciones y una voz me susurraba mi propósito...</p>
+                    <a href="#" class="experience-card__link">Leer más</a>
+                </article>
+                <!-- Historia 2 -->
+                <article class="experience-card">
+                    <span class="experience-card__category">Sincronicidad</span>
+                    <h3 class="experience-card__alias">— Sol</h3>
+                    <time class="experience-card__date">8 de abril, 2026</time>
+                    <p class="experience-card__excerpt">Tres veces seguidas vi el número 11:11, justo cuando pensaba en mi abuela...</p>
+                    <a href="#" class="experience-card__link">Leer más</a>
+                </article>
+                <!-- Historia 3 -->
+                <article class="experience-card">
+                    <span class="experience-card__category">Experiencia paranormal</span>
+                    <h3 class="experience-card__alias">— Estrella</h3>
+                    <time class="experience-card__date">3 de abril, 2026</time>
+                    <p class="experience-card__excerpt">Sintiendo una presencia cálida en mi habitación, supe que no estaba sola...</p>
+                    <a href="#" class="experience-card__link">Leer más</a>
+                </article>
+            </div>
+            <div class="experiences__actions">
+                <a href="#" class="btn btn--secondary">Comparte tu experiencia</a>
+                <a href="#" class="btn btn--primary">Ver todas las historias</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ -->
+    <!--  BLOG (HOME)                 -->
+    <!-- ============================ -->
+    <section class="blog-home">
+        <div class="container">
+            <h2 class="section-title">Últimos artículos</h2>
+            <div class="blog__grid">
+                <!-- Artículo 1 -->
+                <article class="blog-card">
+                    <div class="blog-card__image" style="background-image: url('https://via.placeholder.com/400x250/2A1A3D/FFFFFF?text=Tarot+y+Luna');"></div>
+                    <div class="blog-card__body">
+                        <h3 class="blog-card__title">El tarot y las fases de la luna</h3>
+                        <time class="blog-card__date">15 de abril, 2026</time>
+                        <p class="blog-card__excerpt">Cómo la energía lunar influye en tus lecturas y en la interpretación de los arcanos...</p>
+                        <a href="#" class="btn btn--primary btn--small">Leer más</a>
+                    </div>
+                </article>
+                <!-- Artículo 2 -->
+                <article class="blog-card">
+                    <div class="blog-card__image" style="background-image: url('https://via.placeholder.com/400x250/2A1A3D/FFFFFF?text=Piedras+y+Magia');"></div>
+                    <div class="blog-card__body">
+                        <h3 class="blog-card__title">Piedras con alma: cómo elegir tu amuleto</h3>
+                        <time class="blog-card__date">10 de abril, 2026</time>
+                        <p class="blog-card__excerpt">Conecta con la energía de las piedras y descubre cuál resuena con tu camino...</p>
+                        <a href="#" class="btn btn--primary btn--small">Leer más</a>
+                    </div>
+                </article>
+                <!-- Artículo 3 -->
+                <article class="blog-card">
+                    <div class="blog-card__image" style="background-image: url('https://via.placeholder.com/400x250/2A1A3D/FFFFFF?text=Inciensos+y+Espiritualidad');"></div>
+                    <div class="blog-card__body">
+                        <h3 class="blog-card__title">Inciensos para cada intención</h3>
+                        <time class="blog-card__date">5 de abril, 2026</time>
+                        <p class="blog-card__excerpt">Desde la purificación hasta la meditación, el incienso es un puente entre lo terrenal y lo divino...</p>
+                        <a href="#" class="btn btn--primary btn--small">Leer más</a>
+                    </div>
+                </article>
+            </div>
+            <div class="blog__footer">
+                <a href="#" class="btn btn--secondary">Ver más artículos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ -->
+    <!--  FOOTER                      -->
+    <!-- ============================ -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__brand">
+                <a href="#" class="logo logo--small">Esencia Violeta</a>
+                <p class="footer__quote">“Que la luna guíe tu camino”</p>
+            </div>
+
+            <nav class="footer__nav" aria-label="Menú del pie">
+                <ul>
+                    <li><a href="#">Tienda</a></li>
+                    <li><a href="#">Sobre mí</a></li>
+                    <li><a href="#">Experiencias</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                </ul>
+            </nav>
+
+            <div class="footer__social">
+                <a href="#" aria-label="Instagram"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg></a>
+                <a href="#" aria-label="Pinterest"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.33-.088-.79-.167-2.005.035-2.868.182-.78 1.172-4.97 1.172-4.97s-.299-.6-.299-1.486c0-1.39.806-2.428 1.81-2.428.852 0 1.264.64 1.264 1.408 0 .858-.546 2.14-.828 3.33-.236.995.5 1.807 1.48 1.807 1.777 0 3.143-1.874 3.143-4.579 0-2.394-1.72-4.068-4.176-4.068-2.844 0-4.514 2.134-4.514 4.34 0 .858.33 1.778.742 2.278.082.1.094.187.07.288-.075.316-.243.99-.278 1.128-.044.186-.144.226-.334.136-1.24-.576-2.014-2.386-2.014-3.84 0-3.126 2.272-5.996 6.548-5.996 3.436 0 6.108 2.45 6.108 5.722 0 3.414-2.152 6.164-5.14 6.164-1.004 0-1.948-.522-2.27-1.138l-.618 2.356c-.224.862-.828 1.94-1.234 2.598.93.286 1.916.44 2.938.44 5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg></a>
+                <a href="#" aria-label="TikTok"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.31 6.31 0 0 0-1.05-.09 6.33 6.33 0 0 0-6.33 6.33 6.33 6.33 0 0 0 10.8 4.35 6.33 6.33 0 0 0 1.91-4.5V9.4a8.13 8.13 0 0 0 4.76 1.55V7.69a4.83 4.83 0 0 1-1.91-1z"/></svg></a>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container">
+                <p>&copy; 2026 Esencia Violeta · Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================ -->
+    <!--  SCRIPTS                     -->
+    <!-- ============================ -->
+    <script src="js/script.js"></script>
+</body>
+</html>
