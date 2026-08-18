@@ -275,12 +275,12 @@
                 <p class="contact__text">
                     ¿Tienes alguna pregunta? Escríbeme y te responderé pronto.
                 </p>
-                <form action="#" method="POST" class="contact__form">
-                    <input type="text" name="nombre" placeholder="✦ Tu nombre" required />
-                    <input type="email" name="correo" placeholder="✦ Tu correo" required />
-                    <input type="text" name="asunto" placeholder="✦ Asunto" required />
-                    <textarea name="mensaje" placeholder="✦ Tu mensaje..." rows="4" required></textarea>
-                    <button type="submit" class="btn btn--primary">✦ Enviar ✦</button>
+                <form class="contact__form" id="contactForm">
+                    <input type="text" name="nombre" id="nombre" placeholder="✦ Tu nombre" required />
+                    <input type="email" name="correo" id="correo" placeholder="✦ Tu correo" required />
+                    <input type="text" name="asunto" id="asunto" placeholder="✦ Asunto" required />
+                    <textarea name="mensaje" id="mensaje" placeholder="✦ Tu mensaje..." rows="4" required></textarea>
+                    <button type="submit" class="btn btn--primary" id="enviarWhatsApp">✦ Enviar por WhatsApp ✦</button>
                 </form>
             </div>
         </div>

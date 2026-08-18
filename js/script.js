@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // ========================================
-    //  1. MENÚ HAMBURGUESA - CORREGIDO
+    //  1. MENÚ HAMBURGUESA
     // ========================================
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mainNav = document.getElementById('mainNav');
@@ -55,7 +55,60 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  2. EFECTO DE HUMO FUCSIA - OPTIMIZADO
+    //  2. FORMULARIO DE CONTACTO - WHATSAPP
+    // ========================================
+    const contactForm = document.getElementById('contactForm');
+    const numeroWhatsApp = '50662613366';
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const asunto = document.getElementById('asunto').value.trim();
+            const mensaje = document.getElementById('mensaje').value.trim();
+
+            // Validar que todos los campos estén llenos
+            if (!nombre || !correo || !asunto || !mensaje) {
+                cart.showMagicalNotification('⚠️ Por favor, completa todos los campos');
+                return;
+            }
+
+            // Validar email básico
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(correo)) {
+                cart.showMagicalNotification('⚠️ Por favor, ingresa un correo válido');
+                return;
+            }
+
+            // Construir el mensaje para WhatsApp
+            const mensajeWhatsApp = `Hola soy ${nombre}, mi correo es ${correo}, estoy interesado en ${asunto}. Te cuento un poco: ${mensaje}`;
+
+            // Codificar el mensaje para URL
+            const mensajeCodificado = encodeURIComponent(mensajeWhatsApp);
+
+            // Crear el enlace de WhatsApp
+            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
+
+            // Mostrar notificación de éxito
+            cart.showMagicalNotification('✨ ¡Mensaje enviado! Serás redirigido a WhatsApp ✨');
+
+            // Redirigir a WhatsApp después de un breve delay
+            setTimeout(function() {
+                window.open(urlWhatsApp, '_blank');
+            }, 1000);
+
+            // Limpiar el formulario después de enviar
+            setTimeout(function() {
+                contactForm.reset();
+            }, 2000);
+        });
+    }
+
+    // ========================================
+    //  3. EFECTO DE HUMO FUCSIA
     // ========================================
     const createSmokeEffect = function() {
         const isMobile = window.innerWidth <= 768;
@@ -212,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createSmokeEffect, 300);
 
     // ========================================
-    //  3. POLVO DE HADAS - OPTIMIZADO
+    //  4. POLVO DE HADAS
     // ========================================
     const createFairyDust = function() {
         const isMobile = window.innerWidth <= 768;
@@ -322,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createFairyDust, 500);
 
     // ========================================
-    //  4. DECORACIONES FLOTANTES
+    //  5. DECORACIONES FLOTANTES
     // ========================================
     const createFloatingDecorations = function() {
         const isMobile = window.innerWidth <= 768;
@@ -386,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createFloatingDecorations, 600);
 
     // ========================================
-    //  5. PIEDRAS DECORATIVAS
+    //  6. PIEDRAS DECORATIVAS
     // ========================================
     const createFloatingGems = function() {
         const isMobile = window.innerWidth <= 768;
@@ -445,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createFloatingGems, 800);
 
     // ========================================
-    //  6. PUNTITOS PASTEL
+    //  7. PUNTITOS PASTEL
     // ========================================
     const createPastelDots = function() {
         const aboutSection = document.querySelector('.about-brief');
@@ -517,7 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(createPastelDots, 900);
 
     // ========================================
-    //  7. CARRITO DE COMPRAS
+    //  8. CARRITO DE COMPRAS
     // ========================================
     const cart = {
         items: [],
@@ -816,7 +869,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ========================================
-    //  8. BOTONES "AÑADIR AL CARRITO"
+    //  9. BOTONES "AÑADIR AL CARRITO"
     // ========================================
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
@@ -845,7 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  9. BOTÓN DEL CARRITO
+    //  10. BOTÓN DEL CARRITO
     // ========================================
     const cartButton = document.getElementById('cartBtn');
     if (cartButton) {
@@ -862,7 +915,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  10. BÚSQUEDA - CORREGIDA
+    //  11. BÚSQUEDA
     // ========================================
     const searchButton = document.getElementById('searchBtn');
     
@@ -973,7 +1026,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  11. NAVEGACIÓN SUAVE
+    //  12. NAVEGACIÓN SUAVE
     // ========================================
     const allNavLinks = document.querySelectorAll('.nav__list a, .footer__nav a');
     
@@ -1004,7 +1057,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  12. NAVEGACIÓN ACTIVA
+    //  13. NAVEGACIÓN ACTIVA
     // ========================================
     const navLinksList = document.querySelectorAll('.nav__list a');
     const currentPath = window.location.pathname;
@@ -1016,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  13. ANIMACIONES AL SCROLL
+    //  14. ANIMACIONES AL SCROLL
     // ========================================
     const animateOnScroll = function() {
         const isMobile = window.innerWidth <= 480;
@@ -1053,7 +1106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  14. ESTRELLAS EN EL BANNER
+    //  15. ESTRELLAS EN EL BANNER
     // ========================================
     const createMagicalStars = function() {
         const hero = document.querySelector('.hero');
@@ -1097,12 +1150,12 @@ document.addEventListener('DOMContentLoaded', function() {
     createMagicalStars();
 
     // ========================================
-    //  15. INICIALIZAR CARRITO
+    //  16. INICIALIZAR CARRITO
     // ========================================
     cart.updateBadge();
 
     // ========================================
-    //  16. MENSAJE DE CONSOLA
+    //  17. MENSAJE DE CONSOLA
     // ========================================
     console.log('%c✨✦✧ Esencia Violeta ✧✦✨', 'font-size: 24px; font-weight: bold; color: #2A1A3D; text-shadow: 0 0 40px rgba(180, 138, 217, 0.3);');
     console.log('%cMazos de tarot y artículos esotéricos con alma ✨', 'font-size: 16px; color: #5B3A7A;');
