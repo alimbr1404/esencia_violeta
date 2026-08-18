@@ -317,7 +317,6 @@ h6 {
     background: #1C0F2E;
 }
 
-/* Imagen de fondo del Hero */
 .hero__background {
     position: absolute;
     inset: 0;
@@ -327,7 +326,6 @@ h6 {
     z-index: 0;
 }
 
-/* Overlay más suave para que se vea brillante */
 .hero::after {
     content: '';
     position: absolute;

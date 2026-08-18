@@ -64,43 +64,32 @@ document.addEventListener('DOMContentLoaded', function() {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Obtener valores del formulario
             const nombre = document.getElementById('nombre').value.trim();
             const correo = document.getElementById('correo').value.trim();
             const asunto = document.getElementById('asunto').value.trim();
             const mensaje = document.getElementById('mensaje').value.trim();
 
-            // Validar que todos los campos estén llenos
             if (!nombre || !correo || !asunto || !mensaje) {
                 cart.showMagicalNotification('⚠️ Por favor, completa todos los campos');
                 return;
             }
 
-            // Validar email básico
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(correo)) {
                 cart.showMagicalNotification('⚠️ Por favor, ingresa un correo válido');
                 return;
             }
 
-            // Construir el mensaje para WhatsApp
             const mensajeWhatsApp = `Hola soy ${nombre}, mi correo es ${correo}, estoy interesado en ${asunto}. Te cuento un poco: ${mensaje}`;
-
-            // Codificar el mensaje para URL
             const mensajeCodificado = encodeURIComponent(mensajeWhatsApp);
-
-            // Crear el enlace de WhatsApp
             const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
 
-            // Mostrar notificación de éxito
             cart.showMagicalNotification('✨ ¡Mensaje enviado! Serás redirigido a WhatsApp ✨');
 
-            // Redirigir a WhatsApp después de un breve delay
             setTimeout(function() {
                 window.open(urlWhatsApp, '_blank');
             }, 1000);
 
-            // Limpiar el formulario después de enviar
             setTimeout(function() {
                 contactForm.reset();
             }, 2000);
@@ -108,15 +97,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  3. EFECTO DE HUMO FUCSIA
+    //  3. EFECTO DE HUMO FUCSIA - VERSIÓN INTENSA
     // ========================================
-    const createSmokeEffect = function() {
+
+    (function createSmokeEffect() {
+        'use strict';
+
         const isMobile = window.innerWidth <= 768;
         const isSmallMobile = window.innerWidth <= 480;
-        const maxParticles = isSmallMobile ? 4 : (isMobile ? 6 : 10);
+        const maxParticles = isSmallMobile ? 6 : (isMobile ? 10 : 15);
 
         const container = document.createElement('div');
-        container.className = 'smoke-effect';
+        container.id = 'smokeEffectContainer';
         container.style.cssText = `
             position: fixed;
             top: 0;
@@ -129,59 +121,81 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(container);
 
-        let particles = [];
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
         let isMouseOver = false;
+        let particles = [];
 
         for (let i = 0; i < maxParticles; i++) {
             const particle = document.createElement('div');
-            const size = isSmallMobile ? 100 + Math.random() * 150 : (isMobile ? 120 + Math.random() * 200 : 150 + Math.random() * 300);
-            const hue = 280 + Math.random() * 40;
-            const intensity = isSmallMobile ? 0.02 + Math.random() * 0.03 : (isMobile ? 0.03 + Math.random() * 0.04 : 0.04 + Math.random() * 0.06);
             
+            const size = isSmallMobile 
+                ? 120 + Math.random() * 180 
+                : (isMobile ? 150 + Math.random() * 250 : 180 + Math.random() * 350);
+            
+            const hue = 280 + Math.random() * 40;
+            const intensity = isSmallMobile 
+                ? 0.05 + Math.random() * 0.05 
+                : (isMobile ? 0.08 + Math.random() * 0.06 : 0.10 + Math.random() * 0.08);
+
             particle.style.cssText = `
                 position: absolute;
                 width: ${size}px;
                 height: ${size}px;
                 border-radius: 50%;
-                background: radial-gradient(circle, hsla(${hue}, 100%, 70%, ${intensity}), hsla(${hue + 20}, 100%, 60%, ${intensity * 0.4}), transparent 70%);
+                background: radial-gradient(
+                    circle, 
+                    hsla(${hue}, 100%, 75%, ${intensity}), 
+                    hsla(${hue + 20}, 100%, 65%, ${intensity * 0.4}), 
+                    transparent 70%
+                );
                 pointer-events: none;
                 transform: translate(-50%, -50%);
-                filter: blur(${isSmallMobile ? 25 : (isMobile ? 30 : 40)}px);
-                opacity: 0;
-                transition: opacity 0.2s ease;
+                filter: blur(${isSmallMobile ? 30 : (isMobile ? 40 : 50)}px);
+                opacity: ${isSmallMobile ? 0.15 : (isMobile ? 0.2 : 0.3)};
+                transition: opacity 0.3s ease;
                 will-change: transform, opacity;
             `;
             container.appendChild(particle);
-            
+
             particles.push({
                 el: particle,
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                speed: isSmallMobile ? 0.15 + Math.random() * 0.2 : (isMobile ? 0.2 + Math.random() * 0.3 : 0.3 + Math.random() * 0.4),
+                x: window.innerWidth * (0.05 + Math.random() * 0.9),
+                y: window.innerHeight * (0.05 + Math.random() * 0.9),
+                speed: isSmallMobile 
+                    ? 0.2 + Math.random() * 0.3 
+                    : (isMobile ? 0.3 + Math.random() * 0.4 : 0.4 + Math.random() * 0.5),
                 size: size,
                 phase: Math.random() * Math.PI * 2,
                 hue: hue,
-                opacity: 0,
-                targetX: 0,
-                targetY: 0
+                originalX: 0,
+                originalY: 0
             });
         }
 
-        function handlePointerMove(e) {
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            if (clientX !== undefined && clientY !== undefined) {
-                mouseX = clientX;
-                mouseY = clientY;
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            isMouseOver = true;
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            const touch = e.touches[0];
+            if (touch) {
+                mouseX = touch.clientX;
+                mouseY = touch.clientY;
                 isMouseOver = true;
             }
-        }
+        }, { passive: true });
 
-        document.addEventListener('mousemove', handlePointerMove);
-        document.addEventListener('touchmove', handlePointerMove, { passive: true });
-        document.addEventListener('touchstart', handlePointerMove, { passive: true });
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            if (touch) {
+                mouseX = touch.clientX;
+                mouseY = touch.clientY;
+                isMouseOver = true;
+            }
+        }, { passive: true });
 
         document.addEventListener('mouseleave', function() {
             isMouseOver = false;
@@ -191,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const time = Date.now() / 1000;
 
             particles.forEach((p, index) => {
-                const delay = index * 0.03;
+                const delay = index * 0.02;
                 const effectiveTime = time - delay;
 
                 if (isMouseOver) {
@@ -199,70 +213,81 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dy = mouseY - p.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
                     const maxDistance = isSmallMobile ? 400 : (isMobile ? 600 : 800);
-                    
+
                     if (distance < maxDistance) {
                         const speed = p.speed * (1 + (maxDistance - distance) / maxDistance);
-                        const moveX = (dx / (distance || 1)) * speed * 2;
-                        const moveY = (dy / (distance || 1)) * speed * 2;
+                        const moveX = (dx / (distance || 1)) * speed * 2.5;
+                        const moveY = (dy / (distance || 1)) * speed * 2.5;
+                        
                         p.x += moveX;
                         p.y += moveY;
-                        
-                        const opacity = Math.max(0, 1 - (distance / maxDistance));
-                        p.opacity = opacity * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
-                        p.el.style.opacity = p.opacity;
-                        
-                        const scale = 1 + (1 - distance / maxDistance) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.6));
-                        const rotation = (1 - distance / maxDistance) * (isSmallMobile ? 8 : (isMobile ? 10 : 15));
+
+                        const opacity = Math.max(0.1, 1 - (distance / maxDistance));
+                        p.el.style.opacity = opacity * (isSmallMobile ? 0.6 : (isMobile ? 0.7 : 0.9));
+
+                        const scale = 1 + (1 - distance / maxDistance) * (isSmallMobile ? 0.4 : (isMobile ? 0.5 : 0.8));
+                        const rotation = (1 - distance / maxDistance) * (isSmallMobile ? 8 : (isMobile ? 12 : 18));
                         p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`;
+
+                        const hueShift = Math.sin(time * 0.5 + p.phase) * 30;
+                        const currentHue = p.hue + hueShift;
+                        const intensity = 0.10 + Math.sin(time * 0.6 + p.phase) * 0.05;
+                        const finalOpacity = opacity * 1.5;
+                        
+                        p.el.style.background = `radial-gradient(
+                            circle, 
+                            hsla(${currentHue}, 100%, 80%, ${intensity * finalOpacity}), 
+                            hsla(${currentHue + 30}, 100%, 70%, ${intensity * 0.5 * finalOpacity}), 
+                            transparent 70%
+                        )`;
                     } else {
-                        p.x += (p.originalX - p.x) * 0.02;
-                        p.y += (p.originalY - p.y) * 0.02;
-                        p.opacity = 0;
-                        p.el.style.opacity = 0;
+                        p.x += (p.originalX - p.x) * 0.03;
+                        p.y += (p.originalY - p.y) * 0.03;
+                        p.el.style.opacity = isSmallMobile ? 0.05 : (isMobile ? 0.08 : 0.12);
                         p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                     }
                 } else {
-                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
-                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
+                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.5 : 0.8));
+                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.5 : 0.8));
                     p.x += waveX;
                     p.y += waveY;
-                    p.el.style.opacity = isSmallMobile ? 0.005 : (isMobile ? 0.008 : 0.01);
+                    
+                    p.el.style.opacity = isSmallMobile ? 0.03 : (isMobile ? 0.06 : 0.10);
                     p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                 }
 
-                p.x = Math.max(-100, Math.min(window.innerWidth + 100, p.x));
-                p.y = Math.max(-100, Math.min(window.innerHeight + 100, p.y));
-
-                if (isMouseOver && p.opacity > 0.05) {
-                    const hueShift = Math.sin(time * 0.3 + p.phase) * 15;
-                    const currentHue = p.hue + hueShift;
-                    const intensity = isSmallMobile ? 0.02 + Math.sin(time * 0.4 + p.phase) * 0.01 + 0.02 : (isMobile ? 0.03 + Math.sin(time * 0.4 + p.phase) * 0.015 + 0.03 : 0.04 + Math.sin(time * 0.4 + p.phase) * 0.02 + 0.04);
-                    const opacity = p.opacity * (isSmallMobile ? 1.2 : (isMobile ? 1.3 : 1.5));
-                    p.el.style.background = `radial-gradient(circle, hsla(${currentHue}, 100%, 75%, ${intensity * opacity}), hsla(${currentHue + 30}, 100%, 65%, ${intensity * 0.4 * opacity}), transparent 70%)`;
-                }
+                const margin = 150;
+                p.x = Math.max(-margin, Math.min(window.innerWidth + margin, p.x));
+                p.y = Math.max(-margin, Math.min(window.innerHeight + margin, p.y));
             });
 
             requestAnimationFrame(animateParticles);
         }
 
         particles.forEach((p, index) => {
-            p.originalX = window.innerWidth * (0.1 + (index / particles.length) * 0.8);
-            p.originalY = window.innerHeight * (0.1 + (index / particles.length) * 0.8);
+            p.originalX = window.innerWidth * (0.05 + (index / particles.length) * 0.9);
+            p.originalY = window.innerHeight * (0.05 + (index / particles.length) * 0.9);
             p.x = p.originalX;
             p.y = p.originalY;
         });
 
-        animateParticles();
-        
         window.addEventListener('resize', function() {
             particles.forEach((p, index) => {
-                p.originalX = window.innerWidth * (0.1 + (index / particles.length) * 0.8);
-                p.originalY = window.innerHeight * (0.1 + (index / particles.length) * 0.8);
+                p.originalX = window.innerWidth * (0.05 + (index / particles.length) * 0.9);
+                p.originalY = window.innerHeight * (0.05 + (index / particles.length) * 0.9);
             });
         });
-    };
 
-    setTimeout(createSmokeEffect, 300);
+        animateParticles();
+
+        window.addEventListener('beforeunload', function() {
+            if (container && container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
+        });
+
+        console.log('🌫️ Efecto de humo fucsia activado ✨');
+    })();
 
     // ========================================
     //  4. POLVO DE HADAS
