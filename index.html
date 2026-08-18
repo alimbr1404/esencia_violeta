@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Esencia Violeta · Tarot y artículos esotéricos</title>
 
     <!-- Fuentes Google -->
@@ -28,8 +28,11 @@
                 <a href="#" class="logo">✦ Esencia Violeta ✦</a>
             </div>
 
+            <!-- Botón hamburguesa (móvil) -->
+            <button class="hamburger-btn" aria-label="Abrir menú" id="hamburgerBtn">☰</button>
+
             <!-- Navegación -->
-            <nav class="header__nav" aria-label="Menú principal">
+            <nav class="header__nav" aria-label="Menú principal" id="mainNav">
                 <ul class="nav__list">
                     <li><a href="#inicio" class="active">Inicio</a></li>
                     <li><a href="#tienda">Tienda</a></li>
@@ -42,19 +45,19 @@
 
             <!-- Iconos (carrito + buscador) -->
             <div class="header__actions">
-                <button class="action-btn" aria-label="Buscar">
+                <button class="action-btn" aria-label="Buscar" id="searchBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
                 </button>
-                <button class="action-btn" aria-label="Carrito">
+                <button class="action-btn" aria-label="Carrito" id="cartBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="21" r="1" />
                         <circle cx="20" cy="21" r="1" />
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                     </svg>
-                    <span class="cart-badge">0</span>
+                    <span class="cart-badge" id="cartBadge">0</span>
                 </button>
             </div>
         </div>
@@ -91,19 +94,19 @@
             <div class="categories__grid">
                 <!-- Tarot -->
                 <div class="category-card">
-                    <div class="category-card__image" style="background-image: url('img/mazos de tarot.webp');"></div>
+                    <div class="category-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="Mazos de Tarot"></div>
                     <h3 class="category-card__name">✦ Mazos de Tarot ✦</h3>
                     <a href="#" class="btn btn--secondary">Ver más</a>
                 </div>
                 <!-- Inciensos y Velas -->
                 <div class="category-card">
-                    <div class="category-card__image" style="background-image: url('img/inciensos y velas.webp');"></div>
+                    <div class="category-card__image" style="background-image: url('img/inciensos y velas.webp');" role="img" aria-label="Inciensos y Velas"></div>
                     <h3 class="category-card__name">✦ Inciensos y Velas ✦</h3>
                     <a href="#" class="btn btn--secondary">Ver más</a>
                 </div>
                 <!-- Amuletos y Piedras -->
                 <div class="category-card">
-                    <div class="category-card__image" style="background-image: url('img/amuletos y piedras.webp');"></div>
+                    <div class="category-card__image" style="background-image: url('img/amuletos y piedras.webp');" role="img" aria-label="Amuletos y Piedras"></div>
                     <h3 class="category-card__name">✦ Amuletos y Piedras ✦</h3>
                     <a href="#" class="btn btn--secondary">Ver más</a>
                 </div>
@@ -120,31 +123,31 @@
             <div class="products__grid">
                 <!-- Producto 1 -->
                 <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/mazos de tarot.webp');"></div>
+                    <div class="product-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="Mazo de Tarot Luna"></div>
                     <h3 class="product-card__name">✦ Mazo de Tarot Luna ✦</h3>
                     <span class="product-card__price">€25,00</span>
-                    <button class="btn btn--primary btn--small">✦ Añadir ✦</button>
+                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
                 </article>
                 <!-- Producto 2 -->
                 <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/inciensos y velas.webp');"></div>
+                    <div class="product-card__image" style="background-image: url('img/inciensos y velas.webp');" role="img" aria-label="Incienso de Sándalo"></div>
                     <h3 class="product-card__name">✦ Incienso de Sándalo ✦</h3>
                     <span class="product-card__price">€18,50</span>
-                    <button class="btn btn--primary btn--small">✦ Añadir ✦</button>
+                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
                 </article>
                 <!-- Producto 3 -->
                 <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/amuletos y piedras.webp');"></div>
+                    <div class="product-card__image" style="background-image: url('img/amuletos y piedras.webp');" role="img" aria-label="Amatista Natural"></div>
                     <h3 class="product-card__name">✦ Amatista Natural ✦</h3>
                     <span class="product-card__price">€32,00</span>
-                    <button class="btn btn--primary btn--small">✦ Añadir ✦</button>
+                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
                 </article>
                 <!-- Producto 4 -->
                 <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/mazos de tarot.webp');"></div>
+                    <div class="product-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="Mazo de Tarot Estrella"></div>
                     <h3 class="product-card__name">✦ Mazo de Tarot Estrella ✦</h3>
                     <span class="product-card__price">€28,50</span>
-                    <button class="btn btn--primary btn--small">✦ Añadir ✦</button>
+                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
                 </article>
             </div>
             <div class="featured-products__footer">
@@ -227,7 +230,7 @@
             <div class="blog__grid">
                 <!-- Artículo 1 -->
                 <article class="blog-card">
-                    <div class="blog-card__image" style="background-image: url('img/mazos de tarot.webp');"></div>
+                    <div class="blog-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="El tarot y las fases de la luna"></div>
                     <div class="blog-card__body">
                         <h3 class="blog-card__title">✦ El tarot y las fases de la luna ✦</h3>
                         <time class="blog-card__date">15 de abril, 2026</time>
@@ -237,7 +240,7 @@
                 </article>
                 <!-- Artículo 2 -->
                 <article class="blog-card">
-                    <div class="blog-card__image" style="background-image: url('img/amuletos y piedras.webp');"></div>
+                    <div class="blog-card__image" style="background-image: url('img/amuletos y piedras.webp');" role="img" aria-label="Piedras con alma"></div>
                     <div class="blog-card__body">
                         <h3 class="blog-card__title">✦ Piedras con alma ✦</h3>
                         <time class="blog-card__date">10 de abril, 2026</time>
@@ -247,7 +250,7 @@
                 </article>
                 <!-- Artículo 3 -->
                 <article class="blog-card">
-                    <div class="blog-card__image" style="background-image: url('img/inciensos y velas.webp');"></div>
+                    <div class="blog-card__image" style="background-image: url('img/inciensos y velas.webp');" role="img" aria-label="Inciensos para cada intención"></div>
                     <div class="blog-card__body">
                         <h3 class="blog-card__title">✦ Inciensos para cada intención ✦</h3>
                         <time class="blog-card__date">5 de abril, 2026</time>
@@ -268,16 +271,16 @@
     <section class="contact" id="contacto">
         <div class="container">
             <h2 class="section-title">✦ Contacto ✦</h2>
-            <div style="max-width: 550px; margin: 0 auto; text-align: center;">
-                <p style="font-size: 1rem; color: #4A4A4E; margin-bottom: 1.8rem;">
+            <div class="contact__wrapper">
+                <p class="contact__text">
                     ¿Tienes alguna pregunta? Escríbeme y te responderé pronto.
                 </p>
-                <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 0.8rem;">
-                    <input type="text" name="nombre" placeholder="✦ Tu nombre" required style="padding: 0.8rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 14px; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; transition: all 0.3s ease; background: #FFFFFF;">
-                    <input type="email" name="correo" placeholder="✦ Tu correo" required style="padding: 0.8rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 14px; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; transition: all 0.3s ease; background: #FFFFFF;">
-                    <input type="text" name="asunto" placeholder="✦ Asunto" required style="padding: 0.8rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 14px; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; transition: all 0.3s ease; background: #FFFFFF;">
-                    <textarea name="mensaje" placeholder="✦ Tu mensaje..." rows="4" required style="padding: 0.8rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 14px; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; transition: all 0.3s ease; background: #FFFFFF; resize: vertical;"></textarea>
-                    <button type="submit" class="btn btn--primary" style="width: 100%;">✦ Enviar ✦</button>
+                <form action="#" method="POST" class="contact__form">
+                    <input type="text" name="nombre" placeholder="✦ Tu nombre" required />
+                    <input type="email" name="correo" placeholder="✦ Tu correo" required />
+                    <input type="text" name="asunto" placeholder="✦ Asunto" required />
+                    <textarea name="mensaje" placeholder="✦ Tu mensaje..." rows="4" required></textarea>
+                    <button type="submit" class="btn btn--primary">✦ Enviar ✦</button>
                 </form>
             </div>
         </div>

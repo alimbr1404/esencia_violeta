@@ -7,9 +7,77 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // ========================================
-    //  1. EFECTO DE HUMO FUCSIA - OPTIMIZADO
+    //  1. MENÚ HAMBURGUESA - OPTIMIZADO
+    // ========================================
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mainNav = document.getElementById('mainNav');
+    const navLinks = document.querySelectorAll('.nav__list a');
+
+    if (hamburgerBtn && mainNav) {
+        let menuOpen = false;
+
+        // Función para alternar menú
+        function toggleMenu() {
+            menuOpen = !menuOpen;
+            mainNav.classList.toggle('open', menuOpen);
+            hamburgerBtn.textContent = menuOpen ? '✕' : '☰';
+            hamburgerBtn.classList.toggle('active', menuOpen);
+            hamburgerBtn.setAttribute('aria-label', menuOpen ? 'Cerrar menú' : 'Abrir menú');
+        }
+
+        // Evento click del botón hamburguesa
+        hamburgerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        // Cerrar menú al hacer click en un enlace
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (menuOpen && window.innerWidth <= 992) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Cerrar menú al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (menuOpen && window.innerWidth <= 992) {
+                const isClickInside = mainNav.contains(e.target) || hamburgerBtn.contains(e.target);
+                if (!isClickInside) {
+                    toggleMenu();
+                }
+            }
+        });
+
+        // Cerrar menú al redimensionar a desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992 && menuOpen) {
+                toggleMenu();
+            }
+        });
+
+        // Prevenir scroll cuando el menú está abierto en móvil
+        document.addEventListener('touchmove', function(e) {
+            if (menuOpen && window.innerWidth <= 992) {
+                const target = e.target;
+                if (!mainNav.contains(target) && target !== hamburgerBtn) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+    }
+
+    // ========================================
+    //  2. EFECTO DE HUMO FUCSIA - OPTIMIZADO PARA MÓVIL
     // ========================================
     const createSmokeEffect = function() {
+        // Detectar si es móvil para reducir partículas
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        const maxParticles = isSmallMobile ? 4 : (isMobile ? 6 : 10);
+
         const container = document.createElement('div');
         container.className = 'smoke-effect';
         container.style.cssText = `
@@ -25,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(container);
 
         let particles = [];
-        const maxParticles = 10; // Reducido para mejor rendimiento
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
         let isMouseOver = false;
@@ -33,9 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Crear partículas de humo fucsia
         for (let i = 0; i < maxParticles; i++) {
             const particle = document.createElement('div');
-            const size = 150 + Math.random() * 300;
+            const size = isSmallMobile ? 100 + Math.random() * 150 : (isMobile ? 120 + Math.random() * 200 : 150 + Math.random() * 300);
             const hue = 280 + Math.random() * 40;
-            const intensity = 0.04 + Math.random() * 0.06;
+            const intensity = isSmallMobile ? 0.02 + Math.random() * 0.03 : (isMobile ? 0.03 + Math.random() * 0.04 : 0.04 + Math.random() * 0.06);
             
             particle.style.cssText = `
                 position: absolute;
@@ -45,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 background: radial-gradient(circle, hsla(${hue}, 100%, 70%, ${intensity}), hsla(${hue + 20}, 100%, 60%, ${intensity * 0.4}), transparent 70%);
                 pointer-events: none;
                 transform: translate(-50%, -50%);
-                filter: blur(40px);
+                filter: blur(${isSmallMobile ? 25 : (isMobile ? 30 : 40)}px);
                 opacity: 0;
                 transition: opacity 0.2s ease;
                 will-change: transform, opacity;
@@ -56,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 el: particle,
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                speed: 0.3 + Math.random() * 0.4,
+                speed: isSmallMobile ? 0.15 + Math.random() * 0.2 : (isMobile ? 0.2 + Math.random() * 0.3 : 0.3 + Math.random() * 0.4),
                 size: size,
                 phase: Math.random() * Math.PI * 2,
                 hue: hue,
@@ -66,12 +133,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Seguir el mouse
-        document.addEventListener('mousemove', function(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            isMouseOver = true;
-        });
+        // Seguir el mouse/touch
+        function handlePointerMove(e) {
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            if (clientX !== undefined && clientY !== undefined) {
+                mouseX = clientX;
+                mouseY = clientY;
+                isMouseOver = true;
+            }
+        }
+
+        document.addEventListener('mousemove', handlePointerMove);
+        document.addEventListener('touchmove', handlePointerMove, { passive: true });
+        document.addEventListener('touchstart', handlePointerMove, { passive: true });
 
         document.addEventListener('mouseleave', function() {
             isMouseOver = false;
@@ -89,20 +164,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dx = mouseX - p.x;
                     const dy = mouseY - p.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = isSmallMobile ? 400 : (isMobile ? 600 : 800);
                     
-                    if (distance < 800) {
-                        const speed = p.speed * (1 + (800 - distance) / 800);
-                        const moveX = (dx / distance) * speed * 2;
-                        const moveY = (dy / distance) * speed * 2;
+                    if (distance < maxDistance) {
+                        const speed = p.speed * (1 + (maxDistance - distance) / maxDistance);
+                        const moveX = (dx / (distance || 1)) * speed * 2;
+                        const moveY = (dy / (distance || 1)) * speed * 2;
                         p.x += moveX;
                         p.y += moveY;
                         
-                        const opacity = Math.max(0, 1 - (distance / 800));
-                        p.opacity = opacity * 0.5;
+                        const opacity = Math.max(0, 1 - (distance / maxDistance));
+                        p.opacity = opacity * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
                         p.el.style.opacity = p.opacity;
                         
-                        const scale = 1 + (1 - distance / 800) * 0.6;
-                        const rotation = (1 - distance / 800) * 15;
+                        const scale = 1 + (1 - distance / maxDistance) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.6));
+                        const rotation = (1 - distance / maxDistance) * (isSmallMobile ? 8 : (isMobile ? 10 : 15));
                         p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`;
                     } else {
                         p.x += (p.originalX - p.x) * 0.02;
@@ -113,11 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } else {
                     // Movimiento orgánico cuando no hay mouse
-                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * 0.5;
-                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * 0.5;
+                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
+                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.4 : 0.5));
                     p.x += waveX;
                     p.y += waveY;
-                    p.el.style.opacity = 0.01;
+                    p.el.style.opacity = isSmallMobile ? 0.005 : (isMobile ? 0.008 : 0.01);
                     p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
                 }
 
@@ -125,12 +201,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 p.x = Math.max(-100, Math.min(window.innerWidth + 100, p.x));
                 p.y = Math.max(-100, Math.min(window.innerHeight + 100, p.y));
 
-                // Cambiar color sutilmente más rápido
+                // Cambiar color sutilmente
                 if (isMouseOver && p.opacity > 0.05) {
                     const hueShift = Math.sin(time * 0.3 + p.phase) * 15;
                     const currentHue = p.hue + hueShift;
-                    const intensity = 0.04 + Math.sin(time * 0.4 + p.phase) * 0.02 + 0.04;
-                    const opacity = p.opacity * 1.5;
+                    const intensity = isSmallMobile ? 0.02 + Math.sin(time * 0.4 + p.phase) * 0.01 + 0.02 : (isMobile ? 0.03 + Math.sin(time * 0.4 + p.phase) * 0.015 + 0.03 : 0.04 + Math.sin(time * 0.4 + p.phase) * 0.02 + 0.04);
+                    const opacity = p.opacity * (isSmallMobile ? 1.2 : (isMobile ? 1.3 : 1.5));
                     p.el.style.background = `radial-gradient(circle, hsla(${currentHue}, 100%, 75%, ${intensity * opacity}), hsla(${currentHue + 30}, 100%, 65%, ${intensity * 0.4 * opacity}), transparent 70%)`;
                 }
             });
@@ -157,13 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Iniciar efecto de humo fucsia
-    createSmokeEffect();
+    // Iniciar efecto de humo fucsia (con delay para no bloquear)
+    setTimeout(createSmokeEffect, 300);
 
     // ========================================
-    //  2. POLVO DE HADAS - OPTIMIZADO
+    //  3. POLVO DE HADAS - OPTIMIZADO PARA MÓVIL
     // ========================================
     const createFairyDust = function() {
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        const numParticles = isSmallMobile ? 8 : (isMobile ? 12 : 20);
+
         const container = document.createElement('div');
         container.style.cssText = `
             position: fixed;
@@ -178,7 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(container);
 
         const dustParticles = [];
-        const numParticles = 20; // Reducido para mejor rendimiento
 
         const colors = [
             'rgba(255, 182, 193, 0.6)',
@@ -193,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let i = 0; i < numParticles; i++) {
             const dust = document.createElement('div');
-            const size = 3 + Math.random() * 6;
+            const size = isSmallMobile ? 2 + Math.random() * 3 : (isMobile ? 2.5 + Math.random() * 4 : 3 + Math.random() * 6);
             const color = colors[Math.floor(Math.random() * colors.length)];
             
             dust.style.cssText = `
@@ -204,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 background: ${color};
                 box-shadow: 0 0 ${size * 2}px ${color};
                 pointer-events: none;
-                opacity: ${0.2 + Math.random() * 0.4};
+                opacity: ${isSmallMobile ? 0.1 + Math.random() * 0.2 : (isMobile ? 0.15 + Math.random() * 0.3 : 0.2 + Math.random() * 0.4)};
                 will-change: transform, opacity;
             `;
             container.appendChild(dust);
@@ -213,12 +292,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 el: dust,
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
+                vx: (Math.random() - 0.5) * (isSmallMobile ? 0.2 : (isMobile ? 0.35 : 0.5)),
+                vy: (Math.random() - 0.5) * (isSmallMobile ? 0.2 : (isMobile ? 0.35 : 0.5)),
                 size: size,
                 color: color,
                 phase: Math.random() * Math.PI * 2,
-                speed: 0.2 + Math.random() * 0.3
+                speed: isSmallMobile ? 0.1 + Math.random() * 0.15 : (isMobile ? 0.15 + Math.random() * 0.2 : 0.2 + Math.random() * 0.3)
             });
         }
 
@@ -226,16 +305,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const time = Date.now() / 1000;
 
             dustParticles.forEach(p => {
-                p.x += p.vx + Math.sin(time * p.speed + p.phase) * 0.2;
-                p.y += p.vy + Math.cos(time * p.speed * 0.7 + p.phase) * 0.2;
+                p.x += p.vx + Math.sin(time * p.speed + p.phase) * (isSmallMobile ? 0.1 : (isMobile ? 0.15 : 0.2));
+                p.y += p.vy + Math.cos(time * p.speed * 0.7 + p.phase) * (isSmallMobile ? 0.1 : (isMobile ? 0.15 : 0.2));
 
-                const floatY = Math.sin(time * 0.5 + p.phase) * 0.15;
+                const floatY = Math.sin(time * 0.5 + p.phase) * (isSmallMobile ? 0.08 : (isMobile ? 0.1 : 0.15));
                 p.y += floatY;
 
                 if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
                 if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
 
-                const maxSpeed = 1;
+                const maxSpeed = isSmallMobile ? 0.5 : (isMobile ? 0.7 : 1);
                 const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
                 if (speed > maxSpeed) {
                     p.vx = (p.vx / speed) * maxSpeed;
@@ -243,11 +322,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const pulse = 0.5 + Math.sin(time * 1.5 + p.phase) * 0.5;
-                p.el.style.opacity = (0.3 + Math.random() * 0.1) * pulse;
+                p.el.style.opacity = (isSmallMobile ? 0.15 + Math.random() * 0.05 : (isMobile ? 0.2 + Math.random() * 0.08 : 0.3 + Math.random() * 0.1)) * pulse;
                 p.el.style.transform = `translate(${p.x}px, ${p.y}px) scale(${0.8 + pulse * 0.3})`;
                 
                 const hue = Math.sin(time * 0.3 + p.phase) * 20 + 300;
-                const intensity = 0.3 + Math.sin(time * 0.5 + p.phase) * 0.2;
+                const intensity = isSmallMobile ? 0.15 + Math.sin(time * 0.5 + p.phase) * 0.1 : (isMobile ? 0.2 + Math.sin(time * 0.5 + p.phase) * 0.15 : 0.3 + Math.sin(time * 0.5 + p.phase) * 0.2);
                 p.el.style.background = `hsla(${hue}, 100%, 70%, ${intensity * 0.4})`;
                 p.el.style.boxShadow = `0 0 ${p.size * 2.5}px hsla(${hue}, 100%, 70%, ${intensity * 0.2})`;
             });
@@ -265,35 +344,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    createFairyDust();
+    setTimeout(createFairyDust, 500);
 
     // ========================================
-    //  3. ELEMENTOS ESOTÉRICOS EN NEGRO - DISTRIBUIDOS EN EL CONTENIDO
+    //  4. ELEMENTOS ESOTÉRICOS - OPTIMIZADOS PARA MÓVIL
     // ========================================
     const createFloatingDecorations = function() {
+        // Reducir en móviles
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        
+        if (isSmallMobile) return; // No mostrar en móviles muy pequeños
+
         const decorElements = [
             '🐈‍⬛', '✧', '☿', '♀', '♃', '☽', '♄', '♅', '♆', '♇',
             '☯', '☥', '☸', '⚛', '🜁', '🜂', '🜃', '🜄'
         ];
 
-        // Seleccionar elementos aleatorios
-        const count = 10 + Math.floor(Math.random() * 5);
+        const count = isMobile ? 5 + Math.floor(Math.random() * 3) : 10 + Math.floor(Math.random() * 5);
         const shuffled = decorElements.sort(() => Math.random() - 0.5);
         const selectedDecor = shuffled.slice(0, count);
 
-        // Obtener todas las secciones principales
         const sections = document.querySelectorAll('section');
-        const mainContent = document.querySelector('main') || document.body;
 
         selectedDecor.forEach((icon, index) => {
             const decor = document.createElement('div');
             decor.className = 'floating-decor';
             decor.textContent = icon;
+            const size = isMobile ? 1.5 + Math.random() * 2 : 2.5 + Math.random() * 4;
             decor.style.cssText = `
                 position: absolute;
                 color: #000000;
-                font-size: ${2.5 + Math.random() * 4}rem;
-                opacity: ${0.03 + Math.random() * 0.04};
+                font-size: ${size}rem;
+                opacity: ${isMobile ? 0.02 + Math.random() * 0.02 : 0.03 + Math.random() * 0.04};
                 pointer-events: none;
                 z-index: 0;
                 font-weight: bold;
@@ -303,22 +386,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 user-select: none;
             `;
 
-            // Colocar en una sección aleatoria
             let targetSection;
             if (sections.length > 0) {
                 targetSection = sections[Math.floor(Math.random() * sections.length)];
             } else {
-                targetSection = mainContent;
+                targetSection = document.body;
             }
 
-            // Posición relativa dentro de la sección
             const topPos = 5 + Math.random() * 85;
             const leftPos = 5 + Math.random() * 85;
             
             decor.style.top = topPos + '%';
             decor.style.left = leftPos + '%';
 
-            // Asegurar que el contenedor de la sección tenga position: relative
             if (targetSection) {
                 const computedStyle = window.getComputedStyle(targetSection);
                 if (computedStyle.position === 'static') {
@@ -329,16 +409,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Iniciar decoraciones esotéricas después de que el DOM esté listo
-    setTimeout(createFloatingDecorations, 100);
+    setTimeout(createFloatingDecorations, 600);
 
     // ========================================
-    //  4. PIEDRAS DECORATIVAS - DISTRIBUIDAS EN EL CONTENIDO
+    //  5. PIEDRAS DECORATIVAS - OPTIMIZADAS PARA MÓVIL
     // ========================================
     const createFloatingGems = function() {
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        
+        if (isSmallMobile) return;
+
         const gemElements = ['🔮', '🧿', '💎', '💗', '🌀', '⚪', '🟣', '🟠', '🔴', '🟢', '🔵', '🟡', '⚡', '💜', '💠', '🔶'];
 
-        const count = 6 + Math.floor(Math.random() * 3);
+        const count = isMobile ? 3 + Math.floor(Math.random() * 2) : 6 + Math.floor(Math.random() * 3);
         const shuffled = gemElements.sort(() => Math.random() - 0.5);
         const selectedGems = shuffled.slice(0, count);
 
@@ -348,10 +432,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const gemElement = document.createElement('div');
             gemElement.className = 'floating-gem';
             gemElement.textContent = gem;
+            const size = isMobile ? 1.5 + Math.random() * 1.5 : 2 + Math.random() * 3;
             gemElement.style.cssText = `
                 position: absolute;
-                font-size: ${2 + Math.random() * 3}rem;
-                opacity: ${0.04 + Math.random() * 0.04};
+                font-size: ${size}rem;
+                opacity: ${isMobile ? 0.03 + Math.random() * 0.02 : 0.04 + Math.random() * 0.04};
                 pointer-events: none;
                 z-index: 0;
                 animation: floatGem ${25 + Math.random() * 25}s ease-in-out infinite;
@@ -360,7 +445,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 filter: drop-shadow(0 0 30px rgba(180, 138, 217, 0.1));
             `;
 
-            // Colocar en una sección aleatoria
             let targetSection;
             if (sections.length > 0) {
                 targetSection = sections[Math.floor(Math.random() * sections.length)];
@@ -384,14 +468,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    setTimeout(createFloatingGems, 200);
+    setTimeout(createFloatingGems, 800);
 
     // ========================================
-    //  5. PUNTITOS PASTEL EN "SOBRE MÍ"
+    //  6. PUNTITOS PASTEL - OPTIMIZADOS PARA MÓVIL
     // ========================================
     const createPastelDots = function() {
         const aboutSection = document.querySelector('.about-brief');
         if (!aboutSection) return;
+
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        
+        if (isSmallMobile) return;
 
         const pastelColors = [
             'rgba(255, 182, 193, 0.2)', 'rgba(176, 224, 230, 0.18)',
@@ -400,11 +489,11 @@ document.addEventListener('DOMContentLoaded', function() {
             'rgba(255, 192, 203, 0.15)', 'rgba(169, 204, 227, 0.18)'
         ];
 
-        const dotCount = 12 + Math.floor(Math.random() * 5);
+        const dotCount = isMobile ? 6 + Math.floor(Math.random() * 3) : 12 + Math.floor(Math.random() * 5);
         
         for (let i = 0; i < dotCount; i++) {
             const dot = document.createElement('div');
-            const size = 6 + Math.random() * 18;
+            const size = isMobile ? 4 + Math.random() * 10 : 6 + Math.random() * 18;
             const color = pastelColors[i % pastelColors.length];
             const top = 5 + Math.random() * 90;
             const left = 5 + Math.random() * 90;
@@ -425,16 +514,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 will-change: transform, opacity;
             `;
             
-            const dotId = 'dot-' + Date.now() + '-' + i;
-            const moveX1 = 10 + Math.random() * 30;
-            const moveY1 = -15 - Math.random() * 25;
-            const moveX2 = -10 - Math.random() * 20;
-            const moveY2 = 10 + Math.random() * 20;
-            const moveX3 = 8 + Math.random() * 25;
-            const moveY3 = -8 - Math.random() * 15;
-            const scale1 = 1.2 + Math.random() * 1.5;
-            const scale2 = 0.6 + Math.random() * 0.6;
-            const scale3 = 1.0 + Math.random() * 1.2;
+            const moveX1 = isMobile ? 8 + Math.random() * 15 : 10 + Math.random() * 30;
+            const moveY1 = isMobile ? -10 - Math.random() * 15 : -15 - Math.random() * 25;
+            const moveX2 = isMobile ? -8 - Math.random() * 10 : -10 - Math.random() * 20;
+            const moveY2 = isMobile ? 5 + Math.random() * 10 : 10 + Math.random() * 20;
+            const moveX3 = isMobile ? 5 + Math.random() * 12 : 8 + Math.random() * 25;
+            const moveY3 = isMobile ? -5 - Math.random() * 10 : -8 - Math.random() * 15;
+            const scale1 = isMobile ? 1 + Math.random() * 0.8 : 1.2 + Math.random() * 1.5;
+            const scale2 = isMobile ? 0.6 + Math.random() * 0.3 : 0.6 + Math.random() * 0.6;
+            const scale3 = isMobile ? 0.8 + Math.random() * 0.6 : 1.0 + Math.random() * 1.2;
             
             const style = document.createElement('style');
             style.textContent = `
@@ -452,19 +540,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    setTimeout(createPastelDots, 300);
+    setTimeout(createPastelDots, 900);
 
     // ========================================
-    //  RESTAURAR FUNCIONALIDADES EXISTENTES
-    // ========================================
-    
-    // ========================================
-    //  6. CARRITO DE COMPRAS
+    //  7. CARRITO DE COMPRAS
     // ========================================
     const cart = {
         items: [],
         total: 0,
-        badge: document.querySelector('.cart-badge'),
+        badge: document.getElementById('cartBadge'),
 
         addItem(productName, price) {
             const existingItem = this.items.find(item => item.name === productName);
@@ -492,40 +576,44 @@ document.addEventListener('DOMContentLoaded', function() {
             const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
             if (this.badge) {
                 this.badge.textContent = totalItems;
-                this.badge.style.display = totalItems > 0 ? 'flex' : 'none';
+                this.badge.classList.toggle('visible', totalItems > 0);
                 
-                this.badge.style.transform = 'scale(1.4) rotate(10deg)';
-                this.badge.style.boxShadow = '0 0 40px rgba(255, 0, 255, 0.5)';
-                setTimeout(() => {
-                    this.badge.style.transform = 'scale(1) rotate(0deg)';
-                    this.badge.style.boxShadow = '0 0 30px rgba(255, 0, 255, 0.3)';
-                }, 400);
+                if (totalItems > 0) {
+                    this.badge.style.transform = 'scale(1.4) rotate(10deg)';
+                    this.badge.style.boxShadow = '0 0 40px rgba(255, 0, 255, 0.5)';
+                    setTimeout(() => {
+                        this.badge.style.transform = 'scale(1) rotate(0deg)';
+                        this.badge.style.boxShadow = '0 0 30px rgba(255, 0, 255, 0.3)';
+                    }, 400);
+                }
             }
         },
 
         showMagicalNotification(message) {
+            const isMobile = window.innerWidth <= 480;
+            
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
-                bottom: 30px;
-                right: 30px;
+                ${isMobile ? 'bottom: 16px; right: 16px; left: 16px;' : 'bottom: 30px; right: 30px;'}
                 background: linear-gradient(135deg, #2E1A47, #4A2060, #2E1A47);
                 background-size: 200% 200%;
                 color: #FFFFFF;
-                padding: 1.2rem 2rem;
-                border-radius: 20px;
+                padding: ${isMobile ? '0.8rem 1.2rem' : '1.2rem 2rem'};
+                border-radius: ${isMobile ? '16px' : '20px'};
                 font-family: 'Quicksand', sans-serif;
                 font-weight: 500;
                 box-shadow: 0 12px 60px rgba(42, 26, 61, 0.5), 0 0 40px rgba(180, 138, 217, 0.1);
                 z-index: 9999;
-                transform: translateX(150px) scale(0.8);
+                transform: translateX(${isMobile ? '50px' : '150px'}) scale(0.8);
                 opacity: 0;
                 transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 border: 1px solid rgba(201, 167, 235, 0.15);
                 backdrop-filter: blur(15px);
-                font-size: 1rem;
+                font-size: ${isMobile ? '0.85rem' : '1rem'};
                 animation: gradientShift 3s ease infinite;
-                max-width: 400px;
+                max-width: ${isMobile ? '100%' : '400px'};
+                text-align: center;
             `;
 
             const icon = document.createElement('span');
@@ -537,12 +625,14 @@ document.addEventListener('DOMContentLoaded', function() {
             text.textContent = message;
             notification.appendChild(text);
 
-            for (let i = 0; i < 8; i++) {
+            // Menos sparkles en móvil
+            const sparkleCount = isMobile ? 3 : 8;
+            for (let i = 0; i < sparkleCount; i++) {
                 const sparkle = document.createElement('span');
                 sparkle.textContent = '✦';
                 sparkle.style.cssText = `
                     position: absolute;
-                    font-size: ${0.5 + Math.random() * 0.8}rem;
+                    font-size: ${0.3 + Math.random() * 0.6}rem;
                     color: #C9A7EB;
                     opacity: ${0.3 + Math.random() * 0.5};
                     animation: sparkleFloat ${2 + Math.random() * 3}s ease-in-out infinite;
@@ -562,12 +652,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             setTimeout(() => {
-                notification.style.transform = 'translateX(150px) scale(0.8)';
+                notification.style.transform = `translateX(${isMobile ? '50px' : '150px'}) scale(0.8)`;
                 notification.style.opacity = '0';
                 setTimeout(() => {
                     notification.remove();
                 }, 600);
-            }, 4000);
+            }, 3500);
         },
 
         viewCart() {
@@ -575,6 +665,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.showMagicalNotification('🛒 Tu carrito está vacío... ¡explora la tienda!');
                 return;
             }
+
+            const isMobile = window.innerWidth <= 480;
 
             const modal = document.createElement('div');
             modal.style.cssText = `
@@ -587,15 +679,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 align-items: center;
                 justify-content: center;
                 animation: fadeIn 0.4s ease;
+                padding: ${isMobile ? '12px' : '20px'};
             `;
 
             const modalContent = document.createElement('div');
             modalContent.style.cssText = `
                 background: linear-gradient(145deg, #FFFFFF, #F8F5FA);
-                border-radius: 30px;
-                padding: 2.5rem;
-                max-width: 520px;
-                width: 90%;
+                border-radius: ${isMobile ? '20px' : '30px'};
+                padding: ${isMobile ? '1.2rem' : '2.5rem'};
+                max-width: ${isMobile ? '100%' : '520px'};
+                width: ${isMobile ? '100%' : '90%'};
                 max-height: 80vh;
                 overflow-y: auto;
                 box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 60px rgba(180, 138, 217, 0.05);
@@ -608,8 +701,8 @@ document.addEventListener('DOMContentLoaded', function() {
             title.style.cssText = `
                 font-family: 'Playfair Display', serif;
                 color: #3B1E54;
-                font-size: 1.8rem;
-                margin-bottom: 1.5rem;
+                font-size: ${isMobile ? '1.4rem' : '1.8rem'};
+                margin-bottom: ${isMobile ? '1rem' : '1.5rem'};
                 text-align: center;
                 text-shadow: 0 0 40px rgba(180, 138, 217, 0.1);
             `;
@@ -621,15 +714,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    padding: 0.8rem 0;
+                    padding: ${isMobile ? '0.5rem 0' : '0.8rem 0'};
                     border-bottom: 1px solid rgba(214, 200, 224, 0.1);
                     transition: all 0.3s ease;
+                    gap: ${isMobile ? '8px' : '0'};
                 `;
 
                 const itemInfo = document.createElement('div');
                 itemInfo.innerHTML = `
-                    <strong style="color: #1C1C1E;">${item.name}</strong>
-                    <span style="color: #4A4A4E; font-size: 0.9rem; display: block;">✧ x${item.quantity}</span>
+                    <strong style="color: #1C1C1E; font-size: ${isMobile ? '0.85rem' : '1rem'};">${item.name}</strong>
+                    <span style="color: #4A4A4E; font-size: ${isMobile ? '0.75rem' : '0.9rem'}; display: block;">✧ x${item.quantity}</span>
                 `;
 
                 const itemPrice = document.createElement('span');
@@ -640,7 +734,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
-                    font-size: 1.1rem;
+                    font-size: ${isMobile ? '0.95rem' : '1.1rem'};
                 `;
 
                 itemDiv.appendChild(itemInfo);
@@ -653,29 +747,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 1rem 0;
-                margin-top: 1rem;
+                padding: ${isMobile ? '0.6rem 0' : '1rem 0'};
+                margin-top: ${isMobile ? '0.5rem' : '1rem'};
                 border-top: 2px solid rgba(201, 167, 235, 0.15);
-                font-size: 1.2rem;
+                font-size: ${isMobile ? '1rem' : '1.2rem'};
             `;
             totalDiv.innerHTML = `
                 <strong style="font-family: 'Playfair Display', serif; color: #3B1E54;">✦ Total ✦</strong>
-                <span style="font-weight: 700; background: linear-gradient(135deg, #C9A87C, #B48AD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 1.5rem;">€${this.total.toFixed(2)}</span>
+                <span style="font-weight: 700; background: linear-gradient(135deg, #C9A87C, #B48AD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: ${isMobile ? '1.2rem' : '1.5rem'};">€${this.total.toFixed(2)}</span>
             `;
             modalContent.appendChild(totalDiv);
 
             const actionsDiv = document.createElement('div');
             actionsDiv.style.cssText = `
                 display: flex;
-                gap: 1rem;
-                margin-top: 1.5rem;
+                gap: ${isMobile ? '0.6rem' : '1rem'};
+                margin-top: ${isMobile ? '1rem' : '1.5rem'};
+                flex-direction: ${isMobile ? 'column' : 'row'};
             `;
 
             const closeBtn = document.createElement('button');
             closeBtn.textContent = '✧ Cerrar';
             closeBtn.style.cssText = `
                 flex: 1;
-                padding: 0.8rem;
+                padding: ${isMobile ? '0.6rem' : '0.8rem'};
                 border: 2px solid #2E1A47;
                 border-radius: 50px;
                 background: transparent;
@@ -684,6 +779,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
+                font-size: ${isMobile ? '0.85rem' : '1rem'};
+                min-height: 44px;
             `;
             closeBtn.onmouseover = function() {
                 this.style.background = '#2E1A47';
@@ -699,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function() {
             checkoutBtn.textContent = '✦ Finalizar Compra ✦';
             checkoutBtn.style.cssText = `
                 flex: 1;
-                padding: 0.8rem;
+                padding: ${isMobile ? '0.6rem' : '0.8rem'};
                 border: none;
                 border-radius: 50px;
                 background: linear-gradient(135deg, #2E1A47, #4A2060);
@@ -709,6 +806,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 cursor: pointer;
                 transition: all 0.3s ease;
                 box-shadow: 0 4px 25px rgba(42, 26, 61, 0.3);
+                font-size: ${isMobile ? '0.85rem' : '1rem'};
+                min-height: 44px;
             `;
             checkoutBtn.onmouseover = function() {
                 this.style.background = 'linear-gradient(135deg, #B48AD9, #C9A7EB)';
@@ -744,9 +843,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ========================================
-    //  7. BOTONES "AÑADIR AL CARRITO"
+    //  8. BOTONES "AÑADIR AL CARRITO"
     // ========================================
-    const addToCartButtons = document.querySelectorAll('.product-card .btn--primary, .btn--small');
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
     addToCartButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -773,9 +872,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  8. BOTÓN DEL CARRITO
+    //  9. BOTÓN DEL CARRITO
     // ========================================
-    const cartButton = document.querySelector('.header__actions .action-btn:last-child');
+    const cartButton = document.getElementById('cartBtn');
     if (cartButton) {
         cartButton.addEventListener('click', function(e) {
             e.preventDefault();
@@ -790,14 +889,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  9. BÚSQUEDA
+    //  10. BÚSQUEDA - OPTIMIZADA PARA MÓVIL
     // ========================================
-    const searchButton = document.querySelector('.header__actions .action-btn:first-child');
+    const searchButton = document.getElementById('searchBtn');
     
     if (searchButton) {
         searchButton.addEventListener('click', function(e) {
             e.preventDefault();
             
+            const isMobile = window.innerWidth <= 480;
+
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -809,15 +910,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 align-items: center;
                 justify-content: center;
                 animation: fadeIn 0.3s ease;
+                padding: ${isMobile ? '16px' : '20px'};
             `;
 
             const searchBox = document.createElement('div');
             searchBox.style.cssText = `
                 background: linear-gradient(145deg, #FFFFFF, #F8F5FA);
-                padding: 2.5rem;
-                border-radius: 30px;
-                max-width: 500px;
-                width: 90%;
+                padding: ${isMobile ? '1.5rem' : '2.5rem'};
+                border-radius: ${isMobile ? '20px' : '30px'};
+                max-width: ${isMobile ? '100%' : '500px'};
+                width: ${isMobile ? '100%' : '90%'};
                 text-align: center;
                 box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4);
                 border: 1px solid rgba(214, 200, 224, 0.15);
@@ -834,7 +936,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 bottom: -2px;
                 background: linear-gradient(135deg, #B48AD9, #C9A7EB, #B48AD9, #C9A7EB);
                 background-size: 300% 300%;
-                border-radius: 32px;
+                border-radius: ${isMobile ? '22px' : '32px'};
                 z-index: -1;
                 opacity: 0.3;
                 animation: gradientShift 3s ease infinite;
@@ -842,22 +944,26 @@ document.addEventListener('DOMContentLoaded', function() {
             searchBox.appendChild(glow);
 
             searchBox.innerHTML += `
-                <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🔮</div>
-                <h3 style="font-family: 'Playfair Display', serif; color: #3B1E54; margin-bottom: 0.5rem; font-size: 1.8rem;">✦ Buscar en Esencia Violeta ✦</h3>
-                <p style="color: #4A4A4E; margin-bottom: 1.5rem; font-size: 0.95rem;">Encuentra mazos, amuletos y tesoros mágicos</p>
+                <div style="font-size: ${isMobile ? '2.5rem' : '3.5rem'}; margin-bottom: ${isMobile ? '0.3rem' : '0.5rem'};">🔮</div>
+                <h3 style="font-family: 'Playfair Display', serif; color: #3B1E54; margin-bottom: ${isMobile ? '0.3rem' : '0.5rem'}; font-size: ${isMobile ? '1.3rem' : '1.8rem'};">✦ Buscar en Esencia Violeta ✦</h3>
+                <p style="color: #4A4A4E; margin-bottom: ${isMobile ? '1rem' : '1.5rem'}; font-size: ${isMobile ? '0.85rem' : '0.95rem'};">Encuentra mazos, amuletos y tesoros mágicos</p>
                 <input type="text" 
                        placeholder="¿Qué energía buscas?" 
-                       style="width: 100%; padding: 0.9rem 1.2rem; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: 1rem; margin-bottom: 1rem; transition: all 0.3s ease; background: #FFFFFF;"
+                       style="width: 100%; padding: ${isMobile ? '0.7rem 1rem' : '0.9rem 1.2rem'}; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: ${isMobile ? '0.9rem' : '1rem'}; margin-bottom: ${isMobile ? '0.8rem' : '1rem'}; transition: all 0.3s ease; background: #FFFFFF;"
                        autofocus 
                        id="searchInput" />
-                <button class="btn btn--primary" style="width: 100%;" id="searchBtn">✦ Buscar ✦</button>
-                <button style="width: 100%; margin-top: 0.5rem; padding: 0.8rem; border: 2px solid rgba(214, 200, 224, 0.3); border-radius: 50px; background: transparent; color: #4A4A4E; font-family: 'Quicksand', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" id="closeSearchBtn">Cerrar</button>
+                <button class="btn btn--primary" style="width: 100%; min-height: 44px;" id="searchBtnAction">✦ Buscar ✦</button>
+                <button style="width: 100%; margin-top: ${isMobile ? '0.3rem' : '0.5rem'}; padding: ${isMobile ? '0.6rem' : '0.8rem'}; border: 2px solid rgba(214, 200, 224, 0.3); border-radius: 50px; background: transparent; color: #4A4A4E; font-family: 'Quicksand', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.3s ease; min-height: 44px; font-size: ${isMobile ? '0.85rem' : '1rem'};" id="closeSearchBtn">Cerrar</button>
             `;
 
             overlay.appendChild(searchBox);
             document.body.appendChild(overlay);
 
             const input = searchBox.querySelector('#searchInput');
+            setTimeout(() => {
+                if (input) input.focus();
+            }, 100);
+
             input.addEventListener('focus', function() {
                 this.style.borderColor = '#B48AD9';
                 this.style.boxShadow = '0 0 50px rgba(180, 138, 217, 0.1)';
@@ -886,7 +992,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
 
-            searchBox.querySelector('#searchBtn').addEventListener('click', performSearch);
+            searchBox.querySelector('#searchBtnAction').addEventListener('click', performSearch);
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') performSearch();
             });
@@ -894,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  10. MENÚ DE NAVEGACIÓN
+    //  11. NAVEGACIÓN SUAVE
     // ========================================
     const allNavLinks = document.querySelectorAll('.nav__list a, .footer__nav a');
     
@@ -907,9 +1013,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const offset = 80; // Altura del header
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
                     });
                 }
             } else if (href === '#') {
@@ -923,96 +1031,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  11. MENÚ MÓVIL
-    // ========================================
-    const headerNav = document.querySelector('.header__nav');
-    
-    if (headerNav) {
-        let hamburgerBtn = document.querySelector('.hamburger-btn');
-        if (!hamburgerBtn && window.innerWidth <= 992) {
-            hamburgerBtn = document.createElement('button');
-            hamburgerBtn.className = 'hamburger-btn';
-            hamburgerBtn.setAttribute('aria-label', 'Abrir menú');
-            hamburgerBtn.style.cssText = `
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid rgba(214, 200, 224, 0.08);
-                border-radius: 14px;
-                color: #FFFFFF;
-                font-size: 1.8rem;
-                cursor: pointer;
-                padding: 0.5rem 1rem;
-                transition: all 0.3s ease;
-                font-family: 'Quicksand', sans-serif;
-            `;
-            hamburgerBtn.textContent = '☰';
-            
-            const headerLogo = document.querySelector('.header__logo');
-            if (headerLogo) {
-                headerLogo.after(hamburgerBtn);
-            }
-        }
-
-        if (hamburgerBtn) {
-            let menuOpen = false;
-            
-            if (window.innerWidth <= 992) {
-                headerNav.style.display = 'none';
-                headerNav.style.width = '100%';
-                headerNav.style.order = '3';
-            }
-
-            hamburgerBtn.addEventListener('click', function() {
-                menuOpen = !menuOpen;
-                headerNav.style.display = menuOpen ? 'block' : 'none';
-                hamburgerBtn.textContent = menuOpen ? '✕' : '☰';
-                hamburgerBtn.style.background = menuOpen ? 'rgba(180, 138, 217, 0.15)' : 'rgba(255, 255, 255, 0.03)';
-                hamburgerBtn.style.borderColor = menuOpen ? '#B48AD9' : 'rgba(214, 200, 224, 0.08)';
-                hamburgerBtn.style.boxShadow = menuOpen ? '0 0 40px rgba(180, 138, 217, 0.1)' : 'none';
-                
-                if (menuOpen) {
-                    headerNav.style.animation = 'slideDown 0.3s ease';
-                }
-            });
-
-            headerNav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth <= 992) {
-                        menuOpen = false;
-                        headerNav.style.display = 'none';
-                        hamburgerBtn.textContent = '☰';
-                        hamburgerBtn.style.background = 'rgba(255, 255, 255, 0.03)';
-                        hamburgerBtn.style.borderColor = 'rgba(214, 200, 224, 0.08)';
-                        hamburgerBtn.style.boxShadow = 'none';
-                    }
-                });
-            });
-
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 992) {
-                    headerNav.style.display = 'flex';
-                    headerNav.style.width = 'auto';
-                    headerNav.style.order = '0';
-                    if (hamburgerBtn) {
-                        hamburgerBtn.style.display = 'none';
-                    }
-                } else {
-                    if (hamburgerBtn) {
-                        hamburgerBtn.style.display = 'block';
-                    }
-                    if (!menuOpen) {
-                        headerNav.style.display = 'none';
-                    }
-                }
-            });
-        }
-    }
-
-    // ========================================
     //  12. NAVEGACIÓN ACTIVA
     // ========================================
-    const navLinks = document.querySelectorAll('.nav__list a');
+    const navLinksList = document.querySelectorAll('.nav__list a');
     const currentPath = window.location.pathname;
-    navLinks.forEach(link => {
+    navLinksList.forEach(link => {
         const href = link.getAttribute('href');
         if (href === currentPath || (href === '#' && currentPath === '/')) {
             link.classList.add('active');
@@ -1020,15 +1043,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    //  13. ANIMACIONES AL SCROLL
+    //  13. ANIMACIONES AL SCROLL - OPTIMIZADAS
     // ========================================
     const animateOnScroll = function() {
+        const isMobile = window.innerWidth <= 480;
         const elements = document.querySelectorAll('.category-card, .product-card, .experience-card, .blog-card, .about-brief__content');
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    const delay = index * 50;
+                    const delay = isMobile ? index * 30 : index * 50;
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0) scale(1)';
@@ -1038,15 +1062,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }, {
-            threshold: 0.05,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: isMobile ? 0.1 : 0.05,
+            rootMargin: '0px 0px -30px 0px'
         });
 
         elements.forEach((el) => {
             el.style.opacity = '0';
-            el.style.transform = 'translateY(40px) scale(0.95)';
-            el.style.filter = 'blur(3px)';
-            el.style.transition = `all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
+            el.style.transform = 'translateY(30px) scale(0.97)';
+            el.style.filter = 'blur(2px)';
+            el.style.transition = `all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
             observer.observe(el);
         });
     };
@@ -1056,17 +1080,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  14. ESTRELLAS EN EL BANNER - RÁPIDAS
+    //  14. ESTRELLAS EN EL BANNER - OPTIMIZADAS
     // ========================================
     const createMagicalStars = function() {
         const hero = document.querySelector('.hero');
         if (!hero) return;
 
+        const isMobile = window.innerWidth <= 480;
+        const isSmallMobile = window.innerWidth <= 360;
+        const starCount = isSmallMobile ? 20 : (isMobile ? 30 : 60);
+
         const starColors = ['#C9A87C', '#C9A7EB', '#B48AD9', '#FF00FF', '#FFFFFF', '#FF69B4', '#7B68EE'];
         
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < starCount; i++) {
             const star = document.createElement('div');
-            const size = Math.random() * 5 + 1;
+            const size = isSmallMobile ? 1 + Math.random() * 2 : (isMobile ? 1 + Math.random() * 3 : 1 + Math.random() * 5);
             const x = Math.random() * 100;
             const y = Math.random() * 100;
             const duration = 1.5 + Math.random() * 2;
@@ -1081,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 border-radius: 50%;
                 top: ${y}%;
                 left: ${x}%;
-                opacity: ${Math.random() * 0.6 + 0.1};
+                opacity: ${(isMobile ? 0.2 : 0.1) + Math.random() * (isMobile ? 0.3 : 0.6)};
                 animation: twinkle ${duration}s ease-in-out ${delay}s infinite alternate;
                 pointer-events: none;
                 z-index: 1;
@@ -1112,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }); // Fin DOMContentLoaded
 
 // ========================================
-//  ESTILOS DE ANIMACIÓN
+//  ESTILOS DE ANIMACIÓN ADICIONALES
 // ========================================
 const magicalStyles = document.createElement('style');
 magicalStyles.textContent = `
@@ -1159,36 +1187,24 @@ magicalStyles.textContent = `
         90% { transform: translate(-12px, 18px) rotate(-5deg) scale(0.88); }
     }
 
+    @keyframes floatDot {
+        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+        25% { transform: translate(var(--moveX1), var(--moveY1)) scale(var(--scale1)); opacity: 1; }
+        50% { transform: translate(var(--moveX2), var(--moveY2)) scale(var(--scale2)); opacity: 0.2; }
+        75% { transform: translate(var(--moveX3), var(--moveY3)) scale(var(--scale3)); opacity: 0.8; }
+    }
+
     .cart-badge {
         display: none;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .hamburger-btn {
-        display: none;
-        transition: all 0.3s ease;
+    .cart-badge.visible {
+        display: flex;
     }
 
-    @media (max-width: 992px) {
-        .hamburger-btn { display: block; }
-        .header__nav { order: 3; width: 100%; }
-        .header__nav .nav__list {
-            flex-direction: column;
-            gap: 0.8rem;
-            padding: 1rem 0;
-            align-items: center;
-        }
-        .header__nav .nav__list a {
-            font-size: 1.1rem;
-            padding: 0.4rem 0;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .hamburger-btn { font-size: 1.5rem; padding: 0.4rem 0.8rem; }
-    }
-
-    ::-webkit-scrollbar { width: 8px; }
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: linear-gradient(180deg, #1C0F2E, #2A1A3D); }
     ::-webkit-scrollbar-thumb {
         background: linear-gradient(180deg, #B48AD9, #C9A7EB, #B48AD9);
