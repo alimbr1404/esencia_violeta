@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========================================
-    //  3. EFECTO DE HUMO FUCSIA - VERSIÓN INTENSA
+    //  3. EFECTO DE HUMO FUCSIA - HILO DE INCIENSO
     // ========================================
 
     (function createSmokeEffect() {
@@ -105,11 +105,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const isMobile = window.innerWidth <= 768;
         const isSmallMobile = window.innerWidth <= 480;
-        const maxParticles = isSmallMobile ? 6 : (isMobile ? 10 : 15);
+        const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        const container = document.createElement('div');
-        container.id = 'smokeEffectContainer';
-        container.style.cssText = `
+        if (isReducedMotion) return;
+
+        const canvas = document.createElement('canvas');
+        canvas.id = 'smokeEffectContainer';
+        canvas.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
@@ -117,176 +119,140 @@ document.addEventListener('DOMContentLoaded', function() {
             height: 100%;
             pointer-events: none;
             z-index: 9999;
-            overflow: hidden;
         `;
-        document.body.appendChild(container);
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
 
+        let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Hebras finas de humo: cada una es una cadena de puntos delgados
+        // que nace en el cursor y sube ondulando como incienso.
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
-        let isMouseOver = false;
-        let particles = [];
+        let lastMoveTime = Date.now();
+        let hasMoved = false;
 
-        for (let i = 0; i < maxParticles; i++) {
-            const particle = document.createElement('div');
-            
-            const size = isSmallMobile 
-                ? 120 + Math.random() * 180 
-                : (isMobile ? 150 + Math.random() * 250 : 180 + Math.random() * 350);
-            
-            const hue = 280 + Math.random() * 40;
-            const intensity = isSmallMobile 
-                ? 0.05 + Math.random() * 0.05 
-                : (isMobile ? 0.08 + Math.random() * 0.06 : 0.10 + Math.random() * 0.08);
+        const strands = [];
+        const maxStrands = isSmallMobile ? 10 : (isMobile ? 16 : 26);
+        const baseHue = 320; // fucsia
 
-            particle.style.cssText = `
-                position: absolute;
-                width: ${size}px;
-                height: ${size}px;
-                border-radius: 50%;
-                background: radial-gradient(
-                    circle, 
-                    hsla(${hue}, 100%, 75%, ${intensity}), 
-                    hsla(${hue + 20}, 100%, 65%, ${intensity * 0.4}), 
-                    transparent 70%
-                );
-                pointer-events: none;
-                transform: translate(-50%, -50%);
-                filter: blur(${isSmallMobile ? 30 : (isMobile ? 40 : 50)}px);
-                opacity: ${isSmallMobile ? 0.15 : (isMobile ? 0.2 : 0.3)};
-                transition: opacity 0.3s ease;
-                will-change: transform, opacity;
-            `;
-            container.appendChild(particle);
-
-            particles.push({
-                el: particle,
-                x: window.innerWidth * (0.05 + Math.random() * 0.9),
-                y: window.innerHeight * (0.05 + Math.random() * 0.9),
-                speed: isSmallMobile 
-                    ? 0.2 + Math.random() * 0.3 
-                    : (isMobile ? 0.3 + Math.random() * 0.4 : 0.4 + Math.random() * 0.5),
-                size: size,
+        function spawnStrand(x, y) {
+            if (strands.length >= maxStrands) strands.shift();
+            strands.push({
+                x: x + (Math.random() - 0.5) * 6,
+                y: y + (Math.random() - 0.5) * 6,
+                born: Date.now(),
+                life: isSmallMobile ? 900 + Math.random() * 400 : 1200 + Math.random() * 600,
+                drift: (Math.random() - 0.5) * 0.6,
+                wobbleSpeed: 0.8 + Math.random() * 1.2,
                 phase: Math.random() * Math.PI * 2,
-                hue: hue,
-                originalX: 0,
-                originalY: 0
+                riseSpeed: isSmallMobile ? 18 + Math.random() * 10 : 22 + Math.random() * 14,
+                hue: baseHue + (Math.random() - 0.5) * 25,
+                width: isSmallMobile ? 0.8 + Math.random() * 0.6 : 1 + Math.random() * 0.8
             });
         }
 
+        function updateMouse(x, y) {
+            const now = Date.now();
+            const dt = now - lastMoveTime;
+            const dist = Math.hypot(x - mouseX, y - mouseY);
+            mouseX = x;
+            mouseY = y;
+            lastMoveTime = now;
+
+            // Nace una hebra nueva solo cada tanto y si hubo suficiente movimiento,
+            // para que se vea como un hilo continuo y no como una mancha densa.
+            if (hasMoved && dt > 24 && dist > 3) {
+                spawnStrand(x, y);
+            }
+            hasMoved = true;
+        }
+
         document.addEventListener('mousemove', function(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            isMouseOver = true;
+            updateMouse(e.clientX, e.clientY);
         });
 
         document.addEventListener('touchmove', function(e) {
             const touch = e.touches[0];
-            if (touch) {
-                mouseX = touch.clientX;
-                mouseY = touch.clientY;
-                isMouseOver = true;
-            }
+            if (touch) updateMouse(touch.clientX, touch.clientY);
         }, { passive: true });
 
         document.addEventListener('touchstart', function(e) {
             const touch = e.touches[0];
-            if (touch) {
-                mouseX = touch.clientX;
-                mouseY = touch.clientY;
-                isMouseOver = true;
-            }
+            if (touch) updateMouse(touch.clientX, touch.clientY);
         }, { passive: true });
 
-        document.addEventListener('mouseleave', function() {
-            isMouseOver = false;
-        });
+        function drawStrand(s, now) {
+            const age = now - s.born;
+            const t = age / s.life;
+            if (t >= 1) return false;
 
-        function animateParticles() {
-            const time = Date.now() / 1000;
+            // La hebra sube y ondula suavemente, adelgazándose y desvaneciéndose.
+            const steps = 18;
+            ctx.beginPath();
+            let prevX, prevY;
+            for (let i = 0; i <= steps; i++) {
+                const st = (i / steps) * t;
+                const rise = st * s.life * 0.001 * s.riseSpeed * 10;
+                const wobble = Math.sin(st * Math.PI * 2.2 * s.wobbleSpeed + s.phase) * (6 + st * 14);
+                const px = s.x + wobble + s.drift * rise * 0.4;
+                const py = s.y - rise;
 
-            particles.forEach((p, index) => {
-                const delay = index * 0.02;
-                const effectiveTime = time - delay;
-
-                if (isMouseOver) {
-                    const dx = mouseX - p.x;
-                    const dy = mouseY - p.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    const maxDistance = isSmallMobile ? 400 : (isMobile ? 600 : 800);
-
-                    if (distance < maxDistance) {
-                        const speed = p.speed * (1 + (maxDistance - distance) / maxDistance);
-                        const moveX = (dx / (distance || 1)) * speed * 2.5;
-                        const moveY = (dy / (distance || 1)) * speed * 2.5;
-                        
-                        p.x += moveX;
-                        p.y += moveY;
-
-                        const opacity = Math.max(0.1, 1 - (distance / maxDistance));
-                        p.el.style.opacity = opacity * (isSmallMobile ? 0.6 : (isMobile ? 0.7 : 0.9));
-
-                        const scale = 1 + (1 - distance / maxDistance) * (isSmallMobile ? 0.4 : (isMobile ? 0.5 : 0.8));
-                        const rotation = (1 - distance / maxDistance) * (isSmallMobile ? 8 : (isMobile ? 12 : 18));
-                        p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`;
-
-                        const hueShift = Math.sin(time * 0.5 + p.phase) * 30;
-                        const currentHue = p.hue + hueShift;
-                        const intensity = 0.10 + Math.sin(time * 0.6 + p.phase) * 0.05;
-                        const finalOpacity = opacity * 1.5;
-                        
-                        p.el.style.background = `radial-gradient(
-                            circle, 
-                            hsla(${currentHue}, 100%, 80%, ${intensity * finalOpacity}), 
-                            hsla(${currentHue + 30}, 100%, 70%, ${intensity * 0.5 * finalOpacity}), 
-                            transparent 70%
-                        )`;
-                    } else {
-                        p.x += (p.originalX - p.x) * 0.03;
-                        p.y += (p.originalY - p.y) * 0.03;
-                        p.el.style.opacity = isSmallMobile ? 0.05 : (isMobile ? 0.08 : 0.12);
-                        p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
-                    }
+                if (i === 0) {
+                    ctx.moveTo(px, py);
                 } else {
-                    const waveX = Math.sin(effectiveTime * p.speed * 0.3 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.5 : 0.8));
-                    const waveY = Math.cos(effectiveTime * p.speed * 0.2 + p.phase) * (isSmallMobile ? 0.3 : (isMobile ? 0.5 : 0.8));
-                    p.x += waveX;
-                    p.y += waveY;
-                    
-                    p.el.style.opacity = isSmallMobile ? 0.03 : (isMobile ? 0.06 : 0.10);
-                    p.el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(1) rotate(0deg)`;
+                    ctx.lineTo(px, py);
                 }
+                prevX = px;
+                prevY = py;
+            }
 
-                const margin = 150;
-                p.x = Math.max(-margin, Math.min(window.innerWidth + margin, p.x));
-                p.y = Math.max(-margin, Math.min(window.innerHeight + margin, p.y));
-            });
+            const fade = Math.sin(Math.min(t * 1.4, 1) * Math.PI); // entra y sale suave
+            const opacity = fade * (isSmallMobile ? 0.22 : (isMobile ? 0.28 : 0.34));
+            const lineWidth = s.width * (1 - t * 0.6);
 
-            requestAnimationFrame(animateParticles);
+            ctx.strokeStyle = `hsla(${s.hue}, 85%, 68%, ${opacity})`;
+            ctx.lineWidth = Math.max(0.3, lineWidth);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.shadowColor = `hsla(${s.hue}, 90%, 70%, ${opacity * 0.6})`;
+            ctx.shadowBlur = isSmallMobile ? 2 : 4;
+            ctx.stroke();
+
+            return true;
         }
 
-        particles.forEach((p, index) => {
-            p.originalX = window.innerWidth * (0.05 + (index / particles.length) * 0.9);
-            p.originalY = window.innerHeight * (0.05 + (index / particles.length) * 0.9);
-            p.x = p.originalX;
-            p.y = p.originalY;
-        });
+        function animate() {
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            const now = Date.now();
 
-        window.addEventListener('resize', function() {
-            particles.forEach((p, index) => {
-                p.originalX = window.innerWidth * (0.05 + (index / particles.length) * 0.9);
-                p.originalY = window.innerHeight * (0.05 + (index / particles.length) * 0.9);
-            });
-        });
+            for (let i = strands.length - 1; i >= 0; i--) {
+                const alive = drawStrand(strands[i], now);
+                if (!alive) strands.splice(i, 1);
+            }
 
-        animateParticles();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
 
         window.addEventListener('beforeunload', function() {
-            if (container && container.parentNode) {
-                container.parentNode.removeChild(container);
+            if (canvas && canvas.parentNode) {
+                canvas.parentNode.removeChild(canvas);
             }
         });
 
-        console.log('🌫️ Efecto de humo fucsia activado ✨');
+        console.log('🌫️ Efecto de humo fucsia (hilo de incienso) activado ✨');
     })();
 
     // ========================================
