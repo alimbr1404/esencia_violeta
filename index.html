@@ -1,388 +1,2076 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <title>Esencia Violeta · Tarot y artículos esotéricos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>🐱 Cleo Vidente — Tarot Gatuno</title>
+  <style>
+    /* ===== RESET Y VARIABLES ===== */
+    :root {
+      --gold: #e8c874;
+      --gold-light: #f7e6b4;
+      --gold-dark: #a67c2e;
+      --ink: #241533;
+      --accent: #b77bdb;
+      --card-w: min(300px, 78vw);
+      --card-h: calc(var(--card-w) * 1.7);
+      --btn-fs: clamp(0.85rem, 3.2vw, 1.2rem);
+    }
 
-    <!-- Fuentes Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link 
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" 
-        rel="stylesheet" 
-    />
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <!-- CSS principal -->
-    <link rel="stylesheet" href="css/style.css" />
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(130, 70, 170, 0.15), transparent 55%),
+        radial-gradient(ellipse at 85% 85%, rgba(90, 40, 130, 0.15), transparent 55%),
+        radial-gradient(circle at center, #1a0b23 0%, #0a0510 100%);
+      font-family: 'Georgia', 'Segoe UI', serif;
+      padding: 0.8rem 0.5rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .estrellas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+    .estrellas span {
+      position: absolute;
+      width: 1.5px;
+      height: 1.5px;
+      background: #e6cdfb;
+      border-radius: 50%;
+      animation: parpadeoEstrella 3.5s ease-in-out infinite;
+    }
+    @keyframes parpadeoEstrella {
+      0%, 100% { opacity: 0.1; }
+      50% { opacity: 0.6; }
+    }
+
+    .menu-inicio {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(10, 5, 16, 0.94);
+      backdrop-filter: blur(4px);
+      padding: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .menu-inicio.oculto {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .menu-contenedor {
+      background: linear-gradient(160deg, #3a1e4d, #1c0e28);
+      border: 2px solid var(--gold);
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(183, 123, 219, 0.2), 0 15px 30px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .menu-contenedor h2 {
+      color: var(--gold-light);
+      font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+      margin-bottom: 0.2rem;
+      letter-spacing: 3px;
+    }
+    .menu-contenedor .sub {
+      color: #c9a3dc;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .menu-contenedor label {
+      display: block;
+      color: #d8bce8;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: left;
+      margin-bottom: 0.2rem;
+      margin-top: 0.8rem;
+    }
+    .menu-contenedor label .opcional {
+      color: #6a4a7a;
+      font-size: 0.5rem;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 300;
+    }
+
+    .menu-contenedor input {
+      width: 100%;
+      padding: 0.5rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid #6f4489;
+      background: rgba(255,255,255,0.06);
+      color: #f7ecff;
+      font-family: 'Georgia', serif;
+      font-size: 0.9rem;
+      transition: border 0.2s ease;
+    }
+    .menu-contenedor input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 12px rgba(232, 200, 116, 0.1);
+    }
+    .menu-contenedor input::placeholder {
+      color: #6a4a7a;
+    }
+    .menu-contenedor .input-hint {
+      color: #6a4a7a;
+      font-size: 0.5rem;
+      text-align: left;
+      margin-top: 0.1rem;
+      letter-spacing: 0.5px;
+    }
+
+    .menu-contenedor .btn-iniciar {
+      margin-top: 1.5rem;
+      background: linear-gradient(160deg, #7b46a0, #4a2260);
+      border: 1px solid #c795e0;
+      border-bottom: 3px solid #7d4b9e;
+      color: #f7ecff;
+      font-family: 'Georgia', serif;
+      font-size: 0.95rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 0.7rem 1.2rem;
+      border-radius: 50px 14px 50px 14px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(138, 74, 176, 0.3), 0 4px 0 #2a1233;
+      transition: transform 0.1s ease, box-shadow 0.15s ease;
+    }
+    .menu-contenedor .btn-iniciar:active {
+      transform: translateY(3px);
+      box-shadow: 0 0 10px rgba(155, 77, 202, 0.3), 0 2px 0 #2a1233;
+    }
+
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-bottom: 0.4rem;
+      width: 100%;
+      padding: 0 0.5rem;
+    }
+
+    h1 {
+      font-size: clamp(1.2rem, 4.5vw, 2.2rem);
+      letter-spacing: 3px;
+      font-weight: 400;
+      color: var(--gold-light);
+      text-shadow: 0 0 8px rgba(232, 200, 116, .3), 0 0 20px rgba(155, 77, 202, .25);
+      word-break: break-word;
+    }
+    h1 .patita {
+      display: inline-block;
+      transform: translateY(2px);
+    }
+
+    .subtitulo {
+      display: inline-block;
+      margin-top: 0.1rem;
+      color: #d8bce8;
+      font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 0.15rem 0.8rem;
+      border-top: 1px solid #8a5aae;
+      border-bottom: 1px solid #8a5aae;
+      background: rgba(70, 30, 90, .15);
+      border-radius: 40px;
+      white-space: nowrap;
+    }
+
+    .info-jugador {
+      color: #c9a3dc;
+      font-size: clamp(0.55rem, 1.4vw, 0.7rem);
+      letter-spacing: 1px;
+      margin-top: 0.15rem;
+      opacity: 0.9;
+    }
+    .info-jugador span {
+      color: var(--gold-light);
+    }
+
+    .progreso-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 0.3rem auto 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+      position: relative;
+    }
+    .progreso-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(232, 200, 116, 0.1);
+    }
+    .progreso-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    .progreso-texto {
+      color: #c9a3dc;
+      font-size: clamp(0.5rem, 1vw, 0.6rem);
+      letter-spacing: 1px;
+      white-space: nowrap;
+      min-width: 45px;
+      text-align: right;
+    }
+
+    .historial {
+      display: flex;
+      gap: 0.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0.15rem 0 0.3rem;
+      z-index: 2;
+      position: relative;
+      max-width: 300px;
+    }
+    .historial-item {
+      width: 24px;
+      height: 34px;
+      border-radius: 4px;
+      background: linear-gradient(160deg, #3a1e4d, #1c0e28);
+      border: 1px solid #6f4489;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.4rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      opacity: 0.4;
+      transition: all 0.3s ease;
+      padding: 0.05rem;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .historial-item.revelada {
+      opacity: 1;
+      border-color: var(--gold);
+      box-shadow: 0 0 8px rgba(232, 200, 116, 0.15);
+    }
+    .historial-item .num {
+      font-size: 0.5rem;
+    }
+    .historial-item .nom {
+      font-size: 0.25rem;
+      opacity: 0.7;
+      display: block;
+    }
+
+    .escenario {
+      position: relative;
+      z-index: 2;
+      width: var(--card-w);
+      max-width: 300px;
+      aspect-ratio: 300 / 512;
+      perspective: 1000px;
+      margin: 0 auto;
+    }
+
+    .carta-fantasma {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: linear-gradient(160deg, #3a1e4d, #1c0e28);
+      border: 1px solid #6f4489;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .35);
+    }
+    .carta-fantasma.f1 {
+      transform: rotate(-4deg) translate(-6px, 3px);
+      z-index: 1;
+      opacity: .75;
+    }
+    .carta-fantasma.f2 {
+      transform: rotate(4deg) translate(6px, 4px);
+      z-index: 0;
+      opacity: .6;
+    }
+
+    .card-flip-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform .6s cubic-bezier(.4, .1, .2, 1);
+    }
+    .card-flip-container.girando {
+      transform: rotateY(360deg) scale(1.01);
+    }
+
+    .tarot-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      background:
+        radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, .03), transparent 60%),
+        linear-gradient(160deg, #4a2760, #2a1638 55%, #1c0e28);
+      border: 2px solid var(--gold);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, .45),
+        0 0 0 1px rgba(255, 255, 255, .02) inset,
+        0 0 15px rgba(183, 123, 219, .2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .4s ease;
+    }
+
+    .tarot-card::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(232, 200, 116, .35);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .tarot-card .foil {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, .08) 48%, rgba(255, 255, 255, .02) 52%, transparent 60%);
+      background-size: 260% 260%;
+      background-position: 0% 0%;
+      animation: foilLento 7s ease-in-out infinite;
+      opacity: .35;
+    }
+    @keyframes foilLento {
+      0% { background-position: 120% -20%; }
+      50% { background-position: -20% 120%; }
+      100% { background-position: 120% -20%; }
+    }
+
+    .tarot-card.brillo-burst {
+      animation: burst .6s ease;
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, .45),
+        0 0 30px var(--accent),
+        0 0 60px color-mix(in srgb, var(--accent) 50%, transparent),
+        0 0 0 1px rgba(255, 255, 255, .03) inset;
+    }
+    @keyframes burst {
+      0% { filter: brightness(1); }
+      25% { filter: brightness(1.25); }
+      100% { filter: brightness(1); }
+    }
+
+    .tarot-card .sweep {
+      position: absolute;
+      top: -30%;
+      left: -60%;
+      width: 60%;
+      height: 160%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .3), transparent);
+      transform: skewX(-18deg);
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .tarot-card.brillo-burst .sweep {
+      animation: barrido .6s ease;
+    }
+    @keyframes barrido {
+      0% { left: -60%; opacity: 0; }
+      15% { opacity: .7; }
+      50% { opacity: .3; }
+      100% { left: 130%; opacity: 0; }
+    }
+
+    .chispas {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .chispa {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, var(--accent) 60%, transparent 70%);
+      animation: subirChispa 0.6s ease-out forwards;
+    }
+    @keyframes subirChispa {
+      0% { transform: translateY(0) scale(0.3); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-40px) scale(1); opacity: 0; }
+    }
+
+    .tarot-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      padding: 0.4rem 0.3rem 0.3rem;
+    }
+
+    .indice {
+      position: absolute;
+      z-index: 7;
+      font-family: 'Georgia', serif;
+      color: var(--gold-light);
+      font-size: clamp(0.45rem, 1.2vw, 0.65rem);
+      letter-spacing: 1px;
+      text-align: center;
+      line-height: 1.1;
+      text-shadow: 0 0 3px rgba(232, 200, 116, .3);
+    }
+    .indice .glifo {
+      font-size: clamp(0.5rem, 1.4vw, 0.75rem);
+      display: block;
+    }
+    .indice.tl {
+      top: 4px;
+      left: 5px;
+    }
+    .indice.br {
+      bottom: 4px;
+      right: 5px;
+      transform: rotate(180deg);
+    }
+
+    .banner-nombre {
+      margin-top: 0.05rem;
+      font-size: clamp(0.7rem, 3.2vw, 1.1rem);
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      text-align: center;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold) 55%, var(--gold-dark));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3));
+      padding: 0 0.4rem;
+      line-height: 1.2;
+    }
+
+    .romanos {
+      font-size: clamp(0.4rem, 1vw, 0.55rem);
+      letter-spacing: 2px;
+      color: #c9a3dc;
+      text-transform: uppercase;
+      margin-top: 0.05rem;
+      opacity: .8;
+    }
+
+    .ilustracion {
+      flex: 1 1 auto;
+      width: 100%;
+      margin: 0.15rem 0 0.05rem;
+      border-radius: 6px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(183, 123, 219, .12), transparent 60%),
+        linear-gradient(180deg, rgba(0, 0, 0, .12), rgba(0, 0, 0, .2));
+      border: 1px solid rgba(232, 200, 116, .2);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      min-height: 60px;
+    }
+    .ilustracion::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, #e9d3ff, transparent),
+        radial-gradient(1px 1px at 80% 15%, #e9d3ff, transparent),
+        radial-gradient(1px 1px at 30% 85%, #cf9ef2, transparent),
+        radial-gradient(1px 1px at 70% 80%, #cf9ef2, transparent),
+        radial-gradient(1px 1px at 90% 55%, #e9d3ff, transparent);
+      opacity: .4;
+    }
+
+    .gato-svg {
+      width: 74%;
+      height: 74%;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .3));
+      position: relative;
+      z-index: 1;
+      max-height: 100%;
+    }
+
+    .significado {
+      font-size: clamp(0.5rem, 1.4vw, 0.65rem);
+      color: #e6d7f0;
+      text-align: center;
+      line-height: 1.3;
+      font-style: italic;
+      padding: 0 0.1rem;
+      min-height: 2em;
+      margin-top: 0.05rem;
+    }
+
+    .keywords {
+      display: flex;
+      gap: 0.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0.1rem 0 0.05rem;
+    }
+    .keywords span {
+      font-size: clamp(0.35rem, 1vw, 0.5rem);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      padding: 0.08rem 0.35rem;
+      border-radius: 14px;
+      font-family: 'Segoe UI', sans-serif;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+    }
+
+    .controles {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      padding: 0 0.5rem;
+    }
+
+    .btn-tarot {
+      background: linear-gradient(160deg, #7b46a0, #4a2260);
+      border: 1px solid #c795e0;
+      border-bottom: 3px solid #7d4b9e;
+      color: #f7ecff;
+      font-family: 'Georgia', serif;
+      font-size: var(--btn-fs);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.55rem 0.9rem;
+      border-radius: 50px 12px 50px 12px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(138, 74, 176, .3), 0 4px 0 #2a1233;
+      transition: transform .1s ease, box-shadow .15s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-tarot:active {
+      transform: translateY(3px);
+      box-shadow: 0 0 10px rgba(155, 77, 202, .3), 0 2px 0 #2a1233;
+    }
+    .btn-tarot:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .tarot-card.portada {
+      border-color: var(--gold);
+      border-width: 3px;
+      background:
+        radial-gradient(130% 95% at 50% 0%, rgba(255, 215, 0, 0.10), transparent 55%),
+        radial-gradient(110% 80% at 50% 100%, rgba(199, 149, 224, 0.22), transparent 60%),
+        linear-gradient(160deg, #2f1740, #1a0b23 55%, #0a0510);
+      animation: auraPortada 4.5s ease-in-out infinite;
+    }
+    .tarot-card.portada::before {
+      border-color: rgba(232, 200, 116, 0.55);
+      border-width: 2px;
+      border-style: double;
+      box-shadow: 0 0 10px rgba(232, 200, 116, 0.15) inset;
+    }
+    @keyframes auraPortada {
+      0%, 100% {
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, .45),
+          0 0 18px rgba(232, 200, 116, .25),
+          0 0 34px rgba(183, 123, 219, .18),
+          0 0 0 1px rgba(255, 255, 255, .02) inset;
+      }
+      50% {
+        box-shadow:
+          0 10px 34px rgba(0, 0, 0, .5),
+          0 0 26px rgba(232, 200, 116, .4),
+          0 0 50px rgba(183, 123, 219, .3),
+          0 0 0 1px rgba(255, 255, 255, .03) inset;
+      }
+    }
+    .portada .banner-nombre {
+      background: linear-gradient(180deg, #fff6da, #ffd700 45%, #e8c874 70%, #b8860b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      font-size: clamp(0.85rem, 3.8vw, 1.25rem);
+      letter-spacing: 5px;
+      text-shadow: 0 0 24px rgba(255, 215, 0, 0.3);
+    }
+    .portada .banner-nombre::after {
+      content: '─ ✦ ─';
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.55rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      opacity: 0.55;
+      -webkit-text-fill-color: var(--gold);
+    }
+    .portada .ilustracion {
+      border-color: rgba(232, 200, 116, 0.4);
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.10), transparent 55%),
+        radial-gradient(circle at 50% 75%, rgba(183, 123, 219, 0.16), transparent 60%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.18));
+      box-shadow: inset 0 0 22px rgba(183, 123, 219, .2), inset 0 0 2px rgba(232, 200, 116, .3);
+    }
+    .portada .romanos {
+      color: #dbb8ef;
+      letter-spacing: 4px;
+      font-size: clamp(0.45rem, 1.3vw, 0.65rem);
+      text-shadow: 0 0 8px rgba(199, 149, 224, .35);
+    }
+    .portada .keywords span {
+      background: linear-gradient(180deg, #f0cdff, #b77bdb);
+      color: #2a1233;
+      font-weight: 600;
+      box-shadow: 0 0 14px rgba(183, 123, 219, 0.35), 0 1px 2px rgba(0,0,0,.25);
+    }
+    .portada .significado {
+      color: #e8d3f5;
+      font-size: clamp(0.55rem, 1.6vw, 0.7rem);
+      letter-spacing: 1px;
+    }
+    .portada .indice {
+      color: var(--gold-light);
+      text-shadow: 0 0 6px rgba(232, 200, 116, .5);
+    }
+
+    .lectura-final {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(10, 5, 16, 0.92);
+      backdrop-filter: blur(4px);
+      padding: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .lectura-final.visible {
+      display: flex;
+    }
+
+    .lectura-contenedor {
+      background: linear-gradient(160deg, #3a1e4d, #1c0e28);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 1.5rem 1.2rem;
+      max-width: 460px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 30px rgba(183, 123, 219, 0.2), 0 15px 30px rgba(0,0,0,0.4);
+    }
+    .lectura-contenedor::-webkit-scrollbar {
+      width: 3px;
+    }
+    .lectura-contenedor::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 10px;
+    }
+
+    .lectura-contenedor h2 {
+      color: var(--gold-light);
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      text-align: center;
+      letter-spacing: 3px;
+      margin-bottom: 0.2rem;
+    }
+    .lectura-contenedor .lectura-sub {
+      color: #c9a3dc;
+      text-align: center;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .lectura-cartas-resumen {
+      display: flex;
+      gap: 0.3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .lectura-carta-mini {
+      width: 30px;
+      height: 42px;
+      border-radius: 4px;
+      background: linear-gradient(160deg, #4a2760, #2a1638);
+      border: 1px solid var(--gold);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.35rem;
+      color: var(--gold-light);
+      text-align: center;
+      line-height: 1.1;
+      padding: 0.1rem;
+    }
+    .lectura-carta-mini .num {
+      font-size: 0.6rem;
+      font-weight: 600;
+    }
+    .lectura-carta-mini .nom {
+      font-size: 0.25rem;
+      opacity: 0.8;
+    }
+
+    .lectura-texto {
+      color: #e6d7f0;
+      font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+      line-height: 1.6;
+      text-align: justify;
+      background: rgba(255,255,255,0.03);
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--gold);
+      margin: 0.3rem 0 0.8rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .lectura-texto::-webkit-scrollbar {
+      width: 3px;
+    }
+    .lectura-texto::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 10px;
+    }
+    .lectura-texto .highlight {
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .lectura-texto .carta-nombre {
+      color: #d4a0e8;
+      font-weight: 600;
+    }
+
+    .datos-misticos {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0.2rem 0 0.7rem;
+    }
+    .dato-mistico {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(232, 200, 116, 0.06);
+      border: 1px solid rgba(232, 200, 116, 0.3);
+      border-radius: 14px;
+      padding: 0.5rem 1rem;
+      min-width: 92px;
+    }
+    .dato-mistico .simbolo {
+      font-size: 1.3rem;
+      line-height: 1.2;
+    }
+    .dato-mistico .valor {
+      font-size: 0.8rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      margin-top: 0.15rem;
+      letter-spacing: 0.5px;
+    }
+    .dato-mistico .etiqueta {
+      font-size: 0.48rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #c9a3dc;
+      margin-top: 0.15rem;
+      opacity: 0.85;
+    }
+
+    .mensaje-mistico {
+      color: #c9a3dc;
+      font-size: 0.72rem;
+      font-style: italic;
+      text-align: center;
+      line-height: 1.5;
+      margin: 0 0 0.7rem;
+      opacity: 0.9;
+    }
+
+    .btn-reiniciar {
+      background: linear-gradient(160deg, #7b46a0, #4a2260);
+      border: 1px solid #c795e0;
+      border-bottom: 3px solid #7d4b9e;
+      color: #f7ecff;
+      font-family: 'Georgia', serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      border-radius: 50px 12px 50px 12px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(138, 74, 176, 0.3), 0 4px 0 #2a1233;
+      transition: transform 0.1s ease, box-shadow 0.15s ease;
+    }
+    .btn-reiniciar:active {
+      transform: translateY(3px);
+      box-shadow: 0 0 10px rgba(155, 77, 202, 0.3), 0 2px 0 #2a1233;
+    }
+
+    .pie {
+      margin-top: 0.5rem;
+      text-align: center;
+      color: #8a6a9c;
+      font-size: clamp(0.4rem, 1vw, 0.55rem);
+      letter-spacing: 2px;
+    }
+    .pie span {
+      display: inline-block;
+      animation: parpadeo 3s infinite alternate;
+    }
+    @keyframes parpadeo {
+      0% { opacity: .3; }
+      100% { opacity: 1; text-shadow: 0 0 8px #c38ce0; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.4rem 0.2rem; }
+      .escenario { --card-w: 68vw; max-width: 240px; }
+      .tarot-card::before { inset: 4px; border-radius: 6px; }
+      .indice.tl { top: 3px; left: 4px; }
+      .indice.br { bottom: 3px; right: 4px; }
+      .banner-nombre { font-size: clamp(0.65rem, 3vw, 0.85rem); }
+      .romanos { font-size: clamp(0.35rem, 0.9vw, 0.45rem); letter-spacing: 1px; }
+      .significado { font-size: clamp(0.4rem, 1.2vw, 0.55rem); min-height: 1.8em; }
+      .keywords span { font-size: clamp(0.3rem, 0.9vw, 0.4rem); padding: 0.06rem 0.25rem; }
+      .btn-tarot { padding: 0.4rem 0.7rem; font-size: clamp(0.65rem, 2.2vw, 0.8rem); }
+      .menu-contenedor { padding: 1.2rem 0.8rem; }
+      .lectura-contenedor { padding: 1rem 0.7rem; }
+      .historial-item { width: 20px; height: 28px; }
+      .historial-item .nom { display: none; }
+      .lectura-carta-mini { width: 24px; height: 34px; }
+      .lectura-carta-mini .nom { display: none; }
+      .portada .banner-nombre { font-size: clamp(0.75rem, 3.4vw, 0.95rem); letter-spacing: 3px; }
+      .chispa { width: 3px; height: 3px; }
+      .card-flip-container { transition: transform .5s cubic-bezier(.4, .1, .2, 1); }
+      .lectura-texto { font-size: clamp(0.7rem, 1.6vw, 0.85rem); max-height: 300px; }
+    }
+
+    @media (max-width: 360px) {
+      .escenario { --card-w: 62vw; max-width: 200px; }
+      h1 { font-size: clamp(0.9rem, 3.8vw, 1.3rem); letter-spacing: 2px; }
+      .subtitulo { font-size: clamp(0.35rem, 1vw, 0.45rem); padding: 0.1rem 0.5rem; letter-spacing: 2px; }
+    }
+
+    @media (min-width: 1024px) {
+      .escenario { --card-w: 270px; }
+      .tarot-content { padding: 0.7rem 0.6rem 0.6rem; }
+      .banner-nombre { font-size: 1.15rem; }
+      .significado { font-size: 0.68rem; }
+      .portada .banner-nombre { font-size: 1.35rem; letter-spacing: 6px; }
+      .lectura-texto { font-size: 1rem; max-height: 500px; }
+    }
+
+    @media (max-width: 480px) {
+      .estrellas span { width: 1px; height: 1px; }
+      .tarot-card .foil { animation: none; opacity: 0.2; }
+      .tarot-card.brillo-burst { animation-duration: .4s; }
+      .tarot-card.brillo-burst .sweep { animation-duration: .4s; }
+      .chispa { animation-duration: .4s; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- ============================ -->
-    <!--  HEADER                      -->
-    <!-- ============================ -->
-    <header class="header">
-        <div class="container header__inner">
-            <!-- Logo -->
-            <div class="header__logo">
-                <a href="#" class="logo">✦ Esencia Violeta ✦</a>
-            </div>
+  <div class="estrellas" id="estrellas"></div>
 
-            <!-- Botón hamburguesa (móvil) -->
-            <button class="hamburger-btn" aria-label="Abrir menú" id="hamburgerBtn">☰</button>
+  <!-- MENÚ DE INICIO -->
+  <div class="menu-inicio" id="menuInicio">
+    <div class="menu-contenedor">
+      <h2>🐱 Cleo Vidente</h2>
+      <div class="sub">✦ Tarot Gatuno ✦</div>
+      
+      <label for="nombreInput">📛 Tu nombre</label>
+      <input type="text" id="nombreInput" placeholder="Ej: Luna" maxlength="20" autocomplete="given-name">
+      
+      <label for="fechaInput">📅 Tu fecha de nacimiento <span class="opcional">(opcional)</span></label>
+      <input type="text" id="fechaInput" placeholder="Ej: 15/03/1995" maxlength="10" autocomplete="bday">
+      <div class="input-hint">Escribe tu fecha en formato DD/MM/AAAA</div>
+      
+      <button class="btn-iniciar" id="btnIniciar">✦ Comenzar Lectura ✦</button>
+      <div style="margin-top:0.5rem;color:#6a4a7a;font-size:0.5rem;letter-spacing:1px;">5 cartas revelarán tu destino gatuno</div>
+    </div>
+  </div>
 
-            <!-- Navegación -->
-            <nav class="header__nav" aria-label="Menú principal" id="mainNav">
-                <ul class="nav__list">
-                    <li><a href="#inicio" class="active">Inicio</a></li>
-                    <li><a href="#tienda">Tienda</a></li>
-                    <li><a href="#sobre-mi">Sobre mí</a></li>
-                    <li><a href="#experiencias">Experiencias</a></li>
-                    <li><a href="#blog">Blog</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                </ul>
-            </nav>
+  <!-- LECTURA FINAL -->
+  <div class="lectura-final" id="lecturaFinal">
+    <div class="lectura-contenedor">
+      <h2>🔮 Tu Lectura</h2>
+      <div class="lectura-sub" id="lecturaSaludo">para ti, viajero</div>
+      <div class="datos-misticos" id="datosMisticos"></div>
+      <div class="mensaje-mistico" id="mensajeMistico"></div>
+      <div class="lectura-cartas-resumen" id="lecturaResumen"></div>
+      <div class="lectura-texto" id="lecturaTexto">Las cartas han hablado...</div>
+      <button class="btn-reiniciar" id="btnReiniciar">♢ Nueva Lectura ♢</button>
+    </div>
+  </div>
 
-            <!-- Iconos (carrito + buscador) -->
-            <div class="header__actions">
-                <button class="action-btn" aria-label="Buscar" id="searchBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                </button>
-                <button class="action-btn" aria-label="Carrito" id="cartBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                    </svg>
-                    <span class="cart-badge" id="cartBadge">0</span>
-                </button>
-            </div>
+  <header>
+    <h1><span class="patita">🐾</span> Cleo Vidente <span class="patita">🐾</span></h1>
+    <div class="subtitulo">✦ Tarot Gatuno ✦</div>
+    <div class="info-jugador" id="infoJugador">Bienvenido, <span>viajero</span> ✦</div>
+  </header>
+
+  <div class="progreso-container">
+    <div class="progreso-bar">
+      <div class="progreso-fill" id="progresoFill"></div>
+    </div>
+    <span class="progreso-texto" id="progresoTexto">0 / 5</span>
+  </div>
+
+  <div class="historial" id="historial"></div>
+
+  <div class="escenario">
+    <div class="carta-fantasma f2"></div>
+    <div class="carta-fantasma f1"></div>
+
+    <div class="card-flip-container" id="flipContainer">
+      <div class="tarot-card portada" id="cartaTarot">
+        <div class="foil"></div>
+        <div class="sweep"></div>
+        <div class="chispas" id="chispas"></div>
+
+        <span class="indice tl"><span class="glifo">✦</span><span id="numTL">★</span></span>
+        <span class="indice br"><span class="glifo">✦</span><span id="numBR">★</span></span>
+
+        <div class="tarot-content">
+          <div class="banner-nombre" id="cartaNombre">Cleo Vidente</div>
+          <div class="romanos" id="cartaNumero">✦ Tarot Gatuno ✦</div>
+
+          <div class="ilustracion" style="background: radial-gradient(circle at 50% 40%, rgba(183,123,219,0.08), transparent 70%), linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.15));">
+            <svg class="gato-svg" id="gatoSVG" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" style="width:92%;height:92%;">
+              <defs>
+                <radialGradient id="pGlowBg" cx="50%" cy="42%" r="55%">
+                  <stop offset="0%" stop-color="#b77bdb" stop-opacity="0.32"/>
+                  <stop offset="100%" stop-color="#b77bdb" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="pGold" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#f7e6b4"/>
+                  <stop offset="55%" stop-color="#e8c874"/>
+                  <stop offset="100%" stop-color="#a67c2e"/>
+                </linearGradient>
+                <radialGradient id="pEye" cx="50%" cy="45%" r="60%">
+                  <stop offset="0%" stop-color="#fff6ff"/>
+                  <stop offset="40%" stop-color="#e3b8f7"/>
+                  <stop offset="100%" stop-color="#8a4ab0"/>
+                </radialGradient>
+                <filter id="pSoft" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="2.2" result="b"/>
+                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              <!-- Resplandor de fondo -->
+              <circle cx="140" cy="120" r="98" fill="url(#pGlowBg)"/>
+              <circle cx="140" cy="120" r="80" fill="none" stroke="#e8c874" stroke-width="0.6" opacity="0.25"/>
+              <circle cx="140" cy="120" r="70" fill="none" stroke="#c795e0" stroke-width="0.5" stroke-dasharray="1,4" opacity="0.25"/>
+
+              <!-- Luna creciente -->
+              <g filter="url(#pSoft)">
+                <path d="M196 62 Q182 58 187 44 Q200 37 208 51 Q204 61 196 62 Z" fill="url(#pGold)" opacity="0.85"/>
+              </g>
+
+              <!-- Estrellas -->
+              <g fill="#ffd700">
+                <polygon points="72,70 74,76 80,76 75,80 77,86 72,82 67,86 69,80 64,76 70,76" opacity="0.55"/>
+                <polygon points="205,165 207,171 213,171 208,175 210,181 205,177 200,181 202,175 197,171 203,171" opacity="0.5"/>
+                <circle cx="60" cy="150" r="1.6" opacity="0.6"/>
+                <circle cx="222" cy="100" r="1.6" opacity="0.6"/>
+                <circle cx="140" cy="46" r="1.6" opacity="0.6"/>
+              </g>
+
+              <!-- Orejas -->
+              <g>
+                <polygon points="98,96 116,56 130,100" fill="url(#pGold)" opacity="0.95"/>
+                <polygon points="182,96 164,56 150,100" fill="url(#pGold)" opacity="0.95"/>
+                <polygon points="104,90 116,66 124,92" fill="#5c2f78" opacity="0.85"/>
+                <polygon points="176,90 164,66 156,92" fill="#5c2f78" opacity="0.85"/>
+              </g>
+
+              <!-- Cabeza -->
+              <path d="M97,102 C88,128 88,158 106,176 C118,188 162,188 174,176 C192,158 192,128 183,102 C171,90 109,90 97,102 Z"
+                    fill="#2c1640" stroke="url(#pGold)" stroke-width="1.6" opacity="0.97"/>
+
+              <!-- Gema mística en la frente -->
+              <g filter="url(#pSoft)">
+                <polygon points="140,96 146,104 140,112 134,104" fill="url(#pGold)"/>
+              </g>
+
+              <!-- Ojos brillantes -->
+              <g filter="url(#pSoft)">
+                <path d="M112,132 Q124,120 138,131 Q124,140 112,132 Z" fill="url(#pEye)"/>
+                <path d="M168,132 Q156,120 142,131 Q156,140 168,132 Z" fill="url(#pEye)"/>
+                <line x1="125" y1="124" x2="125" y2="138" stroke="#3a1e4d" stroke-width="1.4"/>
+                <line x1="155" y1="124" x2="155" y2="138" stroke="#3a1e4d" stroke-width="1.4"/>
+              </g>
+
+              <!-- Nariz y boca -->
+              <polygon points="140,146 145,152 135,152" fill="url(#pGold)"/>
+              <path d="M140,152 Q133,159 124,155" fill="none" stroke="#e8c874" stroke-width="1" opacity="0.7"/>
+              <path d="M140,152 Q147,159 156,155" fill="none" stroke="#e8c874" stroke-width="1" opacity="0.7"/>
+
+              <!-- Bigotes -->
+              <g stroke="#e8c874" stroke-width="0.7" opacity="0.5" fill="none">
+                <path d="M96,142 Q75,138 60,140"/>
+                <path d="M96,150 Q74,150 58,155"/>
+                <path d="M96,158 Q76,163 62,170"/>
+                <path d="M184,142 Q205,138 220,140"/>
+                <path d="M184,150 Q206,150 222,155"/>
+                <path d="M184,158 Q204,163 218,170"/>
+              </g>
+
+              <!-- Destellos -->
+              <circle cx="140" cy="70" r="1.8" fill="#ffd700" opacity="0.5"/>
+              <circle cx="90" cy="118" r="1.4" fill="#ffd700" opacity="0.4"/>
+              <circle cx="190" cy="118" r="1.4" fill="#ffd700" opacity="0.4"/>
+            </svg>
+          </div>
+
+          <div class="keywords" id="cartaKeywords">
+            <span>★ Misterio</span>
+            <span>✦ Magia</span>
+            <span>☆ Destino</span>
+          </div>
+          <div class="significado" id="cartaSignificado">El tarot gatuno te espera. Prepárate para descubrir tu destino.</div>
         </div>
-    </header>
+      </div>
+    </div>
+  </div>
 
-    <!-- ============================ -->
-    <!--  HERO / BANNER CON IMAGEN    -->
-    <!-- ============================ -->
-    <section class="hero" id="inicio">
-        <!-- Imagen de fondo -->
-        <img src="img/hero.webp" alt="Esencia Violeta - Artículos esotéricos" class="hero__background" loading="eager" />
-        <div class="container hero__content">
-            <!-- Contenido oculto - la imagen del Hero tiene su propio texto -->
-        </div>
-    </section>
+  <div class="controles">
+    <button class="btn-tarot" id="btnLectura" disabled>♢ Tirar Carta ♢</button>
+    <div class="pie"><span>☆ el destino tiene bigotes ☆</span></div>
+  </div>
 
-    <!-- ============================ -->
-    <!--  FRASE DE BIENVENIDA         -->
-    <!-- ============================ -->
-    <section class="welcome">
-        <div class="container">
-            <blockquote class="welcome__text">
-                Bienvenida a Esencia Violeta, un rincón donde la magia se encuentra con la elegancia. Cada mazo, cada vela y cada amuleto están elegidos con la intención de acompañarte en tu camino espiritual. Que la luna te guíe.
-            </blockquote>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--tarot" style="top: 10%; left: 5%;">🃏</span>
-        <span class="decor-item decor-item--moon" style="top: 15%; right: 8%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="bottom: 20%; left: 10%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="bottom: 15%; right: 5%;">🔮</span>
-    </section>
+  <script>
+    (function() {
+      // ===== ESTRELLAS =====
+      const campo = document.getElementById('estrellas');
+      const esMovil = window.innerWidth < 768;
+      const numEstrellas = esMovil ? 20 : 35;
+      
+      for (let i = 0; i < numEstrellas; i++) {
+        const s = document.createElement('span');
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.animationDelay = (Math.random() * 3) + 's';
+        s.style.width = s.style.height = (Math.random() < 0.15 ? '2px' : '1.5px');
+        campo.appendChild(s);
+      }
 
-    <!-- ============================ -->
-    <!--  CATEGORÍAS DESTACADAS       -->
-    <!-- ============================ -->
-    <section class="categories" id="tienda">
-        <div class="container">
-            <h2 class="section-title">✦ Categorías destacadas ✦</h2>
-            <div class="categories__grid">
-                <!-- Tarot -->
-                <div class="category-card">
-                    <div class="category-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="Mazos de Tarot"></div>
-                    <h3 class="category-card__name">✦ Mazos de Tarot ✦</h3>
-                    <a href="#" class="btn btn--secondary">Ver más</a>
-                </div>
-                <!-- Inciensos y Velas -->
-                <div class="category-card">
-                    <div class="category-card__image" style="background-image: url('img/inciensos y velas.webp');" role="img" aria-label="Inciensos y Velas"></div>
-                    <h3 class="category-card__name">✦ Inciensos y Velas ✦</h3>
-                    <a href="#" class="btn btn--secondary">Ver más</a>
-                </div>
-                <!-- Amuletos y Piedras -->
-                <div class="category-card">
-                    <div class="category-card__image" style="background-image: url('img/amuletos y piedras.webp');" role="img" aria-label="Amuletos y Piedras"></div>
-                    <h3 class="category-card__name">✦ Amuletos y Piedras ✦</h3>
-                    <a href="#" class="btn btn--secondary">Ver más</a>
-                </div>
-            </div>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--moon" style="top: 12%; left: 3%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="top: 8%; right: 4%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="bottom: 15%; left: 6%;">☿</span>
-        <span class="decor-item decor-item--moon" style="bottom: 20%; right: 3%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="top: 45%; left: 2%;">🐈‍⬛</span>
-    </section>
+      // ===== PALETAS =====
+      const P = {
+        tuxedo: { ear: '#2d2d2d', earIn: '#ffd1b3', mask: '#2d2d2d', head: '#f5f0eb', body: '#f5f0eb', belly: '#ffffff', leg: '#f5f0eb', tail: '#2d2d2d', tailTip: '#f5f0eb', nose: '#8b6b4d', eye: '#7ec850', accent: '#8a6fd8' },
+        naranja: { ear: '#d97a3d', earIn: '#ffd9c2', mask: null, head: '#f2a765', body: '#f2a765', belly: '#fbe0c0', leg: '#f2a765', tail: '#d97a3d', tailTip: '#fbe0c0', nose: '#c96b3f', eye: '#3f8f4f', stripe: '#b85f2a', accent: '#e8935a' },
+        plateado: { ear: '#7d7d8a', earIn: '#c9a3dc', mask: null, head: '#a3a3b0', body: '#a3a3b0', belly: '#d8d8e0', leg: '#a3a3b0', tail: '#7d7d8a', tailTip: '#d8d8e0', nose: '#6b5b73', eye: '#c9a3dc', accent: '#9d8ec9' },
+        calico: { ear: '#2d2d2d', earIn: '#ffd1b3', mask: null, head: '#f5f0eb', body: '#f5f0eb', belly: '#ffffff', leg: '#f5f0eb', tail: '#e08a3c', tailTip: '#f5f0eb', nose: '#e8a0a0', eye: '#4a8fc9', patch1: '#e08a3c', patch2: '#2d2d2d', accent: '#d9a066' },
+        negro: { ear: '#26232b', earIn: '#5b3d55', mask: null, head: '#2b2b33', body: '#2b2b33', belly: '#3a3a44', leg: '#2b2b33', tail: '#26232b', tailTip: '#2b2b33', nose: '#55404a', eye: '#ffd700', accent: '#6a5acd' },
+        blanco: { ear: '#fbf8f2', earIn: '#ffd1b3', mask: null, head: '#fbf8f2', body: '#fbf8f2', belly: '#ffffff', leg: '#fbf8f2', tail: '#fbf8f2', tailTip: '#f0e8da', nose: '#e8a0a0', eye: '#7ec8e3', eye2: '#d9a843', accent: '#cbb8e0' },
+        cafeTabby: { ear: '#6b4a35', earIn: '#e0b088', mask: null, head: '#8a6247', body: '#8a6247', belly: '#c9a480', leg: '#8a6247', tail: '#6b4a35', tailTip: '#c9a480', nose: '#4a3324', eye: '#d4a843', stripe: '#55392a', accent: '#a9825f' },
+        siames: { ear: '#4a3324', earIn: '#8a6a52', mask: '#4a3324', head: '#f0e2c8', body: '#f0e2c8', belly: '#f7ecd8', leg: '#f0e2c8', tail: '#4a3324', tailTip: '#4a3324', nose: '#a86b5a', eye: '#5aa8e8', points: '#4a3324', accent: '#c9b088' },
+        azulRuso: { ear: '#7c8a99', earIn: '#b9c4cd', mask: null, head: '#8896a3', body: '#8896a3', belly: '#b9c4cd', leg: '#8896a3', tail: '#7c8a99', tailTip: '#b9c4cd', nose: '#6b5b6a', eye: '#6bc46b', accent: '#8ea0c9' },
+        crema: { ear: '#d9b98a', earIn: '#ffe6c2', mask: null, head: '#f0d9b5', body: '#f0d9b5', belly: '#fbeed7', leg: '#f0d9b5', tail: '#d9b98a', tailTip: '#fbeed7', nose: '#c98a6b', eye: '#d99a3d', accent: '#e0b878' },
+      };
 
-    <!-- ============================ -->
-    <!--  PRODUCTOS DESTACADOS        -->
-    <!-- ============================ -->
-    <section class="featured-products">
-        <div class="container">
-            <h2 class="section-title">✦ Productos destacados ✦</h2>
-            <div class="products__grid">
-                <!-- Producto 1 -->
-                <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="Mazo de Tarot Luna"></div>
-                    <h3 class="product-card__name">✦ Mazo de Tarot Luna ✦</h3>
-                    <span class="product-card__price">€25,00</span>
-                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
-                </article>
-                <!-- Producto 2 -->
-                <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/inciensos y velas.webp');" role="img" aria-label="Incienso de Sándalo"></div>
-                    <h3 class="product-card__name">✦ Incienso de Sándalo ✦</h3>
-                    <span class="product-card__price">€18,50</span>
-                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
-                </article>
-                <!-- Producto 3 -->
-                <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/amuletos y piedras.webp');" role="img" aria-label="Amatista Natural"></div>
-                    <h3 class="product-card__name">✦ Amatista Natural ✦</h3>
-                    <span class="product-card__price">€32,00</span>
-                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
-                </article>
-                <!-- Producto 4 -->
-                <article class="product-card">
-                    <div class="product-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="Mazo de Tarot Estrella"></div>
-                    <h3 class="product-card__name">✦ Mazo de Tarot Estrella ✦</h3>
-                    <span class="product-card__price">€28,50</span>
-                    <button class="btn btn--primary btn--small add-to-cart">✦ Añadir ✦</button>
-                </article>
-            </div>
-            <div class="featured-products__footer">
-                <a href="#" class="btn btn--secondary">✦ Ver toda la tienda ✦</a>
-            </div>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--cat" style="top: 10%; left: 2%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="top: 15%; right: 3%;">♀</span>
-        <span class="decor-item decor-item--moon" style="bottom: 20%; left: 4%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="bottom: 25%; right: 2%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="top: 50%; left: 1%;">♃</span>
-    </section>
+      // ===== PIEZAS DE DIBUJO =====
+      function orejas(pal) {
+        return `
+          <path d="M80 85 L65 40 L105 70 Z" fill="${pal.ear}" stroke="#1a1a1a33" stroke-width="1.5"/>
+          <path d="M85 80 L72 48 L103 72 Z" fill="${pal.earIn}" opacity="0.5"/>
+          <path d="M200 85 L215 40 L175 70 Z" fill="${pal.ear}" stroke="#1a1a1a33" stroke-width="1.5"/>
+          <path d="M195 80 L208 48 L177 72 Z" fill="${pal.earIn}" opacity="0.5"/>
+        `;
+      }
 
-    <!-- ============================ -->
-    <!--  SOBRE MÍ (BREVE)            -->
-    <!-- ============================ -->
-    <section class="about-brief" id="sobre-mi">
-        <div class="container about-brief__inner">
-            <div class="about-brief__image">
-                <img src="img/amuletos y piedras.webp" alt="Ali, fundadora de Esencia Violeta" loading="lazy" />
-            </div>
-            <div class="about-brief__content">
-                <h2 class="section-title">✦ Sobre mí ✦</h2>
-                <p>
-                    Hola, soy Ali. Hace años busqué mi primer mazo de tarot y no lo encontré en ningún lado. 
-                    Esa frustración se convirtió en mi motor. Creé Esencia Violeta para que tú, con tus dones 
-                    y talentos especiales, tengas un lugar donde sentirte comprendida. Aquí cada producto tiene 
-                    una energía pensada para ti.
-                </p>
-                <p>
-                    🌙 🔮 ✨ Cada pieza que encuentras aquí ha sido seleccionada con intención y amor. 
-                    Desde los mazos de tarot hasta las piedras y amuletos, todo tiene una historia que contar 
-                    y una energía que compartir.
-                </p>
-                <a href="#" class="btn btn--primary">✦ Conóceme más ✦</a>
-            </div>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--tarot" style="top: 10%; left: 3%;">☽</span>
-        <span class="decor-item decor-item--moon" style="top: 15%; right: 4%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="bottom: 20%; left: 5%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="bottom: 15%; right: 3%;">♄</span>
-        <span class="decor-item decor-item--moon" style="top: 50%; left: 2%;">🌙</span>
-    </section>
+      function cabeza(pal) {
+        let mask = '';
+        if (pal.mask) {
+          mask = `
+            <ellipse cx="112" cy="115" rx="30" ry="26" fill="${pal.mask}"/>
+            <ellipse cx="168" cy="115" rx="30" ry="26" fill="${pal.mask}"/>
+          `;
+        }
+        let puntosSiames = '';
+        if (pal.points) {
+          puntosSiames = `
+            <ellipse cx="140" cy="132" rx="24" ry="18" fill="${pal.points}" opacity="0.8"/>
+          `;
+        }
+        return `
+          <ellipse cx="140" cy="120" rx="68" ry="58" fill="${pal.head}" stroke="#00000030" stroke-width="2"/>
+          ${mask}${puntosSiames}
+        `;
+      }
 
-    <!-- ============================ -->
-    <!--  EXPERIENCIAS (HOME)         -->
-    <!-- ============================ -->
-    <section class="experiences-home" id="experiencias">
-        <div class="container">
-            <h2 class="section-title">✦ Experiencias compartidas ✦</h2>
-            <div class="experiences__grid">
-                <!-- Historia 1 -->
-                <article class="experience-card">
-                    <span class="experience-card__category">✦ Sueño especial ✦</span>
-                    <h3 class="experience-card__alias">— Luna</h3>
-                    <time class="experience-card__date">12 de abril, 2026</time>
-                    <p class="experience-card__excerpt">Soñé que volaba entre constelaciones y una voz me susurraba mi propósito...</p>
-                    <a href="#" class="experience-card__link">Leer más</a>
-                </article>
-                <!-- Historia 2 -->
-                <article class="experience-card">
-                    <span class="experience-card__category">✦ Sincronicidad ✦</span>
-                    <h3 class="experience-card__alias">— Sol</h3>
-                    <time class="experience-card__date">8 de abril, 2026</time>
-                    <p class="experience-card__excerpt">Tres veces seguidas vi el número 11:11, justo cuando pensaba en mi abuela...</p>
-                    <a href="#" class="experience-card__link">Leer más</a>
-                </article>
-                <!-- Historia 3 -->
-                <article class="experience-card">
-                    <span class="experience-card__category">✦ Experiencia paranormal ✦</span>
-                    <h3 class="experience-card__alias">— Estrella</h3>
-                    <time class="experience-card__date">3 de abril, 2026</time>
-                    <p class="experience-card__excerpt">Sintiendo una presencia cálida en mi habitación, supe que no estaba sola...</p>
-                    <a href="#" class="experience-card__link">Leer más</a>
-                </article>
-            </div>
-            <div class="experiences__actions">
-                <a href="#" class="btn btn--secondary">✦ Comparte tu experiencia ✦</a>
-                <a href="#" class="btn btn--primary">✦ Ver todas ✦</a>
-            </div>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--cat" style="top: 10%; left: 3%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="top: 12%; right: 4%;">♅</span>
-        <span class="decor-item decor-item--moon" style="bottom: 25%; left: 4%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="bottom: 20%; right: 3%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="top: 45%; left: 2%;">♆</span>
-    </section>
+      function ojos(pal, estado) {
+        const c1 = 112, c2 = 168, cy = 115;
+        const iris = pal.eye;
+        const iris2 = pal.eye2 || pal.eye;
+        if (estado === 'cerrado') {
+          return `
+            <path d="M100 115 Q112 107 124 115" stroke="#2d1f0a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M156 115 Q168 107 180 115" stroke="#2d1f0a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          `;
+        }
+        if (estado === 'feliz') {
+          return `
+            <path d="M100 118 Q112 105 124 118" stroke="#2d1f0a" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M156 118 Q168 105 180 118" stroke="#2d1f0a" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          `;
+        }
+        if (estado === 'enojado') {
+          return `
+            <ellipse cx="${c1}" cy="${cy}" rx="13" ry="14" fill="#ff3b3b"/>
+            <ellipse cx="${c1}" cy="${cy}" rx="5" ry="10" fill="#1a0000"/>
+            <ellipse cx="${c2}" cy="${cy}" rx="13" ry="14" fill="#ff3b3b"/>
+            <ellipse cx="${c2}" cy="${cy}" rx="5" ry="10" fill="#1a0000"/>
+            <path d="M97 98 L123 106" stroke="#2d1f0a" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M183 98 L157 106" stroke="#2d1f0a" stroke-width="2.5" stroke-linecap="round"/>
+          `;
+        }
+        return `
+          <ellipse cx="${c1}" cy="${cy}" rx="14" ry="16" fill="${iris}"/>
+          <ellipse cx="${c1}" cy="${cy}" rx="8" ry="10" fill="#1e1a12"/>
+          <ellipse cx="108" cy="109" rx="3.5" ry="4.5" fill="white" opacity="0.9"/>
+          <ellipse cx="114" cy="120" rx="1.5" ry="1.8" fill="white" opacity="0.6"/>
+          <ellipse cx="${c2}" cy="${cy}" rx="14" ry="16" fill="${iris2}"/>
+          <ellipse cx="${c2}" cy="${cy}" rx="8" ry="10" fill="#1e1a12"/>
+          <ellipse cx="164" cy="109" rx="3.5" ry="4.5" fill="white" opacity="0.9"/>
+          <ellipse cx="170" cy="120" rx="1.5" ry="1.8" fill="white" opacity="0.6"/>
+        `;
+      }
 
-    <!-- ============================ -->
-    <!--  BLOG (HOME)                 -->
-    <!-- ============================ -->
-    <section class="blog-home" id="blog">
-        <div class="container">
-            <h2 class="section-title">✦ Últimos artículos ✦</h2>
-            <div class="blog__grid">
-                <!-- Artículo 1 -->
-                <article class="blog-card">
-                    <div class="blog-card__image" style="background-image: url('img/mazos de tarot.webp');" role="img" aria-label="El tarot y las fases de la luna"></div>
-                    <div class="blog-card__body">
-                        <h3 class="blog-card__title">✦ El tarot y las fases de la luna ✦</h3>
-                        <time class="blog-card__date">15 de abril, 2026</time>
-                        <p class="blog-card__excerpt">Cómo la energía lunar influye en tus lecturas...</p>
-                        <a href="#" class="btn btn--primary btn--small">✦ Leer más ✦</a>
-                    </div>
-                </article>
-                <!-- Artículo 2 -->
-                <article class="blog-card">
-                    <div class="blog-card__image" style="background-image: url('img/amuletos y piedras.webp');" role="img" aria-label="Piedras con alma"></div>
-                    <div class="blog-card__body">
-                        <h3 class="blog-card__title">✦ Piedras con alma ✦</h3>
-                        <time class="blog-card__date">10 de abril, 2026</time>
-                        <p class="blog-card__excerpt">Conecta con la energía de las piedras y descubre tu amuleto...</p>
-                        <a href="#" class="btn btn--primary btn--small">✦ Leer más ✦</a>
-                    </div>
-                </article>
-                <!-- Artículo 3 -->
-                <article class="blog-card">
-                    <div class="blog-card__image" style="background-image: url('img/inciensos y velas.webp');" role="img" aria-label="Inciensos para cada intención"></div>
-                    <div class="blog-card__body">
-                        <h3 class="blog-card__title">✦ Inciensos para cada intención ✦</h3>
-                        <time class="blog-card__date">5 de abril, 2026</time>
-                        <p class="blog-card__excerpt">Desde la purificación hasta la meditación...</p>
-                        <a href="#" class="btn btn--primary btn--small">✦ Leer más ✦</a>
-                    </div>
-                </article>
-            </div>
-            <div class="blog__footer">
-                <a href="#" class="btn btn--secondary">✦ Ver más artículos ✦</a>
-            </div>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--moon" style="top: 15%; left: 3%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="top: 10%; right: 4%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="bottom: 20%; left: 5%;">♇</span>
-        <span class="decor-item decor-item--moon" style="bottom: 15%; right: 3%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="top: 50%; left: 2%;">🐈‍⬛</span>
-    </section>
+      function rubor() {
+        return `
+          <ellipse cx="92" cy="132" rx="9" ry="5" fill="#ff9eb0" opacity="0.3"/>
+          <ellipse cx="188" cy="132" rx="9" ry="5" fill="#ff9eb0" opacity="0.3"/>
+        `;
+      }
 
-    <!-- ============================ -->
-    <!--  CONTACTO                    -->
-    <!-- ============================ -->
-    <section class="contact" id="contacto">
-        <div class="container">
-            <h2 class="section-title">✦ Contacto ✦</h2>
-            <div class="contact__wrapper">
-                <p class="contact__text">
-                    ¿Tienes alguna pregunta? Escríbeme y te responderé pronto.
-                </p>
-                <form class="contact__form" id="contactForm">
-                    <input type="text" name="nombre" id="nombre" placeholder="✦ Tu nombre" required />
-                    <input type="email" name="correo" id="correo" placeholder="✦ Tu correo" required />
-                    <input type="text" name="asunto" id="asunto" placeholder="✦ Asunto" required />
-                    <textarea name="mensaje" id="mensaje" placeholder="✦ Tu mensaje..." rows="4" required></textarea>
-                    <button type="submit" class="btn btn--primary" id="enviarWhatsApp">✦ Enviar por WhatsApp ✦</button>
-                </form>
-            </div>
-        </div>
-        <!-- Elementos decorativos -->
-        <span class="decor-item decor-item--tarot" style="top: 10%; left: 4%;">☯</span>
-        <span class="decor-item decor-item--moon" style="top: 15%; right: 4%;">🌙</span>
-        <span class="decor-item decor-item--cat" style="bottom: 20%; left: 5%;">🐈‍⬛</span>
-        <span class="decor-item decor-item--tarot" style="bottom: 15%; right: 4%;">☥</span>
-        <span class="decor-item decor-item--moon" style="top: 50%; left: 3%;">🌙</span>
-    </section>
+      function narizBoca(pal, estado) {
+        let boca = `<path d="M130 138 Q140 144 150 138" stroke="#6b4c3b" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+        if (estado === 'feliz') boca = `<path d="M123 137 Q140 153 157 137" stroke="#6b4c3b" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+        if (estado === 'pequena') boca = `<path d="M134 139 Q140 142 146 139" stroke="#6b4c3b" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+        if (estado === 'seria') boca = `<line x1="132" y1="140" x2="148" y2="140" stroke="#6b4c3b" stroke-width="1.8" stroke-linecap="round"/>`;
+        return `
+          <ellipse cx="140" cy="130" rx="8" ry="5" fill="${pal.nose}"/>
+          <ellipse cx="140" cy="129" rx="6" ry="3.5" fill="${pal.nose}" opacity="0.6"/>
+          ${boca}
+        `;
+      }
 
-    <!-- ============================ -->
-    <!--  FOOTER                      -->
-    <!-- ============================ -->
-    <footer class="footer">
-        <div class="container footer__inner">
-            <div class="footer__brand">
-                <a href="#" class="logo logo--small">✦ Esencia Violeta ✦</a>
-                <p class="footer__quote">“Que la luna guíe tu camino”</p>
-            </div>
+      function bigotes() {
+        return `
+          <line x1="102" y1="130" x2="72" y2="125" stroke="#5559" stroke-width="1.5" opacity="0.5"/>
+          <line x1="102" y1="135" x2="70" y2="138" stroke="#5559" stroke-width="1.5" opacity="0.5"/>
+          <line x1="178" y1="130" x2="208" y2="125" stroke="#5559" stroke-width="1.5" opacity="0.5"/>
+          <line x1="178" y1="135" x2="210" y2="138" stroke="#5559" stroke-width="1.5" opacity="0.5"/>
+          <line x1="107" y1="125" x2="77" y2="115" stroke="#5559" stroke-width="1.5" opacity="0.5"/>
+          <line x1="173" y1="125" x2="203" y2="115" stroke="#5559" stroke-width="1.5" opacity="0.5"/>
+        `;
+      }
 
-            <nav class="footer__nav" aria-label="Menú del pie">
-                <ul>
-                    <li><a href="#inicio">✦ Inicio ✦</a></li>
-                    <li><a href="#tienda">✦ Tienda ✦</a></li>
-                    <li><a href="#sobre-mi">✦ Sobre mí ✦</a></li>
-                    <li><a href="#experiencias">✦ Experiencias ✦</a></li>
-                    <li><a href="#blog">✦ Blog ✦</a></li>
-                    <li><a href="#contacto">✦ Contacto ✦</a></li>
-                </ul>
-            </nav>
+      function pecho(pal) {
+        if (pal.mask || pal.points || pal.patch1) {
+          return `<ellipse cx="140" cy="195" rx="23" ry="18" fill="${pal.belly}"/>`;
+        }
+        return `<ellipse cx="140" cy="197" rx="20" ry="15" fill="${pal.belly}" opacity="0.6"/>`;
+      }
 
-            <div class="footer__social">
-                <!-- Facebook -->
-                <a href="https://www.facebook.com/esenciavioletacr" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="social-icon social-icon--facebook" 
-                   aria-label="Facebook">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                </a>
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/esenciavioletacr" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="social-icon social-icon--instagram" 
-                   aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                        <circle cx="12" cy="12" r="5"/>
-                        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-        <div class="footer__bottom">
-            <div class="container">
-                <p>✦ 2026 Esencia Violeta · Todos los derechos reservados ✦</p>
-            </div>
-        </div>
-    </footer>
+      function estampado(pal) {
+        let out = '';
+        if (pal.stripe) {
+          out += `
+            <path d="M118 78 Q122 92 118 104" stroke="${pal.stripe}" stroke-width="2.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+            <path d="M162 78 Q158 92 162 104" stroke="${pal.stripe}" stroke-width="2.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+            <path d="M105 165 Q140 172 175 165" stroke="${pal.stripe}" stroke-width="3.5" fill="none" opacity="0.35" stroke-linecap="round"/>
+            <path d="M110 185 Q140 191 170 185" stroke="${pal.stripe}" stroke-width="3.5" fill="none" opacity="0.3" stroke-linecap="round"/>
+          `;
+        }
+        if (pal.patch1) {
+          out += `
+            <path d="M95 90 Q75 75 90 55 Q112 62 108 90 Z" fill="${pal.patch1}" opacity="0.85"/>
+            <path d="M170 170 Q205 165 200 200 Q175 210 165 195 Z" fill="${pal.patch2}" opacity="0.85"/>
+            <ellipse cx="118" cy="215" rx="16" ry="12" fill="${pal.patch1}" opacity="0.8"/>
+          `;
+        }
+        return out;
+      }
 
-    <!-- ============================ -->
-    <!--  SCRIPTS                     -->
-    <!-- ============================ -->
-    <script src="js/script.js"></script>
+      function patasTraseras(pal, cx1, cx2, cy, rx = 18, ry = 10, rot1 = 0, rot2 = 0) {
+        return `
+          <ellipse cx="${cx1}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${pal.leg}" stroke="#00000025" stroke-width="1.5" transform="rotate(${rot1} ${cx1} ${cy})"/>
+          <ellipse cx="${cx2}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${pal.leg}" stroke="#00000025" stroke-width="1.5" transform="rotate(${rot2} ${cx2} ${cy})"/>
+        `;
+      }
+
+      function cuerpo(pal, cx = 140, cy = 200, rx = 72, ry = 55) {
+        return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`;
+      }
+
+      function moño() {
+        return `
+          <path d="M115 180 L100 165 L130 170 L140 180 L150 170 L180 165 L165 180 Z" fill="#2d2d2d"/>
+          <ellipse cx="140" cy="180" rx="14" ry="9" fill="#3d3d3d"/>
+        `;
+      }
+
+      function dibujarGato(coat, poseFn, extra, mirror) {
+        const pal = P[coat];
+        const p = poseFn(pal);
+        const grupo = `
+          ${p.cuerpo}
+          ${p.patas}
+          ${p.cola}
+          ${cabeza(pal)}
+          ${orejas(pal)}
+          ${ojos(pal, p.ojos || 'abierto')}
+          ${p.rubor ? rubor() : ''}
+          ${narizBoca(pal, p.boca || '')}
+          ${bigotes()}
+          ${p.pecho !== false ? pecho(pal) : ''}
+          ${p.accesorio || ''}
+          ${p.corbata ? moño() : ''}
+          ${estampado(pal)}
+          ${extra || ''}
+        `;
+        if (mirror) {
+          return `<g transform="translate(280,0) scale(-1,1)">${grupo}</g>`;
+        }
+        return grupo;
+      }
+
+      // ===== POSES =====
+      function poseSentado(pal) {
+        return {
+          cuerpo: cuerpo(pal),
+          patas: patasTraseras(pal, 110, 170, 245) + `
+            <ellipse cx="125" cy="235" rx="10" ry="8" fill="${pal.leg}" stroke="#00000025" stroke-width="1.3"/>
+            <ellipse cx="155" cy="235" rx="10" ry="8" fill="${pal.leg}" stroke="#00000025" stroke-width="1.3"/>`,
+          cola: `<path d="M205 210 Q235 195 225 155 Q220 140 205 145" stroke="${pal.tail}" stroke-width="14" fill="none" stroke-linecap="round"/>`,
+          corbata: true,
+          rubor: true
+        };
+      }
+
+      function poseRegio(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="205" rx="68" ry="65" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: `
+            <ellipse cx="128" cy="248" rx="9" ry="14" fill="${pal.leg}" stroke="#00000025" stroke-width="1.3"/>
+            <ellipse cx="152" cy="248" rx="9" ry="14" fill="${pal.leg}" stroke="#00000025" stroke-width="1.3"/>`,
+          cola: `<path d="M198 225 Q230 235 222 190 Q218 165 198 168" stroke="${pal.tail}" stroke-width="14" fill="none" stroke-linecap="round"/>`,
+          boca: 'pequena',
+          ojos: 'abierto'
+        };
+      }
+
+      function poseMeditar(pal) {
+        return {
+          cuerpo: cuerpo(pal),
+          patas: patasTraseras(pal, 112, 168, 244, 17, 10) + `
+            <ellipse cx="126" cy="234" rx="13" ry="8" fill="${pal.leg}" transform="rotate(-18 126 234)"/>
+            <ellipse cx="154" cy="234" rx="13" ry="8" fill="${pal.leg}" transform="rotate(18 154 234)"/>`,
+          cola: `<path d="M140 250 Q140 262 158 258 Q170 254 165 240" stroke="${pal.tail}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
+          ojos: 'cerrado',
+          boca: 'pequena',
+          corbata: false
+        };
+      }
+
+      function poseRecostado(pal) {
+        return {
+          cuerpo: `<ellipse cx="150" cy="215" rx="90" ry="42" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: `
+            <ellipse cx="205" cy="230" rx="20" ry="9" fill="${pal.leg}" transform="rotate(8 205 230)"/>
+            <ellipse cx="95" cy="235" rx="16" ry="8" fill="${pal.leg}" transform="rotate(-4 95 235)"/>`,
+          cola: `<path d="M235 220 Q265 200 250 165" stroke="${pal.tail}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
+          ojos: 'feliz',
+          boca: 'pequena',
+          rubor: true,
+          pecho: false
+        };
+      }
+
+      function poseFeliz(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="215" rx="76" ry="48" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: `
+            <ellipse cx="95" cy="185" rx="10" ry="18" fill="${pal.leg}" transform="rotate(-25 95 185)"/>
+            <ellipse cx="185" cy="185" rx="10" ry="18" fill="${pal.leg}" transform="rotate(25 185 185)"/>
+            <ellipse cx="115" cy="255" rx="11" ry="16" fill="${pal.leg}" transform="rotate(-15 115 255)"/>
+            <ellipse cx="165" cy="255" rx="11" ry="16" fill="${pal.leg}" transform="rotate(15 165 255)"/>`,
+          cola: `<path d="M210 220 Q230 200 215 175" stroke="${pal.tail}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+          ojos: 'feliz',
+          boca: 'feliz',
+          rubor: true,
+          pecho: true
+        };
+      }
+
+      function poseColgado(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="150" rx="68" ry="58" fill="${pal.body}" stroke="#00000030" stroke-width="2" transform="rotate(180 140 150)"/>`,
+          patas: `
+            <ellipse cx="112" cy="90" rx="10" ry="20" fill="${pal.leg}" transform="rotate(12 112 90)"/>
+            <ellipse cx="168" cy="90" rx="10" ry="20" fill="${pal.leg}" transform="rotate(-12 168 90)"/>
+            <ellipse cx="118" cy="238" rx="10" ry="16" fill="${pal.leg}" transform="rotate(-8 118 238)"/>
+            <ellipse cx="162" cy="238" rx="10" ry="16" fill="${pal.leg}" transform="rotate(8 162 238)"/>`,
+          cola: `<path d="M140 255 Q160 265 150 245" stroke="${pal.tail}" stroke-width="11" fill="none" stroke-linecap="round"/>`,
+          ojos: 'feliz',
+          boca: 'pequena',
+          pecho: false
+        };
+      }
+
+      function poseSalto(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="195" rx="75" ry="48" fill="${pal.body}" stroke="#00000030" stroke-width="2" transform="rotate(-12 140 195)"/>`,
+          patas: `
+            <ellipse cx="90" cy="230" rx="11" ry="18" fill="${pal.leg}" transform="rotate(-35 90 230)"/>
+            <ellipse cx="195" cy="215" rx="11" ry="18" fill="${pal.leg}" transform="rotate(30 195 215)"/>`,
+          cola: `<path d="M205 220 Q245 225 240 190 Q236 168 215 172" stroke="${pal.tail}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
+          ojos: 'abierto',
+          boca: 'feliz',
+          pecho: false
+        };
+      }
+
+      function poseAgazapado(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="220" rx="84" ry="42" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: `
+            <ellipse cx="90" cy="248" rx="13" ry="9" fill="${pal.leg}" transform="rotate(-10 90 248)"/>
+            <ellipse cx="190" cy="248" rx="13" ry="9" fill="${pal.leg}" transform="rotate(10 190 248)"/>`,
+          cola: `<path d="M215 230 Q245 210 230 175" stroke="${pal.tail}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
+          ojos: 'enojado',
+          boca: 'seria',
+          pecho: false
+        };
+      }
+
+      function poseOvillo(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="220" rx="65" ry="46" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: `<ellipse cx="140" cy="258" rx="28" ry="11" fill="${pal.leg}"/>`,
+          cola: `<path d="M195 235 Q225 250 200 262 Q175 268 165 250" stroke="${pal.tail}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+          ojos: 'cerrado',
+          boca: 'pequena',
+          pecho: false
+        };
+      }
+
+      function poseErguido(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="205" rx="60" ry="62" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: patasTraseras(pal, 118, 162, 252, 14, 9) + `
+            <ellipse cx="80" cy="200" rx="12" ry="18" fill="${pal.leg}" transform="rotate(-35 80 200)"/>`,
+          cola: `<path d="M195 220 Q225 210 215 175" stroke="${pal.tail}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+          ojos: 'abierto',
+          boca: '',
+          corbata: true,
+          rubor: true
+        };
+      }
+
+      function poseAlerta(pal) {
+        return {
+          cuerpo: `<ellipse cx="140" cy="205" rx="76" ry="50" fill="${pal.body}" stroke="#00000030" stroke-width="2"/>`,
+          patas: `
+            <ellipse cx="102" cy="248" rx="10" ry="14" fill="${pal.leg}"/>
+            <ellipse cx="178" cy="248" rx="10" ry="14" fill="${pal.leg}"/>`,
+          cola: `<path d="M212 218 Q248 210 240 170 Q236 150 216 156" stroke="${pal.tail}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+          ojos: 'abierto',
+          boca: 'seria',
+          pecho: true
+        };
+      }
+
+      // ===== CARTAS (22 Arcanos) =====
+      const cartas = [
+        { num: '0', romano: 'Arcano 0', nombre: 'El Loco', kws: ['Inicio', 'Fe', 'Libertad'],
+          significado: 'Nuevos comienzos, espontaneidad y fe. Da el salto al vacío con confianza.',
+          coat: 'naranja', pose: poseSalto,
+          extra: `<rect x="115" y="188" width="18" height="22" rx="3" fill="#8b4513" stroke="#4a2a0a" stroke-width="1.5"/><line x1="120" y1="188" x2="120" y2="178" stroke="#4a2a0a" stroke-width="1.5"/><line x1="128" y1="188" x2="128" y2="178" stroke="#4a2a0a" stroke-width="1.5"/>` },
+
+        { num: 'I', romano: 'Arcano I', nombre: 'El Mago', kws: ['Poder', 'Voluntad', 'Creación'],
+          significado: 'Manifiesta tu poder interior, creatividad y voluntad. Tienes todas las herramientas.',
+          coat: 'tuxedo', pose: poseErguido,
+          extra: `<polygon points="185,75 190,90 205,90 193,100 197,115 185,105 173,115 177,100 165,90 180,90" fill="#ffd700" opacity="0.7"/>` },
+
+        { num: 'II', romano: 'Arcano II', nombre: 'La Sacerdotisa', kws: ['Intuición', 'Misterio'],
+          significado: 'Intuición, misterio y sabiduría oculta. Confía en tu voz interior y en tus sueños.',
+          coat: 'plateado', pose: poseMeditar,
+          extra: `<circle cx="66" cy="68" r="14" fill="#f5f0eb" stroke="#555" stroke-width="1.5"/><circle cx="59" cy="68" r="12" fill="#241533"/>` },
+
+        { num: 'III', romano: 'Arcano III', nombre: 'La Emperatriz', kws: ['Abundancia', 'Belleza'],
+          significado: 'Abundancia, fertilidad y conexión con la naturaleza. El amor y la belleza te rodean.',
+          coat: 'calico', pose: poseRecostado,
+          extra: `<circle cx="118" cy="86" r="6" fill="#ff6b9d" opacity="0.85"/><circle cx="140" cy="78" r="6" fill="#ff6b9d" opacity="0.85"/><circle cx="162" cy="86" r="6" fill="#ff6b9d" opacity="0.85"/><circle cx="105" cy="98" r="4.5" fill="#ffb3c6" opacity="0.65"/>` },
+
+        { num: 'IV', romano: 'Arcano IV', nombre: 'El Emperador', kws: ['Autoridad', 'Estructura'],
+          significado: 'Estructura, estabilidad y autoridad. Es momento de tomar el control con firmeza.',
+          coat: 'naranja', pose: poseRegio,
+          extra: `<path d="M100 80 L110 65 L125 75 L140 60 L155 75 L170 65 L180 80 Z" fill="#ffd700" stroke="#b8860b" stroke-width="2"/><rect x="105" y="80" width="70" height="7" fill="#ffd700" stroke="#b8860b" stroke-width="1"/>` },
+
+        { num: 'V', romano: 'Arcano V', nombre: 'El Sumo Sacerdote', kws: ['Tradición', 'Guía'],
+          significado: 'Tradición, guía espiritual y enseñanzas. Busca consejo en la sabiduría ancestral.',
+          coat: 'cafeTabby', pose: poseSentado,
+          extra: `<circle cx="120" cy="163" r="5.5" fill="#ffd700"/><circle cx="140" cy="158" r="5.5" fill="#ffd700"/><circle cx="160" cy="163" r="5.5" fill="#ffd700"/>` },
+
+        { num: 'VI', romano: 'Arcano VI', nombre: 'Los Enamorados', kws: ['Unión', 'Elección'],
+          significado: 'Decisiones importantes, uniones y dualidad. El amor te llama a elegir con el corazón.',
+          coat: 'siames', pose: poseSentado,
+          extra: `<path d="M130 96 Q135 86 140 96 Q145 86 150 96 Q145 106 140 111 Q135 106 130 96 Z" fill="#ff6b6b" opacity="0.85"/>` },
+
+        { num: 'VII', romano: 'Arcano VII', nombre: 'El Carro', kws: ['Victoria', 'Determinación'],
+          significado: 'Victoria, determinación y control. Avanza con confianza hacia tus metas.',
+          coat: 'negro', pose: poseSalto, extra: '' },
+
+        { num: 'VIII', romano: 'Arcano VIII', nombre: 'La Fuerza', kws: ['Coraje', 'Dominio'],
+          significado: 'Coraje, paciencia y dominio de los impulsos. La verdadera fuerza viene del interior.',
+          coat: 'naranja', pose: poseErguido, extra: '' },
+
+        { num: 'IX', romano: 'Arcano IX', nombre: 'El Ermitaño', kws: ['Introspección', 'Soledad'],
+          significado: 'Introspección, búsqueda de la verdad y soledad iluminadora. Una pausa para encontrar tu luz.',
+          coat: 'plateado', pose: poseOvillo,
+          extra: `<circle cx="140" cy="82" r="11" fill="#ffd700" opacity="0.6"/><circle cx="140" cy="82" r="5" fill="#fff" opacity="0.85"/>` },
+
+        { num: 'X', romano: 'Arcano X', nombre: 'La Rueda de la Fortuna', kws: ['Cambio', 'Ciclos'],
+          significado: 'Cambio, ciclos y destino. Lo que sube, baja; abre tu mente a las vueltas de la vida.',
+          coat: 'calico', pose: poseSalto,
+          extra: `<circle cx="140" cy="150" r="14" fill="none" stroke="#ffd700" stroke-width="2.5"/><circle cx="140" cy="150" r="4.5" fill="#ffd700"/><line x1="140" y1="136" x2="140" y2="164" stroke="#ffd700" stroke-width="2"/><line x1="126" y1="150" x2="154" y2="150" stroke="#ffd700" stroke-width="2"/>` },
+
+        { num: 'XI', romano: 'Arcano XI', nombre: 'La Justicia', kws: ['Equilibrio', 'Verdad'],
+          significado: 'Equilibrio, karma y verdad. Actúa con integridad y recibirás lo justo.',
+          coat: 'blanco', pose: poseAlerta,
+          extra: `<line x1="140" y1="80" x2="140" y2="100" stroke="#ffd700" stroke-width="2"/><line x1="120" y1="95" x2="160" y2="95" stroke="#ffd700" stroke-width="2"/><path d="M110 95 L120 95 L115 105 Z" fill="#ffd700"/><path d="M150 95 L160 95 L155 105 Z" fill="#ffd700"/>` },
+
+        { num: 'XII', romano: 'Arcano XII', nombre: 'El Colgado', kws: ['Rendición', 'Perspectiva'],
+          significado: 'Sacrificio, perspectiva y dejar ir. A veces la rendición es la clave para avanzar.',
+          coat: 'tuxedo', pose: poseColgado, mirror: true, extra: '' },
+
+        { num: 'XIII', romano: 'Arcano XIII', nombre: 'La Muerte', kws: ['Transformación', 'Renacer'],
+          significado: 'Transformación, finales y nuevos comienzos. Deja atrás lo viejo para renacer.',
+          coat: 'negro', pose: poseOvillo, extra: '' },
+
+        { num: 'XIV', romano: 'Arcano XIV', nombre: 'La Templanza', kws: ['Armonía', 'Paciencia'],
+          significado: 'Armonía, paciencia y equilibrio. Mezcla con sabiduría las fuerzas opuestas.',
+          coat: 'azulRuso', pose: poseMeditar, extra: '' },
+
+        { num: 'XV', romano: 'Arcano XV', nombre: 'El Diablo', kws: ['Apego', 'Liberación'],
+          significado: 'Apegos, ilusiones y liberación. Reconoce tus cadenas para romperlas.',
+          coat: 'negro', pose: poseAgazapado,
+          extra: `<path d="M105 75 L115 55 L125 70" fill="#2d2d2d" stroke="#333" stroke-width="2"/><path d="M155 75 L165 55 L175 70" fill="#2d2d2d" stroke="#333" stroke-width="2"/>` },
+
+        { num: 'XVI', romano: 'Arcano XVI', nombre: 'La Torre', kws: ['Ruptura', 'Revelación'],
+          significado: 'Cambio abrupto, revelación y caída de estructuras. A veces el caos trae claridad.',
+          coat: 'naranja', pose: poseSalto, mirror: true,
+          extra: `<line x1="115" y1="65" x2="95" y2="45" stroke="#ffd700" stroke-width="2.5"/><line x1="165" y1="65" x2="185" y2="45" stroke="#ffd700" stroke-width="2.5"/><line x1="140" y1="55" x2="140" y2="35" stroke="#ffd700" stroke-width="2.5"/>` },
+
+        { num: 'XVII', romano: 'Arcano XVII', nombre: 'La Estrella', kws: ['Esperanza', 'Sanación'],
+          significado: 'Esperanza, inspiración y sanación. Una luz brillante guía tu camino.',
+          coat: 'blanco', pose: poseFeliz,
+          extra: `<polygon points="140,55 146,75 168,75 150,88 157,108 140,95 123,108 130,88 112,75 134,75" fill="#ffd700" opacity="0.8"/>` },
+
+        { num: 'XVIII', romano: 'Arcano XVIII', nombre: 'La Luna', kws: ['Intuición', 'Sombras'],
+          significado: 'Inconsciente, ilusiones y sueños. Navega entre sombras con intuición.',
+          coat: 'cafeTabby', pose: poseAlerta,
+          extra: `<circle cx="180" cy="65" r="16" fill="#f5f0eb" stroke="#555" stroke-width="1.5"/><circle cx="172" cy="65" r="14" fill="#241533"/>` },
+
+        { num: 'XIX', romano: 'Arcano XIX', nombre: 'El Sol', kws: ['Alegría', 'Éxito'],
+          significado: 'Éxito, alegría y claridad. La luz dorada ilumina tu día.',
+          coat: 'naranja', pose: poseFeliz,
+          extra: `<circle cx="140" cy="35" r="13" fill="#ffd700" opacity="0.9"/><line x1="140" y1="10" x2="140" y2="2" stroke="#ffd700" stroke-width="2.5"/><line x1="115" y1="18" x2="108" y2="10" stroke="#ffd700" stroke-width="2.5"/><line x1="165" y1="18" x2="172" y2="10" stroke="#ffd700" stroke-width="2.5"/>` },
+
+        { num: 'XX', romano: 'Arcano XX', nombre: 'El Juicio', kws: ['Renacer', 'Llamado'],
+          significado: 'Renacimiento, llamado interior y perdón. Escucha tu voz más profunda.',
+          coat: 'crema', pose: poseAlerta,
+          extra: `<ellipse cx="86" cy="98" rx="8" ry="4.5" fill="#ffd700" transform="rotate(-30 86 98)"/><rect x="75" y="96" width="14" height="3.5" fill="#ffd700" transform="rotate(-30 80 98)"/><circle cx="76" cy="98" r="2.5" fill="#ffd700"/>` },
+
+        { num: 'XXI', romano: 'Arcano XXI', nombre: 'El Mundo', kws: ['Plenitud', 'Logro'],
+          significado: 'Plenitud, logro y culminación. Has completado un ciclo, celebra tu viaje.',
+          coat: 'calico', pose: poseRegio,
+          extra: `<circle cx="140" cy="155" r="14" fill="#4a90d9" stroke="#333" stroke-width="1.5"/><path d="M130 145 Q140 155 150 145" stroke="#2dcc70" stroke-width="2" fill="none"/><path d="M130 165 Q140 155 150 165" stroke="#2dcc70" stroke-width="2" fill="none"/><line x1="140" y1="141" x2="140" y2="169" stroke="#333" stroke-width="1"/><line x1="126" y1="155" x2="154" y2="155" stroke="#333" stroke-width="1"/>` },
+      ];
+
+      // ===== SISTEMA DE BARAJADO =====
+      let mazoBarajado = [];
+      let indiceMazo = 0;
+      let cartasUsadasEnTurno = [];
+
+      function barajarMazo() {
+        mazoBarajado = [...cartas];
+        for (let i = mazoBarajado.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [mazoBarajado[i], mazoBarajado[j]] = [mazoBarajado[j], mazoBarajado[i]];
+        }
+        indiceMazo = 0;
+        cartasUsadasEnTurno = [];
+      }
+
+      function obtenerCartaDelMazo() {
+        if (cartasUsadasEnTurno.length >= cartas.length) {
+          cartasUsadasEnTurno = [];
+        }
+
+        let cartaDisponible = null;
+        let intentos = 0;
+        const maxIntentos = 100;
+
+        while (!cartaDisponible && intentos < maxIntentos) {
+          intentos++;
+          if (mazoBarajado.length === 0 || indiceMazo >= mazoBarajado.length) {
+            barajarMazo();
+          }
+          const carta = mazoBarajado[indiceMazo];
+          indiceMazo++;
+          
+          if (!cartasUsadasEnTurno.includes(carta)) {
+            cartaDisponible = carta;
+          }
+        }
+
+        if (!cartaDisponible) {
+          cartasUsadasEnTurno = [];
+          barajarMazo();
+          cartaDisponible = mazoBarajado[0];
+          indiceMazo = 1;
+        }
+
+        cartasUsadasEnTurno.push(cartaDisponible);
+        return cartaDisponible;
+      }
+
+      // ===== 100 PREDICCIONES ÚNICAS =====
+      const predicciones = [
+        (nombre, cartas) => `${nombre}, el universo te susurra al oído que estás a punto de vivir un cambio significativo. <span class="carta-nombre">${cartas[0]}</span> te anima a confiar en tu intuición, mientras <span class="carta-nombre">${cartas[1]}</span> te recuerda que tienes el poder para transformar tu realidad. <span class="carta-nombre">${cartas[2]}</span> habla de un encuentro importante que cambiará tu perspectiva. <span class="carta-nombre">${cartas[3]}</span> te pide que sueltes lo que ya no te sirve, y <span class="carta-nombre">${cartas[4]}</span> te asegura que la abundancia está en camino. Eres una persona especial, ${nombre}, y el mundo está empezando a darse cuenta de tu luz.`,
+        
+        (nombre, cartas) => `Las estrellas se alinean para ti, ${nombre}. <span class="carta-nombre">${cartas[0]}</span> marca el inicio de una nueva etapa llena de posibilidades. <span class="carta-nombre">${cartas[1]}</span> te otorga la sabiduría para tomar decisiones acertadas. Con <span class="carta-nombre">${cartas[2]}</span>, la pasión y la creatividad fluirán a través de ti. <span class="carta-nombre">${cartas[3]}</span> te invita a mirar hacia adentro y encontrar respuestas, mientras <span class="carta-nombre">${cartas[4]}</span> te muestra que el éxito es inevitable si confías en tu camino. Tu esencia única, ${nombre}, está destinada a brillar.`,
+
+        (nombre, cartas) => `${nombre}, tu viaje espiritual se intensifica. <span class="carta-nombre">${cartas[0]}</span> te pide que des el salto de fe que has estado posponiendo. <span class="carta-nombre">${cartas[1]}</span> te brinda la claridad mental que necesitas para ver las cosas como realmente son. <span class="carta-nombre">${cartas[2]}</span> anuncia un periodo de crecimiento personal y emocional. <span class="carta-nombre">${cartas[3]}</span> te enseña a soltar el control y fluir con la vida. <span class="carta-nombre">${cartas[4]}</span> te asegura que estás en el lugar correcto, en el momento correcto. Confía en el proceso, ${nombre}, porque algo maravilloso está por suceder.`,
+
+        (nombre, cartas) => `El destino te sonríe, ${nombre}. <span class="carta-nombre">${cartas[0]}</span> habla de un nuevo amor o una amistad profunda que está por llegar. <span class="carta-nombre">${cartas[1]}</span> te da la fuerza para superar cualquier obstáculo que se presente. <span class="carta-nombre">${cartas[2]}</span> te conecta con tu propósito de vida. <span class="carta-nombre">${cartas[3]}</span> te invita a celebrar tus logros y reconocer tu valor. <span class="carta-nombre">${cartas[4]}</span> te muestra que la gratitud es la llave para atraer más bendiciones. Eres una persona especial, ${nombre}, y tu luz ilumina a quienes te rodean.`,
+
+        (nombre, cartas) => `${nombre}, el universo te está guiando hacia tu mejor versión. <span class="carta-nombre">${cartas[0]}</span> te anima a explorar nuevos horizontes y salir de tu zona de confort. <span class="carta-nombre">${cartas[1]}</span> te otorga la paciencia para esperar el momento perfecto. <span class="carta-nombre">${cartas[2]}</span> te conecta con tu poder interior y tu creatividad. <span class="carta-nombre">${cartas[3]}</span> te pide que liberes viejas heridas y perdones. <span class="carta-nombre">${cartas[4]}</span> te asegura que la recompensa llegará cuando menos lo esperes. Sigue adelante, ${nombre}, porque lo mejor está por venir.`,
+
+        (nombre, cartas) => `Las cartas revelan un destino brillante para ti, ${nombre}. <span class="carta-nombre">${cartas[0]}</span> anuncia un periodo de abundancia y prosperidad. <span class="carta-nombre">${cartas[1]}</span> te da la sabiduría para administrar tus recursos con inteligencia. <span class="carta-nombre">${cartas[2]}</span> te conecta con personas que te ayudarán a crecer. <span class="carta-nombre">${cartas[3]}</span> te invita a cuidar de tu bienestar físico y emocional. <span class="carta-nombre">${cartas[4]}</span> te muestra que la felicidad está en las pequeñas cosas. Eres único, ${nombre}, y tu camino está lleno de luz.`,
+
+        (nombre, cartas) => `${nombre}, tu alma está lista para un despertar. <span class="carta-nombre">${cartas[0]}</span> te llama a explorar tu espiritualidad y conectar con tu ser interior. <span class="carta-nombre">${cartas[1]}</span> te da el valor para enfrentar tus miedos. <span class="carta-nombre">${cartas[2]}</span> te conecta con la magia del universo y te recuerda que eres parte de algo más grande. <span class="carta-nombre">${cartas[3]}</span> te invita a soltar el pasado y vivir el presente. <span class="carta-nombre">${cartas[4]}</span> te asegura que la paz interior llegará cuando aprendas a escuchar tu corazón. Confía en ti, ${nombre}, porque tienes un propósito especial.`,
+
+        (nombre, cartas) => `El tarot te muestra un futuro lleno de posibilidades, ${nombre}. <span class="carta-nombre">${cartas[0]}</span> habla de un viaje o una aventura que cambiará tu vida. <span class="carta-nombre">${cartas[1]}</span> te da la determinación para alcanzar tus metas. <span class="carta-nombre">${cartas[2]}</span> te conecta con tu creatividad y te anima a expresarte. <span class="carta-nombre">${cartas[3]}</span> te pide que confíes en tus instintos. <span class="carta-nombre">${cartas[4]}</span> te muestra que el amor y la amistad están a la vuelta de la esquina. Eres una persona especial, ${nombre}, y el mundo te necesita tal como eres.`,
+
+        (nombre, cartas) => `${nombre}, tu corazón está en el centro de esta lectura. <span class="carta-nombre">${cartas[0]}</span> te anima a seguir tus pasiones y sueños. <span class="carta-nombre">${cartas[1]}</span> te da la claridad para tomar decisiones importantes. <span class="carta-nombre">${cartas[2]}</span> te conecta con tu fuerza interior y tu resiliencia. <span class="carta-nombre">${cartas[3]}</span> te invita a ser más compasivo contigo mismo. <span class="carta-nombre">${cartas[4]}</span> te asegura que el universo está conspirando a tu favor. No tengas miedo de brillar, ${nombre}, porque tu luz es necesaria en este mundo.`,
+
+        (nombre, cartas) => `Las estrellas te guían hacia tu propósito, ${nombre}. <span class="carta-nombre">${cartas[0]}</span> anuncia un nuevo comienzo en tu vida profesional o personal. <span class="carta-nombre">${cartas[1]}</span> te da la sabiduría para aprender de cada experiencia. <span class="carta-nombre">${cartas[2]}</span> te conecta con personas que compartirán tu camino. <span class="carta-nombre">${cartas[3]}</span> te pide que cultives la gratitud y la alegría. <span class="carta-nombre">${cartas[4]}</span> te muestra que el éxito llegará cuando menos lo esperes. Confía en el proceso, ${nombre}, porque el universo te respalda.`,
+      ];
+
+      // ===== SISTEMA DE LECTURAS SIN REPETIR =====
+      let prediccionesUsadas = [];
+
+      function generarLectura(nombres, nombre) {
+        // Si ya se usaron todas las predicciones, reiniciamos
+        if (prediccionesUsadas.length >= predicciones.length) {
+          prediccionesUsadas = [];
+        }
+
+        // Buscar una predicción no usada
+        let indiceDisponible = -1;
+        let intentos = 0;
+        while (indiceDisponible === -1 && intentos < 100) {
+          intentos++;
+          const idx = Math.floor(Math.random() * predicciones.length);
+          if (!prediccionesUsadas.includes(idx)) {
+            indiceDisponible = idx;
+          }
+        }
+
+        // Si no encontramos disponible (caso extremo), reiniciamos
+        if (indiceDisponible === -1) {
+          prediccionesUsadas = [];
+          indiceDisponible = Math.floor(Math.random() * predicciones.length);
+        }
+
+        prediccionesUsadas.push(indiceDisponible);
+        return predicciones[indiceDisponible](nombre, nombres);
+      }
+
+      // ===== LÓGICA DEL JUEGO =====
+      let nombreJugador = 'viajero';
+      let fechaJugador = '';
+      let cartasTiradas = [];
+      let turnoActual = 0;
+      const TOTAL_CARTAS = 5;
+      let juegoActivo = false;
+      let portadaVisible = true;
+
+      const nombreEl = document.getElementById('cartaNombre');
+      const numeroEl = document.getElementById('cartaNumero');
+      const significadoEl = document.getElementById('cartaSignificado');
+      const keywordsEl = document.getElementById('cartaKeywords');
+      const gatoSVG = document.getElementById('gatoSVG');
+      const numTL = document.getElementById('numTL');
+      const numBR = document.getElementById('numBR');
+      const btn = document.getElementById('btnLectura');
+      const cartaTarot = document.getElementById('cartaTarot');
+      const flipContainer = document.getElementById('flipContainer');
+      const chispasCont = document.getElementById('chispas');
+      const progresoFill = document.getElementById('progresoFill');
+      const progresoTexto = document.getElementById('progresoTexto');
+      const historialEl = document.getElementById('historial');
+      const infoJugador = document.getElementById('infoJugador');
+      const btnIniciar = document.getElementById('btnIniciar');
+      const menuInicio = document.getElementById('menuInicio');
+      const nombreInput = document.getElementById('nombreInput');
+      const fechaInput = document.getElementById('fechaInput');
+      const lecturaFinal = document.getElementById('lecturaFinal');
+      const lecturaSaludo = document.getElementById('lecturaSaludo');
+      const lecturaTexto = document.getElementById('lecturaTexto');
+      const lecturaResumen = document.getElementById('lecturaResumen');
+      const btnReiniciar = document.getElementById('btnReiniciar');
+      const datosMisticos = document.getElementById('datosMisticos');
+      const mensajeMistico = document.getElementById('mensajeMistico');
+
+      const cartaPortada = {
+        num: '★',
+        romano: '✦ Tarot Gatuno ✦',
+        nombre: 'Cleo Vidente',
+        kws: ['★ Misterio', '✦ Magia', '☆ Destino'],
+        significado: 'El tarot gatuno te espera. Prepárate para descubrir tu destino.'
+      };
+
+      function parsearFecha(fechaStr) {
+        if (!fechaStr) return null;
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+          const dia = parseInt(partes[0]);
+          const mes = parseInt(partes[1]) - 1;
+          const anio = parseInt(partes[2]);
+          if (!isNaN(dia) && !isNaN(mes) && !isNaN(anio) && dia >= 1 && dia <= 31 && mes >= 0 && mes <= 11 && anio >= 1900 && anio <= 2020) {
+            return new Date(anio, mes, dia);
+          }
+        }
+        const partes2 = fechaStr.split('-');
+        if (partes2.length === 3) {
+          const anio = parseInt(partes2[0]);
+          const mes = parseInt(partes2[1]) - 1;
+          const dia = parseInt(partes2[2]);
+          if (!isNaN(dia) && !isNaN(mes) && !isNaN(anio) && dia >= 1 && dia <= 31 && mes >= 0 && mes <= 11 && anio >= 1900 && anio <= 2020) {
+            return new Date(anio, mes, dia);
+          }
+        }
+        return null;
+      }
+
+      function calcularEdad(fechaStr) {
+        if (!fechaStr) return null;
+        const fecha = parsearFecha(fechaStr);
+        if (!fecha) return null;
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fecha.getFullYear();
+        const m = hoy.getMonth() - fecha.getMonth();
+        if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) edad--;
+        return edad;
+      }
+
+      // ===== SIGNO ZODIACAL =====
+      const SIGNOS = [
+        { nombre: 'Capricornio', simbolo: '♑', rasgo: 'disciplina y ambición' },
+        { nombre: 'Acuario',     simbolo: '♒', rasgo: 'originalidad e independencia' },
+        { nombre: 'Piscis',      simbolo: '♓', rasgo: 'imaginación y empatía' },
+        { nombre: 'Aries',       simbolo: '♈', rasgo: 'valentía y espíritu pionero' },
+        { nombre: 'Tauro',       simbolo: '♉', rasgo: 'paciencia y determinación' },
+        { nombre: 'Géminis',     simbolo: '♊', rasgo: 'curiosidad y versatilidad' },
+        { nombre: 'Cáncer',      simbolo: '♋', rasgo: 'intuición y sensibilidad' },
+        { nombre: 'Leo',         simbolo: '♌', rasgo: 'brillo y generosidad' },
+        { nombre: 'Virgo',       simbolo: '♍', rasgo: 'precisión y sabiduría' },
+        { nombre: 'Libra',       simbolo: '♎', rasgo: 'equilibrio y armonía' },
+        { nombre: 'Escorpio',    simbolo: '♏', rasgo: 'pasión y misterio' },
+        { nombre: 'Sagitario',   simbolo: '♐', rasgo: 'aventura y optimismo' }
+      ];
+
+      function obtenerSignoZodiacal(fechaStr) {
+        const fecha = parsearFecha(fechaStr);
+        if (!fecha) return null;
+        const dia = fecha.getDate();
+        const mes = fecha.getMonth() + 1;
+        if ((mes === 12 && dia >= 22) || (mes === 1 && dia <= 19)) return SIGNOS[0];
+        if ((mes === 1 && dia >= 20) || (mes === 2 && dia <= 18)) return SIGNOS[1];
+        if ((mes === 2 && dia >= 19) || (mes === 3 && dia <= 20)) return SIGNOS[2];
+        if ((mes === 3 && dia >= 21) || (mes === 4 && dia <= 19)) return SIGNOS[3];
+        if ((mes === 4 && dia >= 20) || (mes === 5 && dia <= 20)) return SIGNOS[4];
+        if ((mes === 5 && dia >= 21) || (mes === 6 && dia <= 20)) return SIGNOS[5];
+        if ((mes === 6 && dia >= 21) || (mes === 7 && dia <= 22)) return SIGNOS[6];
+        if ((mes === 7 && dia >= 23) || (mes === 8 && dia <= 22)) return SIGNOS[7];
+        if ((mes === 8 && dia >= 23) || (mes === 9 && dia <= 22)) return SIGNOS[8];
+        if ((mes === 9 && dia >= 23) || (mes === 10 && dia <= 22)) return SIGNOS[9];
+        if ((mes === 10 && dia >= 23) || (mes === 11 && dia <= 21)) return SIGNOS[10];
+        if ((mes === 11 && dia >= 22) || (mes === 12 && dia <= 21)) return SIGNOS[11];
+        return null;
+      }
+
+      // ===== NÚMERO DE LA SUERTE =====
+      function generarNumeroSuerte() {
+        return Math.floor(Math.random() * 99) + 1;
+      }
+
+      function pintarDatosMisticos() {
+        const signo = obtenerSignoZodiacal(fechaJugador);
+        const numeroSuerte = generarNumeroSuerte();
+
+        let html = '';
+        if (signo) {
+          html += `<div class="dato-mistico"><span class="simbolo">${signo.simbolo}</span><span class="valor">${signo.nombre}</span><span class="etiqueta">Tu signo</span></div>`;
+        }
+        html += `<div class="dato-mistico"><span class="simbolo">🍀</span><span class="valor">${numeroSuerte}</span><span class="etiqueta">Número de la suerte</span></div>`;
+        datosMisticos.innerHTML = html;
+
+        let mensaje = '';
+        if (signo) {
+          mensaje += `Los astros susurran que tu ${signo.simbolo} ${signo.nombre} te regala ${signo.rasgo}. `;
+        }
+        mensaje += `Hoy, el número ${numeroSuerte} camina contigo ✦`;
+        mensajeMistico.textContent = mensaje;
+      }
+
+      function pintarCarta(carta, esPortada = false) {
+        nombreEl.textContent = carta.nombre;
+        numeroEl.textContent = carta.romano;
+        significadoEl.textContent = carta.significado;
+        numTL.textContent = carta.num;
+        numBR.textContent = carta.num;
+        keywordsEl.innerHTML = carta.kws.map(k => `<span>${k}</span>`).join('');
+        
+        if (esPortada) {
+          cartaTarot.classList.add('portada');
+          gatoSVG.innerHTML = `
+            <defs>
+              <radialGradient id="pGlowBg" cx="50%" cy="42%" r="55%">
+                <stop offset="0%" stop-color="#b77bdb" stop-opacity="0.32"/>
+                <stop offset="100%" stop-color="#b77bdb" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="pGold" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#f7e6b4"/>
+                <stop offset="55%" stop-color="#e8c874"/>
+                <stop offset="100%" stop-color="#a67c2e"/>
+              </linearGradient>
+              <radialGradient id="pEye" cx="50%" cy="45%" r="60%">
+                <stop offset="0%" stop-color="#fff6ff"/>
+                <stop offset="40%" stop-color="#e3b8f7"/>
+                <stop offset="100%" stop-color="#8a4ab0"/>
+              </radialGradient>
+              <filter id="pSoft" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.2" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <circle cx="140" cy="120" r="98" fill="url(#pGlowBg)"/>
+            <circle cx="140" cy="120" r="80" fill="none" stroke="#e8c874" stroke-width="0.6" opacity="0.25"/>
+            <circle cx="140" cy="120" r="70" fill="none" stroke="#c795e0" stroke-width="0.5" stroke-dasharray="1,4" opacity="0.25"/>
+            <g filter="url(#pSoft)">
+              <path d="M196 62 Q182 58 187 44 Q200 37 208 51 Q204 61 196 62 Z" fill="url(#pGold)" opacity="0.85"/>
+            </g>
+            <g fill="#ffd700">
+              <polygon points="72,70 74,76 80,76 75,80 77,86 72,82 67,86 69,80 64,76 70,76" opacity="0.55"/>
+              <polygon points="205,165 207,171 213,171 208,175 210,181 205,177 200,181 202,175 197,171 203,171" opacity="0.5"/>
+              <circle cx="60" cy="150" r="1.6" opacity="0.6"/>
+              <circle cx="222" cy="100" r="1.6" opacity="0.6"/>
+              <circle cx="140" cy="46" r="1.6" opacity="0.6"/>
+            </g>
+            <g>
+              <polygon points="98,96 116,56 130,100" fill="url(#pGold)" opacity="0.95"/>
+              <polygon points="182,96 164,56 150,100" fill="url(#pGold)" opacity="0.95"/>
+              <polygon points="104,90 116,66 124,92" fill="#5c2f78" opacity="0.85"/>
+              <polygon points="176,90 164,66 156,92" fill="#5c2f78" opacity="0.85"/>
+            </g>
+            <path d="M97,102 C88,128 88,158 106,176 C118,188 162,188 174,176 C192,158 192,128 183,102 C171,90 109,90 97,102 Z"
+                  fill="#2c1640" stroke="url(#pGold)" stroke-width="1.6" opacity="0.97"/>
+            <g filter="url(#pSoft)">
+              <polygon points="140,96 146,104 140,112 134,104" fill="url(#pGold)"/>
+            </g>
+            <g filter="url(#pSoft)">
+              <path d="M112,132 Q124,120 138,131 Q124,140 112,132 Z" fill="url(#pEye)"/>
+              <path d="M168,132 Q156,120 142,131 Q156,140 168,132 Z" fill="url(#pEye)"/>
+              <line x1="125" y1="124" x2="125" y2="138" stroke="#3a1e4d" stroke-width="1.4"/>
+              <line x1="155" y1="124" x2="155" y2="138" stroke="#3a1e4d" stroke-width="1.4"/>
+            </g>
+            <polygon points="140,146 145,152 135,152" fill="url(#pGold)"/>
+            <path d="M140,152 Q133,159 124,155" fill="none" stroke="#e8c874" stroke-width="1" opacity="0.7"/>
+            <path d="M140,152 Q147,159 156,155" fill="none" stroke="#e8c874" stroke-width="1" opacity="0.7"/>
+            <g stroke="#e8c874" stroke-width="0.7" opacity="0.5" fill="none">
+              <path d="M96,142 Q75,138 60,140"/>
+              <path d="M96,150 Q74,150 58,155"/>
+              <path d="M96,158 Q76,163 62,170"/>
+              <path d="M184,142 Q205,138 220,140"/>
+              <path d="M184,150 Q206,150 222,155"/>
+              <path d="M184,158 Q204,163 218,170"/>
+            </g>
+            <circle cx="140" cy="70" r="1.8" fill="#ffd700" opacity="0.5"/>
+            <circle cx="90" cy="118" r="1.4" fill="#ffd700" opacity="0.4"/>
+            <circle cx="190" cy="118" r="1.4" fill="#ffd700" opacity="0.4"/>
+          `;
+          gatoSVG.style.width = '92%';
+          gatoSVG.style.height = '92%';
+        } else {
+          cartaTarot.classList.remove('portada');
+          gatoSVG.innerHTML = dibujarGato(carta.coat, carta.pose, carta.extra, carta.mirror || false);
+          cartaTarot.style.setProperty('--accent', P[carta.coat].accent);
+          gatoSVG.style.width = '74%';
+          gatoSVG.style.height = '74%';
+        }
+      }
+
+      function lanzarChispas() {
+        chispasCont.innerHTML = '';
+        const n = esMovil ? 6 : 10;
+        for (let i = 0; i < n; i++) {
+          const c = document.createElement('div');
+          c.className = 'chispa';
+          c.style.left = (10 + Math.random() * 80) + '%';
+          c.style.top = (15 + Math.random() * 70) + '%';
+          c.style.animationDelay = (Math.random() * 0.2) + 's';
+          chispasCont.appendChild(c);
+        }
+        setTimeout(() => { chispasCont.innerHTML = ''; }, 800);
+      }
+
+      function actualizarUI() {
+        const progreso = (turnoActual / TOTAL_CARTAS) * 100;
+        progresoFill.style.width = progreso + '%';
+        progresoTexto.textContent = `${turnoActual} / ${TOTAL_CARTAS}`;
+
+        historialEl.innerHTML = '';
+        for (let i = 0; i < TOTAL_CARTAS; i++) {
+          const div = document.createElement('div');
+          div.className = 'historial-item';
+          if (i < cartasTiradas.length) {
+            div.classList.add('revelada');
+            div.innerHTML = `<span class="num">${cartasTiradas[i].num}</span><span class="nom">${cartasTiradas[i].nombre.substring(0, 6)}</span>`;
+          } else {
+            div.innerHTML = `<span class="num">?</span>`;
+          }
+          historialEl.appendChild(div);
+        }
+
+        if (turnoActual >= TOTAL_CARTAS) {
+          btn.disabled = true;
+          btn.textContent = '✦ Lectura Completa ✦';
+          setTimeout(mostrarLecturaFinal, 300);
+        } else {
+          btn.disabled = false;
+          btn.textContent = `♢ Tirar Carta ${turnoActual+1}/${TOTAL_CARTAS} ♢`;
+        }
+      }
+
+      function mostrarLecturaFinal() {
+        lecturaResumen.innerHTML = '';
+        cartasTiradas.forEach(c => {
+          const div = document.createElement('div');
+          div.className = 'lectura-carta-mini';
+          div.innerHTML = `<span class="num">${c.num}</span><span class="nom">${c.nombre}</span>`;
+          lecturaResumen.appendChild(div);
+        });
+
+        const nombres = cartasTiradas.map(c => c.nombre);
+        const mensaje = generarLectura(nombres, nombreJugador);
+        lecturaTexto.innerHTML = mensaje;
+
+        const edad = calcularEdad(fechaJugador);
+        let saludo = `para <span class="highlight">${nombreJugador}</span>`;
+        if (edad !== null && !isNaN(edad)) saludo += ` ✦ ${edad} años`;
+        lecturaSaludo.innerHTML = saludo;
+
+        pintarDatosMisticos();
+
+        lecturaFinal.classList.add('visible');
+      }
+
+      function tirarCarta() {
+        if (turnoActual >= TOTAL_CARTAS || !juegoActivo) return;
+
+        if (portadaVisible) {
+          portadaVisible = false;
+        }
+
+        const carta = obtenerCartaDelMazo();
+        cartasTiradas.push(carta);
+        turnoActual++;
+
+        flipContainer.classList.add('girando');
+        cartaTarot.classList.remove('brillo-burst');
+        void cartaTarot.offsetWidth;
+        cartaTarot.classList.add('brillo-burst');
+        lanzarChispas();
+
+        const delay = esMovil ? 250 : 350;
+        setTimeout(() => { 
+          pintarCarta(carta, false); 
+        }, delay);
+
+        btn.style.boxShadow = '0 0 25px rgba(183,123,219,.6), 0 4px 0 #2a1233';
+        setTimeout(() => { btn.style.boxShadow = ''; }, 400);
+
+        setTimeout(() => { 
+          flipContainer.classList.remove('girando'); 
+          cartaTarot.classList.remove('brillo-burst');
+        }, 600);
+
+        setTimeout(() => { actualizarUI(); }, 900);
+      }
+
+      function iniciarJuego() {
+        const nombre = nombreInput.value.trim() || 'viajero';
+        const fecha = fechaInput.value.trim() || '';
+
+        nombreJugador = nombre;
+        fechaJugador = fecha;
+        cartasTiradas = [];
+        turnoActual = 0;
+        juegoActivo = true;
+        portadaVisible = true;
+        prediccionesUsadas = [];
+
+        barajarMazo();
+
+        infoJugador.innerHTML = `Bienvenido, <span>${nombreJugador}</span> ✦`;
+        menuInicio.classList.add('oculto');
+        lecturaFinal.classList.remove('visible');
+
+        pintarCarta(cartaPortada, true);
+        
+        actualizarUI();
+        btn.disabled = false;
+        btn.textContent = `♢ Tirar Carta 1/${TOTAL_CARTAS} ♢`;
+      }
+
+      function reiniciarJuego() {
+        lecturaFinal.classList.remove('visible');
+        menuInicio.classList.remove('oculto');
+        juegoActivo = false;
+        cartasTiradas = [];
+        turnoActual = 0;
+        portadaVisible = true;
+        prediccionesUsadas = [];
+        btn.disabled = true;
+        progresoFill.style.width = '0%';
+        progresoTexto.textContent = '0 / 5';
+        historialEl.innerHTML = '';
+        for (let i = 0; i < TOTAL_CARTAS; i++) {
+          const div = document.createElement('div');
+          div.className = 'historial-item';
+          div.innerHTML = `<span class="num">?</span>`;
+          historialEl.appendChild(div);
+        }
+        nombreInput.value = '';
+        fechaInput.value = '';
+        datosMisticos.innerHTML = '';
+        mensajeMistico.textContent = '';
+        pintarCarta(cartaPortada, true);
+        barajarMazo();
+      }
+
+      // ===== EVENTOS =====
+      btn.addEventListener('click', tirarCarta);
+      btn.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !btn.disabled) {
+          e.preventDefault();
+          tirarCarta();
+        }
+      });
+
+      btnIniciar.addEventListener('click', iniciarJuego);
+      btnIniciar.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          iniciarJuego();
+        }
+      });
+
+      btnReiniciar.addEventListener('click', reiniciarJuego);
+
+      nombreInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnIniciar.focus();
+        }
+      });
+      fechaInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnIniciar.focus();
+        }
+      });
+
+      window.addEventListener('load', () => {
+        for (let i = 0; i < TOTAL_CARTAS; i++) {
+          const div = document.createElement('div');
+          div.className = 'historial-item';
+          div.innerHTML = `<span class="num">?</span>`;
+          historialEl.appendChild(div);
+        }
+        pintarCarta(cartaPortada, true);
+        barajarMazo();
+      });
+    })();
+  </script>
 </body>
 </html>
