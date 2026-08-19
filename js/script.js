@@ -143,38 +143,28 @@ document.addEventListener('DOMContentLoaded', function() {
         let hasMoved = false;
 
         const strands = [];
-        const maxStrands = isSmallMobile ? 10 : (isMobile ? 16 : 26);
-        const baseHue = 320; // fucsia
+        const maxStrands = isSmallMobile ? 14 : (isMobile ? 22 : 34);
+        const baseHue = 322; // fucsia/magenta intenso
 
         function spawnStrand(x, y) {
             if (strands.length >= maxStrands) strands.shift();
             strands.push({
-                x: x + (Math.random() - 0.5) * 6,
-                y: y + (Math.random() - 0.5) * 6,
+                x: x + (Math.random() - 0.5) * 4,
+                y: y + (Math.random() - 0.5) * 4,
                 born: Date.now(),
-                life: isSmallMobile ? 900 + Math.random() * 400 : 1200 + Math.random() * 600,
+                life: isSmallMobile ? 850 + Math.random() * 350 : 1100 + Math.random() * 550,
                 drift: (Math.random() - 0.5) * 0.6,
                 wobbleSpeed: 0.8 + Math.random() * 1.2,
                 phase: Math.random() * Math.PI * 2,
                 riseSpeed: isSmallMobile ? 18 + Math.random() * 10 : 22 + Math.random() * 14,
-                hue: baseHue + (Math.random() - 0.5) * 25,
-                width: isSmallMobile ? 0.8 + Math.random() * 0.6 : 1 + Math.random() * 0.8
+                hue: baseHue + (Math.random() - 0.5) * 14,
+                width: isSmallMobile ? 1 + Math.random() * 0.8 : 1.3 + Math.random() * 1.1
             });
         }
 
         function updateMouse(x, y) {
-            const now = Date.now();
-            const dt = now - lastMoveTime;
-            const dist = Math.hypot(x - mouseX, y - mouseY);
             mouseX = x;
             mouseY = y;
-            lastMoveTime = now;
-
-            // Nace una hebra nueva solo cada tanto y si hubo suficiente movimiento,
-            // para que se vea como un hilo continuo y no como una mancha densa.
-            if (hasMoved && dt > 24 && dist > 3) {
-                spawnStrand(x, y);
-            }
             hasMoved = true;
         }
 
@@ -191,6 +181,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const touch = e.touches[0];
             if (touch) updateMouse(touch.clientX, touch.clientY);
         }, { passive: true });
+
+        // Emisión continua: el humo brota del cursor todo el tiempo,
+        // como si saliera de una varita de incienso pegada al puntero.
+        const emitInterval = isSmallMobile ? 90 : (isMobile ? 70 : 55);
+        setInterval(function() {
+            if (!hasMoved) return;
+            const now = Date.now();
+            if (now - lastMoveTime > 4000) return; // pausa si el cursor lleva rato quieto fuera de pantalla
+            spawnStrand(mouseX, mouseY);
+        }, emitInterval);
+
+        document.addEventListener('mousemove', function() {
+            lastMoveTime = Date.now();
+        });
 
         function drawStrand(s, now) {
             const age = now - s.born;
@@ -218,15 +222,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const fade = Math.sin(Math.min(t * 1.4, 1) * Math.PI); // entra y sale suave
-            const opacity = fade * (isSmallMobile ? 0.22 : (isMobile ? 0.28 : 0.34));
+            const opacity = fade * (isSmallMobile ? 0.4 : (isMobile ? 0.5 : 0.6));
             const lineWidth = s.width * (1 - t * 0.6);
 
-            ctx.strokeStyle = `hsla(${s.hue}, 85%, 68%, ${opacity})`;
-            ctx.lineWidth = Math.max(0.3, lineWidth);
+            // Magenta/fucsia saturado e intenso, no pastel.
+            ctx.strokeStyle = `hsla(${s.hue}, 100%, 52%, ${opacity})`;
+            ctx.lineWidth = Math.max(0.4, lineWidth);
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            ctx.shadowColor = `hsla(${s.hue}, 90%, 70%, ${opacity * 0.6})`;
-            ctx.shadowBlur = isSmallMobile ? 2 : 4;
+            ctx.shadowColor = `hsla(${s.hue}, 100%, 58%, ${opacity * 0.85})`;
+            ctx.shadowBlur = isSmallMobile ? 3 : 6;
             ctx.stroke();
 
             return true;
