@@ -135,8 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Hebras finas de humo: cada una es una cadena de puntos delgados
-        // que nace en el cursor y sube ondulando como incienso.
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
         let lastMoveTime = Date.now();
@@ -144,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const strands = [];
         const maxStrands = isSmallMobile ? 14 : (isMobile ? 22 : 34);
-        const baseHue = 322; // fucsia/magenta intenso
+        const baseHue = 322;
 
         function spawnStrand(x, y) {
             if (strands.length >= maxStrands) strands.shift();
@@ -182,13 +180,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (touch) updateMouse(touch.clientX, touch.clientY);
         }, { passive: true });
 
-        // Emisión continua: el humo brota del cursor todo el tiempo,
-        // como si saliera de una varita de incienso pegada al puntero.
         const emitInterval = isSmallMobile ? 90 : (isMobile ? 70 : 55);
         setInterval(function() {
             if (!hasMoved) return;
             const now = Date.now();
-            if (now - lastMoveTime > 4000) return; // pausa si el cursor lleva rato quieto fuera de pantalla
+            if (now - lastMoveTime > 4000) return;
             spawnStrand(mouseX, mouseY);
         }, emitInterval);
 
@@ -201,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const t = age / s.life;
             if (t >= 1) return false;
 
-            // La hebra sube y ondula suavemente, adelgazándose y desvaneciéndose.
             const steps = 18;
             ctx.beginPath();
             let prevX, prevY;
@@ -221,11 +216,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 prevY = py;
             }
 
-            const fade = Math.sin(Math.min(t * 1.4, 1) * Math.PI); // entra y sale suave
+            const fade = Math.sin(Math.min(t * 1.4, 1) * Math.PI);
             const opacity = fade * (isSmallMobile ? 0.4 : (isMobile ? 0.5 : 0.6));
             const lineWidth = s.width * (1 - t * 0.6);
 
-            // Magenta/fucsia saturado e intenso, no pastel.
             ctx.strokeStyle = `hsla(${s.hue}, 100%, 52%, ${opacity})`;
             ctx.lineWidth = Math.max(0.4, lineWidth);
             ctx.lineCap = 'round';

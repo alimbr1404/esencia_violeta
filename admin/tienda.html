@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Productos · Esencia Violeta Admin</title>
+
+    <!-- Fuentes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" 
+        rel="stylesheet" 
+    />
+
+    <!-- Estilos del admin -->
+    <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+    <!-- ======================================== -->
+    <!--  LOGIN (oculto por defecto)              -->
+    <!-- ======================================== -->
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <div class="icon">🔮</div>
+            <span class="logo">✦ Esencia Violeta ✦</span>
+            <p class="subtitle">Panel de Administración</p>
+            <form id="loginForm">
+                <input type="text" id="loginUser" placeholder="Usuario" value="admin" />
+                <input type="password" id="loginPass" placeholder="Contraseña" value="esencia2026" />
+                <button type="submit" class="btn">✦ Ingresar ✦</button>
+                <div class="error" id="loginError">❌ Usuario o contraseña incorrectos</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!--  ADMIN PANEL (oculto por defecto)        -->
+    <!-- ======================================== -->
+    <div id="adminPanel" style="display: none;">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="logo">
+                    ✦ <span>Esencia Violeta</span> · Admin
+                </div>
+                <div class="user-info">
+                    <span id="userNameDisplay">Admin</span>
+                    <div class="user-icon">A</div>
+                    <button class="btn-logout" id="logoutBtn">✕ Cerrar sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- LAYOUT -->
+        <div class="admin-layout">
+
+            <!-- SIDEBAR -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-title">✦ Navegación</div>
+                <nav class="sidebar-menu">
+                    <a href="dashboard.html">
+                        <span class="icon">📊</span> Dashboard
+                    </a>
+                    <a href="tienda.html" class="active">
+                        <span class="icon">🛒</span> Productos
+                    </a>
+                    <a href="#">
+                        <span class="icon">📝</span> Blog
+                    </a>
+                    <a href="#">
+                        <span class="icon">⭐</span> Experiencias
+                    </a>
+                    <a href="#">
+                        <span class="icon">⚙️</span> Configuración
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- CONTENT -->
+            <main class="admin-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1 class="page-title">✦ Gestión de Productos ✦</h1>
+                        <p class="page-subtitle">Administra tu catálogo de productos esotéricos</p>
+                    </div>
+                    <button class="btn btn-primary" id="btnNuevoProducto">
+                        ➕ Nuevo Producto
+                    </button>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="table-toolbar">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="🔍 Buscar productos..." />
+                        <button class="btn btn-secondary" id="btnBuscar">Buscar</button>
+                        <button class="btn btn-secondary" id="btnLimpiar">✕ Limpiar</button>
+                    </div>
+                    <div>
+                        <select id="filtroCategoria" class="btn btn-secondary" style="padding: 0.6rem 1rem; border-radius: 50px; border: 2px solid #2E1A47; background: transparent; font-family: 'Quicksand', sans-serif; font-size: 0.9rem; color: #2E1A47;">
+                            <option value="all">✦ Todas ✦</option>
+                            <option value="Tarot">✦ Tarot ✦</option>
+                            <option value="Inciensos">✦ Inciensos ✦</option>
+                            <option value="Velas">✦ Velas ✦</option>
+                            <option value="Piedras">✦ Piedras ✦</option>
+                            <option value="Amuletos">✦ Amuletos ✦</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tabla de productos -->
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Destacado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProductos">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 2rem; color: #4A4A4E;">
+                                    🔮 Cargando productos...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!--  MODAL PARA CREAR/EDITAR PRODUCTO       -->
+    <!-- ======================================== -->
+    <div class="modal-overlay" id="modalProducto">
+        <div class="modal">
+            <h2 class="modal-title" id="modalTitle">✦ Nuevo Producto ✦</h2>
+            <p class="modal-subtitle" id="modalSubtitle">Completa los datos del producto</p>
+            
+            <form id="productoForm">
+                <input type="hidden" id="productoId" value="" />
+
+                <div class="form-group">
+                    <label>✦ Nombre <span class="required">*</span></label>
+                    <input type="text" id="formNombre" placeholder="Ej: Mazo de Tarot Luna" required />
+                </div>
+
+                <div class="form-group">
+                    <label>✦ Categoría <span class="required">*</span></label>
+                    <select id="formCategoria" required>
+                        <option value="">Seleccionar categoría...</option>
+                        <option value="Tarot">✦ Tarot ✦</option>
+                        <option value="Inciensos">✦ Inciensos ✦</option>
+                        <option value="Velas">✦ Velas ✦</option>
+                        <option value="Piedras">✦ Piedras ✦</option>
+                        <option value="Amuletos">✦ Amuletos ✦</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>✦ Descripción <span class="required">*</span></label>
+                    <textarea id="formDescripcion" placeholder="Describe el producto..." rows="3" required></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>✦ Precio (₡) <span class="required">*</span></label>
+                        <input type="number" id="formPrecio" placeholder="25000" required />
+                    </div>
+                    <div class="form-group">
+                        <label>✦ Stock <span class="required">*</span></label>
+                        <input type="number" id="formStock" placeholder="10" required min="0" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>✦ Imagen</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="formImagen" accept="image/*" />
+                        <small style="display: block; color: #4A4A4E; margin-top: 0.3rem;">
+                            Formatos: JPG, PNG, WEBP. Tamaño máximo: 5MB
+                        </small>
+                    </div>
+                    <img id="formImagePreview" class="image-preview" alt="Vista previa" />
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="formDestacado" />
+                        <label for="formDestacado" style="margin: 0; cursor: pointer;">⭐ Marcar como destacado</label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarModal">✧ Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardarProducto">✦ Guardar ✦</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!--  MODAL PARA CONFIRMAR ELIMINACIÓN        -->
+    <!-- ======================================== -->
+    <div class="modal-overlay" id="modalEliminar">
+        <div class="modal" style="max-width: 420px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🗑️</div>
+            <h2 class="modal-title">✦ ¿Eliminar producto? ✦</h2>
+            <p class="modal-subtitle" id="eliminarMensaje">¿Estás seguro de que deseas eliminar este producto?</p>
+            <div style="display: flex; gap: 0.8rem; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" id="btnCancelarEliminar" style="flex: 1;">✧ Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminar" style="flex: 1;">🗑️ Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!--  SCRIPTS                                 -->
+    <!-- ======================================== -->
+    <script type="module">
+        // ========================================
+        //  GESTIÓN DE PRODUCTOS - ESENCIA VIOLETA
+        // ========================================
+
+        import { 
+            getProductos,
+            getProducto,
+            createProducto,
+            updateProducto,
+            deleteProducto
+        } from '../js/firebase-config.js';
+
+        // ========================================
+        //  1. AUTENTICACIÓN
+        // ========================================
+
+        const ADMIN_USER = 'admin';
+        const ADMIN_PASS = 'esencia2026';
+
+        const loginPage = document.getElementById('loginPage');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (sessionStorage.getItem('admin_logged') === 'true') {
+            loginPage.style.display = 'none';
+            adminPanel.style.display = 'block';
+            cargarProductos();
+        }
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                sessionStorage.setItem('admin_logged', 'true');
+                loginPage.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loginError.style.display = 'none';
+                cargarProductos();
+            } else {
+                loginError.style.display = 'block';
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        logoutBtn.addEventListener('click', function() {
+            sessionStorage.removeItem('admin_logged');
+            adminPanel.style.display = 'none';
+            loginPage.style.display = 'flex';
+        });
+
+        // ========================================
+        //  2. VARIABLES GLOBALES
+        // ========================================
+
+        let productos = [];
+        let productoEditandoId = null;
+
+        // Configuración de Cloudinary
+        const CLOUDINARY_CLOUD_NAME = 'xnt9xngf';
+        const CLOUDINARY_UPLOAD_PRESET = 'esencia_violeta_products';
+
+        // ========================================
+        //  3. CARGAR PRODUCTOS
+        // ========================================
+
+        async function cargarProductos() {
+            try {
+                productos = await getProductos();
+                renderTabla(productos);
+            } catch (error) {
+                console.error('Error al cargar productos:', error);
+                mostrarNotificacion('❌ Error al cargar los productos', 'error');
+            }
+        }
+
+        // ========================================
+        //  4. RENDERIZAR TABLA
+        // ========================================
+
+        function renderTabla(data) {
+            const tbody = document.getElementById('tablaProductos');
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: #4A4A4E;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📦</div>
+                            <p>No hay productos registrados.</p>
+                            <p style="font-size: 0.9rem;">Haz clic en "Nuevo Producto" para comenzar.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = data.map(p => `
+                <tr>
+                    <td>
+                        <img src="${p.imagen || 'https://via.placeholder.com/50x50/2A1A3D/FFFFFF?text=🔮'}" 
+                             alt="${p.nombre}" 
+                             class="product-image"
+                             onerror="this.src='https://via.placeholder.com/50x50/2A1A3D/FFFFFF?text=🔮'"
+                        />
+                    </td>
+                    <td><strong>${p.nombre}</strong></td>
+                    <td><span class="badge badge-primary">✦ ${p.categoria} ✦</span></td>
+                    <td>₡${(p.precio || 0).toLocaleString('es-CR')}</td>
+                    <td>
+                        ${(p.stock || 0) > 5 ? 
+                            `<span class="badge badge-success">${p.stock || 0}</span>` :
+                            (p.stock || 0) > 0 ?
+                            `<span class="badge badge-warning">${p.stock || 0}</span>` :
+                            `<span class="badge badge-danger">Sin stock</span>`
+                        }
+                    </td>
+                    <td>${p.destacado ? '⭐' : '—'}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-primary btn-sm btn-editar" data-id="${p.id}">✎ Editar</button>
+                            <button class="btn btn-danger btn-sm btn-eliminar" data-id="${p.id}">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Event listeners para editar
+            document.querySelectorAll('.btn-editar').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    abrirModalEditar(id);
+                });
+            });
+
+            // Event listeners para eliminar
+            document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const producto = productos.find(p => p.id === id);
+                    if (producto) {
+                        abrirModalEliminar(id, producto.nombre);
+                    }
+                });
+            });
+        }
+
+        // ========================================
+        //  5. FILTROS Y BÚSQUEDA
+        // ========================================
+
+        document.getElementById('btnBuscar').addEventListener('click', function() {
+            aplicarFiltros();
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                aplicarFiltros();
+            }
+        });
+
+        document.getElementById('btnLimpiar').addEventListener('click', function() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filtroCategoria').value = 'all';
+            renderTabla(productos);
+        });
+
+        document.getElementById('filtroCategoria').addEventListener('change', function() {
+            aplicarFiltros();
+        });
+
+        function aplicarFiltros() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const categoria = document.getElementById('filtroCategoria').value;
+
+            let filtrados = [...productos];
+
+            if (searchTerm) {
+                filtrados = filtrados.filter(p =>
+                    p.nombre.toLowerCase().includes(searchTerm) ||
+                    p.descripcion.toLowerCase().includes(searchTerm) ||
+                    p.categoria.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (categoria !== 'all') {
+                filtrados = filtrados.filter(p => p.categoria === categoria);
+            }
+
+            renderTabla(filtrados);
+        }
+
+        // ========================================
+        //  6. MODAL - NUEVO PRODUCTO
+        // ========================================
+
+        document.getElementById('btnNuevoProducto').addEventListener('click', function() {
+            abrirModalNuevo();
+        });
+
+        function abrirModalNuevo() {
+            productoEditandoId = null;
+            document.getElementById('modalTitle').textContent = '✦ Nuevo Producto ✦';
+            document.getElementById('modalSubtitle').textContent = 'Completa los datos del producto';
+            document.getElementById('productoForm').reset();
+            document.getElementById('productoId').value = '';
+            document.getElementById('formImagePreview').classList.remove('active');
+            document.getElementById('formImagePreview').src = '';
+            document.getElementById('btnGuardarProducto').textContent = '✦ Guardar ✦';
+            document.getElementById('modalProducto').classList.add('active');
+        }
+
+        function abrirModalEditar(id) {
+            const producto = productos.find(p => p.id === id);
+            if (!producto) return;
+
+            productoEditandoId = id;
+            document.getElementById('modalTitle').textContent = '✦ Editar Producto ✦';
+            document.getElementById('modalSubtitle').textContent = 'Modifica los datos del producto';
+            document.getElementById('productoId').value = id;
+            document.getElementById('formNombre').value = producto.nombre || '';
+            document.getElementById('formCategoria').value = producto.categoria || '';
+            document.getElementById('formDescripcion').value = producto.descripcion || '';
+            document.getElementById('formPrecio').value = producto.precio || '';
+            document.getElementById('formStock').value = producto.stock || '';
+            document.getElementById('formDestacado').checked = producto.destacado || false;
+            
+            if (producto.imagen) {
+                document.getElementById('formImagePreview').src = producto.imagen;
+                document.getElementById('formImagePreview').classList.add('active');
+            } else {
+                document.getElementById('formImagePreview').classList.remove('active');
+            }
+
+            document.getElementById('btnGuardarProducto').textContent = '✦ Actualizar ✦';
+            document.getElementById('modalProducto').classList.add('active');
+        }
+
+        // ========================================
+        //  7. MODAL - ELIMINAR
+        // ========================================
+
+        let productoEliminarId = null;
+
+        function abrirModalEliminar(id, nombre) {
+            productoEliminarId = id;
+            document.getElementById('eliminarMensaje').textContent = 
+                `¿Estás seguro de que deseas eliminar "${nombre}"? Esta acción no se puede deshacer.`;
+            document.getElementById('modalEliminar').classList.add('active');
+        }
+
+        document.getElementById('btnCancelarEliminar').addEventListener('click', function() {
+            document.getElementById('modalEliminar').classList.remove('active');
+            productoEliminarId = null;
+        });
+
+        document.getElementById('btnConfirmarEliminar').addEventListener('click', async function() {
+            if (!productoEliminarId) return;
+            
+            try {
+                await deleteProducto(productoEliminarId);
+                mostrarNotificacion('✅ Producto eliminado correctamente', 'success');
+                document.getElementById('modalEliminar').classList.remove('active');
+                productoEliminarId = null;
+                await cargarProductos();
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                mostrarNotificacion('❌ Error al eliminar el producto', 'error');
+            }
+        });
+
+        // ========================================
+        //  8. CERRAR MODAL
+        // ========================================
+
+        document.getElementById('btnCancelarModal').addEventListener('click', function() {
+            document.getElementById('modalProducto').classList.remove('active');
+        });
+
+        document.getElementById('modalProducto').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // ========================================
+        //  9. SUBIR IMAGEN A CLOUDINARY
+        // ========================================
+
+        document.getElementById('formImagen').addEventListener('change', async function(e) {
+            const file = this.files[0];
+            if (!file) return;
+
+            // Validar tamaño (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                mostrarNotificacion('❌ La imagen no puede superar los 5MB', 'error');
+                this.value = '';
+                return;
+            }
+
+            // Validar tipo
+            const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!tiposPermitidos.includes(file.type)) {
+                mostrarNotificacion('❌ Formato no permitido. Usa JPG, PNG o WEBP', 'error');
+                this.value = '';
+                return;
+            }
+
+            try {
+                mostrarNotificacion('📤 Subiendo imagen...', 'success');
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('folder', 'productos');
+
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
+                );
+
+                const data = await response.json();
+
+                if (data.secure_url) {
+                    // Mostrar preview
+                    document.getElementById('formImagePreview').src = data.secure_url;
+                    document.getElementById('formImagePreview').classList.add('active');
+                    
+                    // Guardar URL en un campo oculto
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.id = 'formImagenUrl';
+                    hiddenInput.value = data.secure_url;
+                    const oldHidden = document.getElementById('formImagenUrl');
+                    if (oldHidden) oldHidden.remove();
+                    this.parentNode.appendChild(hiddenInput);
+
+                    mostrarNotificacion('✅ Imagen subida correctamente', 'success');
+                } else {
+                    mostrarNotificacion('❌ Error al subir la imagen', 'error');
+                }
+            } catch (error) {
+                console.error('Error al subir a Cloudinary:', error);
+                mostrarNotificacion('❌ Error al subir la imagen', 'error');
+            }
+        });
+
+        // ========================================
+        //  10. GUARDAR PRODUCTO
+        // ========================================
+
+        document.getElementById('productoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('formNombre').value.trim();
+            const categoria = document.getElementById('formCategoria').value;
+            const descripcion = document.getElementById('formDescripcion').value.trim();
+            const precio = parseFloat(document.getElementById('formPrecio').value);
+            const stock = parseInt(document.getElementById('formStock').value) || 0;
+            const destacado = document.getElementById('formDestacado').checked;
+            
+            // Obtener URL de imagen
+            const imagenInput = document.getElementById('formImagenUrl');
+            const imagen = imagenInput ? imagenInput.value : '';
+            const previewImg = document.getElementById('formImagePreview');
+            const imagenExistente = previewImg.classList.contains('active') ? previewImg.src : '';
+
+            // Validaciones
+            if (!nombre) {
+                mostrarNotificacion('❌ El nombre es obligatorio', 'error');
+                return;
+            }
+            if (!categoria) {
+                mostrarNotificacion('❌ La categoría es obligatoria', 'error');
+                return;
+            }
+            if (!descripcion) {
+                mostrarNotificacion('❌ La descripción es obligatoria', 'error');
+                return;
+            }
+            if (!precio || precio <= 0) {
+                mostrarNotificacion('❌ El precio debe ser mayor a 0', 'error');
+                return;
+            }
+            if (stock < 0) {
+                mostrarNotificacion('❌ El stock no puede ser negativo', 'error');
+                return;
+            }
+
+            const data = {
+                nombre,
+                categoria,
+                descripcion,
+                precio,
+                stock,
+                destacado,
+                imagen: imagen || imagenExistente || ''
+            };
+
+            try {
+                const editandoId = document.getElementById('productoId').value;
+                
+                if (editandoId) {
+                    // Editar
+                    await updateProducto(editandoId, data);
+                    mostrarNotificacion('✅ Producto actualizado correctamente', 'success');
+                } else {
+                    // Crear
+                    await createProducto(data);
+                    mostrarNotificacion('✅ Producto creado correctamente', 'success');
+                }
+
+                document.getElementById('modalProducto').classList.remove('active');
+                await cargarProductos();
+                
+                // Limpiar formulario
+                this.reset();
+                document.getElementById('formImagePreview').classList.remove('active');
+                const hiddenInput = document.getElementById('formImagenUrl');
+                if (hiddenInput) hiddenInput.remove();
+
+            } catch (error) {
+                console.error('Error al guardar:', error);
+                mostrarNotificacion('❌ Error al guardar el producto', 'error');
+            }
+        });
+
+        // ========================================
+        //  11. NOTIFICACIONES
+        // ========================================
+
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${tipo}`;
+            notif.textContent = mensaje;
+            document.body.appendChild(notif);
+
+            setTimeout(() => notif.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notif.classList.remove('show');
+                setTimeout(() => notif.remove(), 500);
+            }, 3000);
+        }
+
+        // ========================================
+        //  12. MENSAJE DE CONSOLA
+        // ========================================
+
+        console.log('%c✨✦✧ Esencia Violeta - Gestión de Productos ✧✦✨', 
+            'font-size: 20px; font-weight: bold; color: #2A1A3D; text-shadow: 0 0 40px rgba(180, 138, 217, 0.3);');
+        console.log('%c🛒 CRUD completo de productos', 'font-size: 14px; color: #5B3A7A;');
+        console.log('%c☁️ Cloudinary integrado para imágenes', 'font-size: 14px; color: #B48AD9;');
+
+        // Exponer funciones para debug
+        window.cargarProductos = cargarProductos;
+
+    </script>
+</body>
+</html>

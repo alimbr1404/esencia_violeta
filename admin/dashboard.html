@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard · Esencia Violeta Admin</title>
+
+    <!-- Fuentes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" 
+        rel="stylesheet" 
+    />
+
+    <!-- Estilos del admin -->
+    <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+    <!-- ======================================== -->
+    <!--  LOGIN (oculto por defecto)              -->
+    <!-- ======================================== -->
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <div class="icon">🔮</div>
+            <span class="logo">✦ Esencia Violeta ✦</span>
+            <p class="subtitle">Panel de Administración</p>
+            <form id="loginForm">
+                <input type="text" id="loginUser" placeholder="Usuario" value="admin" />
+                <input type="password" id="loginPass" placeholder="Contraseña" value="esencia2026" />
+                <button type="submit" class="btn">✦ Ingresar ✦</button>
+                <div class="error" id="loginError">❌ Usuario o contraseña incorrectos</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!--  ADMIN PANEL (oculto por defecto)        -->
+    <!-- ======================================== -->
+    <div id="adminPanel" style="display: none;">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="logo">
+                    ✦ <span>Esencia Violeta</span> · Admin
+                </div>
+                <div class="user-info">
+                    <span id="userNameDisplay">Admin</span>
+                    <div class="user-icon">A</div>
+                    <button class="btn-logout" id="logoutBtn">✕ Cerrar sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- LAYOUT -->
+        <div class="admin-layout">
+
+            <!-- SIDEBAR -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-title">✦ Navegación</div>
+                <nav class="sidebar-menu">
+                    <a href="dashboard.html" class="active">
+                        <span class="icon">📊</span> Dashboard
+                    </a>
+                    <a href="tienda.html">
+                        <span class="icon">🛒</span> Productos
+                    </a>
+                    <a href="#">
+                        <span class="icon">📝</span> Blog
+                    </a>
+                    <a href="#">
+                        <span class="icon">⭐</span> Experiencias
+                    </a>
+                    <a href="#">
+                        <span class="icon">⚙️</span> Configuración
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- CONTENT -->
+            <main class="admin-content">
+                <h1 class="page-title">✦ Dashboard ✦</h1>
+                <p class="page-subtitle">Bienvenido al panel de administración de Esencia Violeta</p>
+
+                <!-- STATS -->
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-number" id="totalProductos">0</div>
+                        <div class="stat-label">✦ Productos totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📂</div>
+                        <div class="stat-number" id="totalCategorias">0</div>
+                        <div class="stat-label">✦ Categorías</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-number" id="totalDestacados">0</div>
+                        <div class="stat-label">✦ Productos destacados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-number" id="totalBlog">0</div>
+                        <div class="stat-label">✦ Artículos</div>
+                    </div>
+                </div>
+
+                <!-- ÚLTIMOS PRODUCTOS -->
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #3B1E54; margin-bottom: 1rem;">
+                    ✦ Últimos productos agregados ✦
+                </h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Destacado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ultimosProductos">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: #4A4A4E;">
+                                    Cargando productos...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ACCESOS RÁPIDOS -->
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="tienda.html" class="btn btn-primary" style="padding: 0.8rem 2rem;">
+                        ➕ Agregar producto
+                    </a>
+                    <a href="tienda.html" class="btn btn-secondary" style="padding: 0.8rem 2rem;">
+                        📋 Ver todos los productos
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!--  SCRIPTS                                 -->
+    <!-- ======================================== -->
+    <script type="module">
+        // ========================================
+        //  DASHBOARD - ESENCIA VIOLETA
+        // ========================================
+
+        import { 
+            getProductos,
+            getProductosDestacados 
+        } from '../js/firebase-config.js';
+
+        // ========================================
+        //  1. AUTENTICACIÓN
+        // ========================================
+
+        const ADMIN_USER = 'admin';
+        const ADMIN_PASS = 'esencia2026';
+
+        const loginPage = document.getElementById('loginPage');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Verificar sesión al cargar
+        if (sessionStorage.getItem('admin_logged') === 'true') {
+            loginPage.style.display = 'none';
+            adminPanel.style.display = 'block';
+            cargarDatos();
+        }
+
+        // Login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                sessionStorage.setItem('admin_logged', 'true');
+                loginPage.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loginError.style.display = 'none';
+                cargarDatos();
+            } else {
+                loginError.style.display = 'block';
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', function() {
+            sessionStorage.removeItem('admin_logged');
+            adminPanel.style.display = 'none';
+            loginPage.style.display = 'flex';
+        });
+
+        // ========================================
+        //  2. CARGAR DATOS DEL DASHBOARD
+        // ========================================
+
+        async function cargarDatos() {
+            try {
+                // Obtener todos los productos
+                const productos = await getProductos();
+                
+                // Estadísticas
+                const total = productos.length;
+                document.getElementById('totalProductos').textContent = total;
+
+                // Categorías únicas
+                const categorias = [...new Set(productos.map(p => p.categoria))];
+                document.getElementById('totalCategorias').textContent = categorias.length;
+
+                // Destacados
+                const destacados = productos.filter(p => p.destacado === true);
+                document.getElementById('totalDestacados').textContent = destacados.length;
+
+                // Blog (por ahora fijo)
+                document.getElementById('totalBlog').textContent = '8';
+
+                // Últimos 5 productos
+                const ultimos = productos
+                    .sort((a, b) => {
+                        const dateA = a.creado ? new Date(a.creado.seconds * 1000) : new Date(0);
+                        const dateB = b.creado ? new Date(b.creado.seconds * 1000) : new Date(0);
+                        return dateB - dateA;
+                    })
+                    .slice(0, 5);
+
+                const tbody = document.getElementById('ultimosProductos');
+                
+                if (ultimos.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #4A4A4E;">
+                                📦 No hay productos aún. ¡Comienza agregando tu primer producto!
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tbody.innerHTML = ultimos.map(p => `
+                    <tr>
+                        <td>
+                            <img src="${p.imagen || 'https://via.placeholder.com/50x50/2A1A3D/FFFFFF?text=🔮'}" 
+                                 alt="${p.nombre}" 
+                                 class="product-image"
+                                 onerror="this.src='https://via.placeholder.com/50x50/2A1A3D/FFFFFF?text=🔮'"
+                            />
+                        </td>
+                        <td><strong>${p.nombre}</strong></td>
+                        <td><span class="badge badge-primary">✦ ${p.categoria} ✦</span></td>
+                        <td>₡${(p.precio || 0).toLocaleString('es-CR')}</td>
+                        <td>
+                            ${(p.stock || 0) > 5 ? 
+                                `<span class="badge badge-success">${p.stock || 0}</span>` :
+                                (p.stock || 0) > 0 ?
+                                `<span class="badge badge-warning">${p.stock || 0}</span>` :
+                                `<span class="badge badge-danger">Sin stock</span>`
+                            }
+                        </td>
+                        <td>
+                            ${p.destacado ? '⭐' : '—'}
+                        </td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                mostrarNotificacion('❌ Error al cargar los datos', 'error');
+            }
+        }
+
+        // ========================================
+        //  3. NOTIFICACIONES
+        // ========================================
+
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${tipo}`;
+            notif.textContent = mensaje;
+            document.body.appendChild(notif);
+
+            setTimeout(() => notif.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notif.classList.remove('show');
+                setTimeout(() => notif.remove(), 500);
+            }, 3000);
+        }
+
+        // ========================================
+        //  4. MENSAJE DE CONSOLA
+        // ========================================
+
+        console.log('%c✨✦✧ Esencia Violeta - Admin Dashboard ✧✦✨', 
+            'font-size: 20px; font-weight: bold; color: #2A1A3D; text-shadow: 0 0 40px rgba(180, 138, 217, 0.3);');
+        console.log('%c🔐 Panel de administración', 'font-size: 14px; color: #5B3A7A;');
+        console.log('%c📊 Dashboard cargado correctamente', 'font-size: 14px; color: #B48AD9;');
+
+        // Exponer funciones para debug
+        window.cargarDatos = cargarDatos;
+
+    </script>
+</body>
+</html>
