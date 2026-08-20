@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Blog · Esencia Violeta</title>
+
+    <!-- Fuentes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" 
+        rel="stylesheet" 
+    />
+
+    <style>
+        /* ========================================
+           RESET Y CONFIGURACIÓN BASE
+           ======================================== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Nunito', sans-serif;
+            background: #F8F5FA;
+            color: #1C1C1E;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            cursor: default;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========================================
+           TIPOGRAFÍA
+           ======================================== */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #3B1E54;
+        }
+
+        .section-title {
+            font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-top: 1.4rem;
+        }
+
+        .section-title::before {
+            content: '✦';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: #C9A7EB;
+            opacity: 0.5;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #C9A7EB, #B48AD9, #C9A7EB, transparent);
+            margin: 0.7rem auto 0;
+            border-radius: 2px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFFFFF, #D6C8E0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .logo--small {
+            font-size: clamp(1rem, 2.8vw, 1.4rem);
+        }
+
+        /* ========================================
+           BOTONES
+           ======================================== */
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2.2vw, 1rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+            min-width: 48px;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, #2E1A47, #4A2060);
+            color: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(42, 26, 61, 0.25);
+        }
+
+        .btn--primary::before {
+            content: '✦';
+            margin-right: 6px;
+            opacity: 0.6;
+        }
+
+        .btn--primary:hover {
+            background: linear-gradient(135deg, #B48AD9, #C9A7EB);
+            color: #1C1C1E;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(180, 138, 217, 0.4);
+        }
+
+        .btn--secondary {
+            background: transparent;
+            color: #2E1A47;
+            border: 2px solid #2E1A47;
+        }
+
+        .btn--secondary::before {
+            content: '✧';
+            margin-right: 6px;
+            opacity: 0.6;
+        }
+
+        .btn--secondary:hover {
+            background: #2E1A47;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .btn--small {
+            padding: 0.5rem 1rem;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            min-height: 40px;
+            min-width: 40px;
+        }
+
+        /* ========================================
+           HEADER
+           ======================================== */
+        .header {
+            background: linear-gradient(135deg, #1C0F2E, #2A1A3D, #3B1E54);
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 30px rgba(42, 26, 61, 0.3);
+            border-bottom: 1px solid rgba(201, 167, 235, 0.05);
+        }
+
+        .header__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            padding: 0.2rem 0;
+        }
+
+        .header__logo {
+            flex: 0 1 auto;
+        }
+
+        .header__nav {
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header__nav .nav__list {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .header__nav .nav__list a {
+            color: #D6C8E0;
+            font-weight: 500;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.4rem 0;
+            white-space: nowrap;
+        }
+
+        .header__nav .nav__list a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #B48AD9, #C9A7EB);
+            transition: width 0.3s ease;
+        }
+
+        .header__nav .nav__list a:hover::after,
+        .header__nav .nav__list a.active::after {
+            width: 100%;
+        }
+
+        .header__nav .nav__list a:hover,
+        .header__nav .nav__list a.active {
+            color: #FFFFFF;
+        }
+
+        .header__actions {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+            flex: 0 1 auto;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(214, 200, 224, 0.08);
+            border-radius: 50%;
+            width: clamp(38px, 6.5vw, 42px);
+            height: clamp(38px, 6.5vw, 42px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #D6C8E0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            background: rgba(180, 138, 217, 0.15);
+            border-color: rgba(180, 138, 217, 0.2);
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        .action-btn svg {
+            width: clamp(18px, 3.2vw, 22px);
+            height: clamp(18px, 3.2vw, 22px);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #FF00FF, #B48AD9);
+            color: #FFFFFF;
+            font-size: clamp(0.55rem, 1.3vw, 0.65rem);
+            font-weight: 700;
+            width: clamp(18px, 3.2vw, 20px);
+            height: clamp(18px, 3.2vw, 20px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-badge {
+            display: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cart-badge.visible {
+            display: flex;
+        }
+
+        /* ========================================
+           MENÚ HAMBURGUESA
+           ======================================== */
+        .hamburger-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(214, 200, 224, 0.08);
+            border-radius: 14px;
+            color: #FFFFFF;
+            font-size: clamp(1.4rem, 4.5vw, 2rem);
+            cursor: pointer;
+            padding: 0.3rem 0.8rem;
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+            min-height: 44px;
+            min-width: 48px;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(180, 138, 217, 0.15);
+            border-color: rgba(180, 138, 217, 0.2);
+        }
+
+        .hamburger-btn.active {
+            background: rgba(180, 138, 217, 0.15);
+            border-color: #B48AD9;
+            box-shadow: 0 0 40px rgba(180, 138, 217, 0.1);
+        }
+
+        /* ========================================
+           BLOG
+           ======================================== */
+        .blog-page {
+            padding: clamp(2.5rem, 6.5vw, 4rem) 0;
+            background: linear-gradient(180deg, #F8F5FA 0%, #FFFFFF 100%);
+            position: relative;
+        }
+
+        .blog-page__layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: clamp(1.8rem, 4.5vw, 3rem);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========================================
+           ARTÍCULOS
+           ======================================== */
+        .blog-posts {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.8rem, 4.5vw, 3rem);
+        }
+
+        .blog-post {
+            background: #FFFFFF;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(214, 200, 224, 0.12);
+            box-shadow: 0 4px 20px rgba(42, 26, 61, 0.04);
+            transition: all 0.4s ease;
+        }
+
+        .blog-post:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 50px rgba(42, 26, 61, 0.08);
+        }
+
+        .blog-post__image {
+            width: 100%;
+            height: clamp(220px, 40vw, 320px);
+            background-size: cover;
+            background-position: center;
+            background-color: #2A1A3D;
+        }
+
+        .blog-post__body {
+            padding: clamp(1.2rem, 3.2vw, 2rem);
+        }
+
+        .blog-post__category {
+            display: inline-block;
+            background: linear-gradient(135deg, #C9A7EB, #B48AD9);
+            color: #1C1C1E;
+            font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+            font-weight: 700;
+            padding: 0.2rem 1rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-post__title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.3rem, 3.8vw, 1.8rem);
+            color: #3B1E54;
+            margin-bottom: 0.3rem;
+        }
+
+        .blog-post__date {
+            display: block;
+            font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+            color: #4A4A4E;
+            margin-bottom: 0.8rem;
+        }
+
+        .blog-post__excerpt {
+            color: #4A4A4E;
+            font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+        }
+
+        .blog-post__content {
+            color: #4A4A4E;
+            font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            display: none;
+        }
+
+        .blog-post__content.visible {
+            display: block;
+        }
+
+        .blog-post__link {
+            color: #2E1A47;
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .blog-post__link::after {
+            content: '→';
+            margin-left: 5px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .blog-post__link:hover {
+            color: #B48AD9;
+        }
+
+        .blog-post__link:hover::after {
+            margin-left: 10px;
+        }
+
+        .blog-post__actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        /* ========================================
+           SIDEBAR
+           ======================================== */
+        .blog-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.5rem, 3.5vw, 2.5rem);
+        }
+
+        .sidebar-widget {
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: clamp(1.2rem, 3.2vw, 2rem);
+            border: 1px solid rgba(214, 200, 224, 0.12);
+            box-shadow: 0 4px 20px rgba(42, 26, 61, 0.04);
+        }
+
+        .sidebar-widget__title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: #3B1E54;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .sidebar-widget__title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #C9A7EB, #B48AD9, transparent);
+            margin: 0.5rem auto 0;
+        }
+
+        /* Buscador */
+        .search-widget {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-widget input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: 2px solid rgba(214, 200, 224, 0.25);
+            border-radius: 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            transition: all 0.3s ease;
+            background: #FFFFFF;
+            color: #1C1C1E;
+            min-height: 44px;
+        }
+
+        .search-widget input:focus {
+            border-color: #B48AD9;
+            box-shadow: 0 0 30px rgba(180, 138, 217, 0.08);
+            outline: none;
+        }
+
+        .search-widget input::placeholder {
+            color: #9A9A9E;
+            opacity: 0.7;
+        }
+
+        .search-widget .btn {
+            min-height: 44px;
+            padding: 0.7rem 1.2rem;
+        }
+
+        /* Categorías */
+        .category-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            background: rgba(180, 138, 217, 0.08);
+            color: #2E1A47;
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(180, 138, 217, 0.1);
+            cursor: pointer;
+        }
+
+        .category-tag:hover,
+        .category-tag.active {
+            background: linear-gradient(135deg, #B48AD9, #C9A7EB);
+            color: #1C1C1E;
+            border-color: #B48AD9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(180, 138, 217, 0.2);
+        }
+
+        /* Artículos recientes */
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .recent-item {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .recent-item:hover {
+            background: rgba(180, 138, 217, 0.05);
+        }
+
+        .recent-item__image {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            background-color: #2A1A3D;
+            flex-shrink: 0;
+        }
+
+        .recent-item__info {
+            flex: 1;
+        }
+
+        .recent-item__title {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-weight: 600;
+            color: #1C1C1E;
+            line-height: 1.3;
+        }
+
+        .recent-item__date {
+            font-size: clamp(0.7rem, 1.4vw, 0.8rem);
+            color: #4A4A4E;
+        }
+
+        /* ========================================
+           PAGINACIÓN
+           ======================================== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(214, 200, 224, 0.2);
+            border-radius: 12px;
+            background: transparent;
+            color: #2E1A47;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
+            min-height: 40px;
+            min-width: 40px;
+        }
+
+        .pagination button:hover {
+            border-color: #B48AD9;
+            background: rgba(180, 138, 217, 0.05);
+        }
+
+        .pagination button.active {
+            background: linear-gradient(135deg, #2E1A47, #4A2060);
+            color: #FFFFFF;
+            border-color: #2E1A47;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ========================================
+           ELEMENTOS DECORATIVOS
+           ======================================== */
+        .decor-item {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            color: rgba(0, 0, 0, 0.06);
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            user-select: none;
+            animation: floatDecor 15s ease-in-out infinite;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .decor-item:hover {
+            opacity: 0.8;
+        }
+
+        .decor-item--moon {
+            color: rgba(0, 0, 0, 0.07);
+            animation-duration: 18s;
+        }
+
+        .decor-item--cat {
+            color: rgba(0, 0, 0, 0.08);
+            animation-duration: 22s;
+        }
+
+        .decor-item--tarot {
+            color: rgba(0, 0, 0, 0.06);
+            animation-duration: 20s;
+        }
+
+        @keyframes floatDecor {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(15px, -20px) rotate(5deg) scale(1.1); }
+            50% { transform: translate(-10px, 15px) rotate(-5deg) scale(0.9); }
+            75% { transform: translate(10px, -10px) rotate(3deg) scale(1.05); }
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: linear-gradient(135deg, #1C0F2E, #2A1A3D);
+            color: #D6C8E0;
+            padding: clamp(1.8rem, 4.5vw, 3rem) 0 0;
+            position: relative;
+        }
+
+        .footer__inner {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: clamp(1.2rem, 3.2vw, 2.2rem);
+            align-items: start;
+            padding-bottom: clamp(1.8rem, 3.2vw, 2.2rem);
+            border-bottom: 1px solid rgba(214, 200, 224, 0.05);
+        }
+
+        .footer__brand .logo {
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .footer__quote {
+            font-family: 'Caveat', cursive;
+            font-size: clamp(1.1rem, 3.2vw, 1.4rem);
+            color: #C9A7EB;
+            opacity: 0.6;
+        }
+
+        .footer__nav ul {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1.8rem;
+        }
+
+        .footer__nav a {
+            color: #D6C8E0;
+            transition: all 0.3s ease;
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+        }
+
+        .footer__nav a:hover {
+            color: #B48AD9;
+        }
+
+        .footer__social {
+            display: flex;
+            gap: clamp(0.8rem, 2.2vw, 1.2rem);
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: clamp(44px, 7vw, 50px);
+            height: clamp(44px, 7vw, 50px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(214, 200, 224, 0.08);
+            color: #D6C8E0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #B48AD9, #C9A7EB);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .social-icon svg {
+            width: clamp(20px, 3.2vw, 26px);
+            height: clamp(20px, 3.2vw, 26px);
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-icon--facebook svg {
+            fill: currentColor;
+        }
+
+        .social-icon--instagram svg {
+            fill: none;
+            stroke: currentColor;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            border-color: #B48AD9;
+            box-shadow: 0 8px 40px rgba(180, 138, 217, 0.3);
+        }
+
+        .social-icon:hover::before {
+            opacity: 1;
+        }
+
+        .social-icon:hover svg {
+            color: #FFFFFF;
+            transform: rotate(10deg) scale(1.15);
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #B48AD9, #C9A7EB) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: pulseRing 2s ease-in-out infinite;
+        }
+
+        .social-icon:hover::after {
+            opacity: 1;
+        }
+
+        .social-icon--facebook:hover {
+            border-color: #1877F2;
+            box-shadow: 0 8px 40px rgba(24, 119, 242, 0.3);
+        }
+
+        .social-icon--facebook::before {
+            background: linear-gradient(135deg, #1877F2, #0d65d9);
+        }
+
+        .social-icon--instagram:hover {
+            border-color: #E4405F;
+            box-shadow: 0 8px 40px rgba(228, 64, 95, 0.3);
+        }
+
+        .social-icon--instagram::before {
+            background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+
+        .footer__bottom {
+            padding: clamp(1rem, 2.2vw, 1.4rem) 0;
+            text-align: center;
+            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+            color: rgba(214, 200, 224, 0.25);
+            border-top: 1px solid rgba(214, 200, 224, 0.03);
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+
+        @media (max-width: 992px) {
+            .hamburger-btn {
+                display: block;
+                order: 2;
+            }
+
+            .header__inner {
+                flex-wrap: wrap;
+            }
+
+            .header__logo {
+                flex: 0 1 auto;
+                order: 0;
+            }
+
+            .header__actions {
+                order: 1;
+            }
+
+            .header__nav {
+                display: none;
+                width: 100%;
+                order: 3;
+                flex-basis: 100%;
+                padding: 0.5rem 0;
+                border-top: 1px solid rgba(214, 200, 224, 0.05);
+                background: transparent;
+            }
+
+            .header__nav.open {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+
+            .header__nav .nav__list {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.3rem 0;
+                align-items: center;
+            }
+
+            .header__nav .nav__list a {
+                font-size: clamp(0.9rem, 2.8vw, 1.1rem);
+                padding: 0.4rem 0;
+                display: block;
+                text-align: center;
+                width: 100%;
+                color: #D6C8E0;
+            }
+
+            .blog-page__layout {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.2rem;
+            }
+
+            .footer__inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1.4rem;
+            }
+
+            .footer__nav ul {
+                grid-template-columns: 1fr 1fr 1fr;
+                max-width: 380px;
+                margin: 0 auto;
+            }
+
+            .footer__social {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 12px;
+            }
+
+            .blog-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .footer__nav ul {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.3rem;
+            }
+
+            .blog-post__image {
+                height: clamp(180px, 35vw, 240px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .header {
+                padding: 0.3rem 0;
+            }
+
+            .header__inner {
+                gap: 0.3rem;
+            }
+
+            .header__logo .logo {
+                font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+            }
+
+            .hamburger-btn {
+                font-size: 1.3rem;
+                padding: 0.2rem 0.6rem;
+                min-height: 38px;
+                min-width: 42px;
+                border-radius: 10px;
+            }
+
+            .header__nav .nav__list a {
+                font-size: 0.95rem;
+                padding: 0.3rem 0;
+            }
+
+            .action-btn {
+                width: 34px;
+                height: 34px;
+            }
+
+            .action-btn svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .cart-badge {
+                width: 16px;
+                height: 16px;
+                font-size: 0.5rem;
+                top: -4px;
+                right: -4px;
+            }
+
+            .section-title {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                margin-bottom: 1.4rem;
+                padding-top: 1.2rem;
+            }
+
+            .blog-post__body {
+                padding: 1rem;
+            }
+
+            .blog-post__image {
+                height: clamp(160px, 40vw, 200px);
+            }
+
+            .blog-post__title {
+                font-size: clamp(1.1rem, 4vw, 1.3rem);
+            }
+
+            .sidebar-widget {
+                padding: 1rem;
+            }
+
+            .search-widget {
+                flex-direction: column;
+            }
+
+            .search-widget .btn {
+                width: 100%;
+            }
+
+            .footer__inner {
+                gap: 1rem;
+                padding-bottom: 1.2rem;
+            }
+
+            .footer__nav ul {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.3rem;
+                max-width: 100%;
+            }
+
+            .footer__nav a {
+                font-size: clamp(0.8rem, 2vw, 0.9rem);
+            }
+
+            .social-icon {
+                width: clamp(40px, 8vw, 44px);
+                height: clamp(40px, 8vw, 44px);
+            }
+
+            .social-icon svg {
+                width: clamp(18px, 3.5vw, 22px);
+                height: clamp(18px, 3.5vw, 22px);
+            }
+
+            .pagination button {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.8rem;
+                min-height: 34px;
+                min-width: 34px;
+            }
+
+            .blog-post__actions {
+                flex-direction: column;
+            }
+
+            .blog-post__actions .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 0 8px;
+            }
+
+            .header__logo .logo {
+                font-size: 0.85rem;
+            }
+
+            .action-btn {
+                width: 30px;
+                height: 30px;
+            }
+
+            .action-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .cart-badge {
+                width: 14px;
+                height: 14px;
+                font-size: 0.45rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .social-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .social-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* ========================================
+           ANIMACIONES
+           ======================================== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(0.3); }
+            100% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(8px, -12px) scale(1.4); opacity: 1; }
+        }
+
+        .floating-decor,
+        .floating-gem {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .floating-decor,
+            .floating-gem {
+                display: block;
+            }
+        }
+
+        /* ========================================
+           SCROLLBAR
+           ======================================== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1C0F2E;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #B48AD9, #C9A7EB);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #C9A7EB, #FF00FF);
+        }
+
+        /* ========================================
+           SELECCIÓN
+           ======================================== */
+        ::selection {
+            background: rgba(180, 138, 217, 0.2);
+            color: #2A1A3D;
+        }
+
+        /* ========================================
+           BREADCRUMB
+           ======================================== */
+        .breadcrumb {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: #4A4A4E;
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb a {
+            color: #B48AD9;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #2E1A47;
+        }
+
+        .breadcrumb span {
+            margin: 0 0.3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================ -->
+    <!--  HEADER                      -->
+    <!-- ============================ -->
+    <header class="header">
+        <div class="container header__inner">
+            <!-- Logo -->
+            <div class="header__logo">
+                <a href="index.html" class="logo">✦ Esencia Violeta ✦</a>
+            </div>
+
+            <!-- Botón hamburguesa (móvil) -->
+            <button class="hamburger-btn" aria-label="Abrir menú" id="hamburgerBtn">☰</button>
+
+            <!-- Navegación -->
+            <nav class="header__nav" aria-label="Menú principal" id="mainNav">
+                <ul class="nav__list">
+                    <li><a href="index.html#inicio">Inicio</a></li>
+                    <li><a href="index.html#tienda">Tienda</a></li>
+                    <li><a href="index.html#sobre-mi">Sobre mí</a></li>
+                    <li><a href="index.html#experiencias">Experiencias</a></li>
+                    <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <!-- Iconos (carrito + buscador) -->
+            <div class="header__actions">
+                <button class="action-btn" aria-label="Buscar" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                </button>
+                <button class="action-btn" aria-label="Carrito" id="cartBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================ -->
+    <!--  BLOG PAGE                   -->
+    <!-- ============================ -->
+    <section class="blog-page">
+        <div class="container">
+            <h1 class="section-title">✦ Blog de Esencia Violeta ✦</h1>
+
+            <div class="breadcrumb">
+                <a href="index.html">✦ Inicio ✦</a>
+                <span>›</span>
+                <span>✦ Blog ✦</span>
+            </div>
+
+            <div class="blog-page__layout">
+                <!-- ==================================== -->
+                <!--  ARTÍCULOS                          -->
+                <!-- ==================================== -->
+                <div class="blog-posts" id="blogPostsContainer">
+                    <!-- Los artículos se generarán con JavaScript -->
+                </div>
+
+                <!-- ==================================== -->
+                <!--  SIDEBAR                            -->
+                <!-- ==================================== -->
+                <aside class="blog-sidebar">
+                    <!-- Buscador -->
+                    <div class="sidebar-widget">
+                        <h3 class="sidebar-widget__title">✦ Buscar ✦</h3>
+                        <div class="search-widget">
+                            <input type="text" id="searchInput" placeholder="¿Qué energía buscas?" />
+                            <button class="btn btn--primary" id="searchBtnAction">✦ Buscar ✦</button>
+                        </div>
+                    </div>
+
+                    <!-- Categorías -->
+                    <div class="sidebar-widget">
+                        <h3 class="sidebar-widget__title">✦ Categorías ✦</h3>
+                        <div class="category-list" id="categoryList">
+                            <button class="category-tag active" data-category="all">✦ Todas ✦</button>
+                            <!-- Las categorías se generarán con JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Artículos Recientes -->
+                    <div class="sidebar-widget">
+                        <h3 class="sidebar-widget__title">✦ Recientes ✦</h3>
+                        <div class="recent-list" id="recentList">
+                            <!-- Se generará con JavaScript -->
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination" id="pagination">
+                <!-- Se generará con JavaScript -->
+            </div>
+        </div>
+
+        <!-- Elementos decorativos -->
+        <span class="decor-item decor-item--tarot" style="top: 10%; left: 3%;">🃏</span>
+        <span class="decor-item decor-item--moon" style="top: 15%; right: 5%;">🌙</span>
+        <span class="decor-item decor-item--cat" style="bottom: 20%; left: 5%;">🐈‍⬛</span>
+        <span class="decor-item decor-item--tarot" style="bottom: 15%; right: 4%;">🔮</span>
+        <span class="decor-item decor-item--moon" style="top: 45%; left: 4%;">🌙</span>
+        <span class="decor-item decor-item--cat" style="top: 55%; right: 3%;">🐈‍⬛</span>
+    </section>
+
+    <!-- ============================ -->
+    <!--  FOOTER                      -->
+    <!-- ============================ -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__brand">
+                <a href="index.html" class="logo logo--small">✦ Esencia Violeta ✦</a>
+                <p class="footer__quote">“Que la luna guíe tu camino”</p>
+            </div>
+
+            <nav class="footer__nav" aria-label="Menú del pie">
+                <ul>
+                    <li><a href="index.html#inicio">✦ Inicio ✦</a></li>
+                    <li><a href="index.html#tienda">✦ Tienda ✦</a></li>
+                    <li><a href="index.html#sobre-mi">✦ Sobre mí ✦</a></li>
+                    <li><a href="index.html#experiencias">✦ Experiencias ✦</a></li>
+                    <li><a href="blog.html">✦ Blog ✦</a></li>
+                    <li><a href="index.html#contacto">✦ Contacto ✦</a></li>
+                </ul>
+            </nav>
+
+            <div class="footer__social">
+                <a href="https://www.facebook.com/esenciavioletacr" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="social-icon social-icon--facebook" 
+                   aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/esenciavioletacr" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="social-icon social-icon--instagram" 
+                   aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <circle cx="12" cy="12" r="5"/>
+                        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container">
+                <p>✦ 2026 Esencia Violeta · Todos los derechos reservados ✦</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================ -->
+    <!--  SCRIPTS                     -->
+    <!-- ============================ -->
+    <script>
+        // ========================================
+        //  ESENCIA VIOLETA - BLOG
+        //  Datos de ejemplo (próximamente Firebase)
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            'use strict';
+
+            // ========================================
+            //  1. DATOS DE LOS ARTÍCULOS
+            // ========================================
+            const blogPosts = [{
+                id: '1',
+                title: '✦ El tarot y las fases de la luna ✦',
+                category: 'Tarot',
+                date: '15 de abril, 2026',
+                excerpt: 'Cómo la energía lunar influye en tus lecturas de tarot. Descubre qué fase lunar potencia cada tipo de tirada.',
+                content: 'La luna ha sido desde tiempos ancestrales una guía para los buscadores de sabiduría. Cada fase lunar tiene una energía única que puede potenciar diferentes aspectos de tus lecturas de tarot. En luna nueva, los rituales de manifestación y los nuevos comienzos son especialmente poderosos. En luna llena, las lecturas revelan verdades ocultas y cierres necesarios. Aprende a sincronizar tu práctica con el ciclo lunar para obtener lecturas más profundas y significativas.',
+                image: 'img/mazos de tarot.webp',
+                link: '#'
+            }, {
+                id: '2',
+                title: '✦ Piedras con alma ✦',
+                category: 'Piedras',
+                date: '10 de abril, 2026',
+                excerpt: 'Conecta con la energía de las piedras y descubre tu amuleto personal. Una guía para elegir tu piedra espiritual.',
+                content: 'Cada piedra tiene una vibración única que resuena con diferentes aspectos de nuestro ser. La amatista, con su energía protectora y espiritual, es ideal para la meditación. El cuarzo rosa abre el corazón al amor y la compasión. El ojo de tigre fortalece la voluntad y la confianza. Conocer las propiedades de cada piedra te ayudará a encontrar tu amuleto perfecto, aquel que te acompañará en tu camino espiritual.',
+                image: 'img/amuletos y piedras.webp',
+                link: '#'
+            }, {
+                id: '3',
+                title: '✦ Inciensos para cada intención ✦',
+                category: 'Inciensos',
+                date: '5 de abril, 2026',
+                excerpt: 'Desde la purificación hasta la meditación, descubre qué incienso usar según tu intención y momento del día.',
+                content: 'El incienso ha sido utilizado durante milenios como puente entre lo terrenal y lo divino. Cada aroma tiene un propósito específico: el sándalo para la meditación profunda, la lavanda para la relajación, el copal para la purificación. Crear tu propia combinación de inciensos según tu intención puede transformar por completo tu práctica espiritual. Aprende a elegir y combinar aromas para cada momento de tu vida.',
+                image: 'img/inciensos y velas.webp',
+                link: '#'
+            }, {
+                id: '4',
+                title: '✦ Sueños y su significado ✦',
+                category: 'Sueños',
+                date: '28 de marzo, 2026',
+                excerpt: 'Interpreta tus sueños y descubre los mensajes que tu subconsciente te envía cada noche mientras duermes.',
+                content: 'Los sueños son el lenguaje del alma. Cada imagen, cada sensación, cada emoción en tus sueños tiene un significado profundo. Los sueños con agua simbolizan emociones, los sueños de vuelo representan libertad y los sueños de caída pueden indicar ansiedad. Llevar un diario de sueños y aprender a interpretarlos te abrirá una puerta al autoconocimiento más profundo.',
+                image: 'img/mazos de tarot.webp',
+                link: '#'
+            }, {
+                id: '5',
+                title: '✦ Sincronicidades y señales ✦',
+                category: 'Espiritualidad',
+                date: '22 de marzo, 2026',
+                excerpt: 'Aprende a reconocer las sincronicidades y las señales que el universo te envía en tu día a día para guiarte.',
+                content: 'Las sincronicidades son esos momentos en los que el universo parece hablar directamente contigo. Ver números repetidos, encontrar plumas en tu camino, escuchar canciones con mensajes justo cuando los necesitas. Aprender a reconocer estas señales te ayuda a sentirte conectado con algo más grande. El universo siempre está comunicándose contigo, solo necesitas aprender a escuchar.',
+                image: 'img/amuletos y piedras.webp',
+                link: '#'
+            }, {
+                id: '6',
+                title: '✦ Velas y su magia ✦',
+                category: 'Velas',
+                date: '15 de marzo, 2026',
+                excerpt: 'El arte de la velaterapia: cómo usar velas para manifestar intenciones, limpiar energías y conectar con lo divino.',
+                content: 'Las velas han sido herramientas de transformación desde tiempos inmemoriales. Cada color tiene una vibración específica: el blanco para la paz, el rojo para la pasión, el verde para la abundancia. La manera en que la cera se derrite, cómo baila la llama, incluso cómo se consume la vela, todo tiene un significado. Aprende a usar velas para manifestar tus intenciones más profundas.',
+                image: 'img/inciensos y velas.webp',
+                link: '#'
+            }, {
+                id: '7',
+                title: '✦ Meditación con cuarzos ✦',
+                category: 'Meditación',
+                date: '8 de marzo, 2026',
+                excerpt: 'Una guía práctica para meditar con cuarzos y piedras, potenciando tu conexión espiritual y tu equilibrio interior.',
+                content: 'La meditación con cuarzos es una práctica que combina la sabiduría de la tierra con la quietud de la mente. Sostener un cuarzo mientras meditas puede ayudarte a entrar más profundamente en estados de conciencia. Colocar piedras en tus chakras durante la meditación puede desbloquear energías estancadas. Convierte tu práctica de meditación en una experiencia más profunda y significativa.',
+                image: 'img/amuletos y piedras.webp',
+                link: '#'
+            }, {
+                id: '8',
+                title: '✦ El poder de los amuletos ✦',
+                category: 'Amuletos',
+                date: '1 de marzo, 2026',
+                excerpt: 'Descubre la historia y el poder de los amuletos, y cómo elegir el tuyo para protección, amor y prosperidad.',
+                content: 'Los amuletos han acompañado a la humanidad desde el principio de los tiempos. Son objetos cargados de intención que nos protegen, nos guían y nos recuerdan nuestra conexión con lo sagrado. Desde el ojo turco hasta la herradura de la suerte, cada amuleto tiene una historia y un propósito. Aprende a elegir tu amuleto personal y a cargarlo con tu intención.',
+                image: 'img/amuletos y piedras.webp',
+                link: '#'
+            }];
+
+            // ========================================
+            //  2. ESTADO DE LA APLICACIÓN
+            // ========================================
+            let currentPage = 1;
+            let postsPerPage = 3;
+            let filteredPosts = [...blogPosts];
+            let currentCategory = 'all';
+            let searchTerm = '';
+
+            // ========================================
+            //  3. FUNCIONES DE RENDERIZADO
+            // ========================================
+
+            // Renderizar artículos
+            function renderPosts(posts) {
+                const container = document.getElementById('blogPostsContainer');
+                if (!container) return;
+
+                const start = (currentPage - 1) * postsPerPage;
+                const end = start + postsPerPage;
+                const pagePosts = posts.slice(start, end);
+
+                if (pagePosts.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3rem 0; color: #4A4A4E;">
+                            <p style="font-size: 2rem; margin-bottom: 1rem;">🔮</p>
+                            <p>No se encontraron artículos que coincidan con tu búsqueda.</p>
+                            <button class="btn btn--primary" onclick="resetFilters()" style="margin-top: 1rem;">✦ Ver todos ✦</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = pagePosts.map(post => `
+                    <article class="blog-post">
+                        <div class="blog-post__image" style="background-image: url('${post.image}');" role="img" aria-label="${post.title}"></div>
+                        <div class="blog-post__body">
+                            <span class="blog-post__category">✦ ${post.category} ✦</span>
+                            <h2 class="blog-post__title">${post.title}</h2>
+                            <time class="blog-post__date">${post.date}</time>
+                            <p class="blog-post__excerpt">${post.excerpt}</p>
+                            <div class="blog-post__content">${post.content}</div>
+                            <div class="blog-post__actions">
+                                <button class="btn btn--secondary btn--small read-more-btn" data-id="${post.id}">✦ Leer más ✦</button>
+                                ${post.link && post.link !== '#' ? `<a href="${post.link}" class="btn btn--primary btn--small" target="_blank">✦ Visitar enlace ✦</a>` : ''}
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+
+                // Event listeners para "Leer más"
+                document.querySelectorAll('.read-more-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const postId = this.getAttribute('data-id');
+                        const post = blogPosts.find(p => p.id === postId);
+                        if (post) {
+                            const contentElement = this.closest('.blog-post__body').querySelector('.blog-post__content');
+                            const excerptElement = this.closest('.blog-post__body').querySelector('.blog-post__excerpt');
+                            if (contentElement.classList.contains('visible')) {
+                                contentElement.classList.remove('visible');
+                                excerptElement.style.display = 'block';
+                                this.textContent = '✦ Leer más ✦';
+                            } else {
+                                contentElement.classList.add('visible');
+                                excerptElement.style.display = 'none';
+                                this.textContent = '✦ Mostrar menos ✦';
+                            }
+                        }
+                    });
+                });
+
+                renderPagination(posts.length);
+                updateRecentPosts(posts);
+            }
+
+            // Renderizar paginación
+            function renderPagination(totalPosts) {
+                const pagination = document.getElementById('pagination');
+                if (!pagination) return;
+
+                const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+                if (totalPages <= 1) {
+                    pagination.innerHTML = '';
+                    return;
+                }
+
+                let html = `
+                    <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                        ◀
+                    </button>
+                `;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `
+                        <button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">
+                            ${i}
+                        </button>
+                    `;
+                }
+
+                html += `
+                    <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                        ▶
+                    </button>
+                `;
+
+                pagination.innerHTML = html;
+            }
+
+            // Renderizar categorías
+            function renderCategories(posts) {
+                const container = document.getElementById('categoryList');
+                if (!container) return;
+
+                const categories = ['all', ...new Set(posts.map(p => p.category))];
+                const categoryNames = {
+                    'all': '✦ Todas ✦',
+                    'Tarot': '✦ Tarot ✦',
+                    'Piedras': '✦ Piedras ✦',
+                    'Inciensos': '✦ Inciensos ✦',
+                    'Velas': '✦ Velas ✦',
+                    'Sueños': '✦ Sueños ✦',
+                    'Espiritualidad': '✦ Espiritualidad ✦',
+                    'Meditación': '✦ Meditación ✦',
+                    'Amuletos': '✦ Amuletos ✦'
+                };
+
+                container.innerHTML = categories.map(cat => `
+                    <button class="category-tag ${cat === currentCategory ? 'active' : ''}" data-category="${cat}">
+                        ${categoryNames[cat] || cat}
+                    </button>
+                `).join('');
+
+                // Event listeners para categorías
+                container.querySelectorAll('.category-tag').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const category = this.getAttribute('data-category');
+                        currentCategory = category;
+                        currentPage = 1;
+                        applyFilters();
+                    });
+                });
+            }
+
+            // Renderizar artículos recientes
+            function updateRecentPosts(posts) {
+                const container = document.getElementById('recentList');
+                if (!container) return;
+
+                const recent = posts.slice(0, 5);
+
+                container.innerHTML = recent.map(post => `
+                    <div class="recent-item" onclick="goToPost('${post.id}')">
+                        <div class="recent-item__image" style="background-image: url('${post.image}');"></div>
+                        <div class="recent-item__info">
+                            <div class="recent-item__title">${post.title}</div>
+                            <div class="recent-item__date">${post.date}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // ========================================
+            //  4. FILTROS Y BÚSQUEDA
+            // ========================================
+
+            function applyFilters() {
+                let posts = [...blogPosts];
+
+                // Filtrar por categoría
+                if (currentCategory !== 'all') {
+                    posts = posts.filter(p => p.category === currentCategory);
+                }
+
+                // Filtrar por búsqueda
+                if (searchTerm.trim() !== '') {
+                    const term = searchTerm.toLowerCase().trim();
+                    posts = posts.filter(p =>
+                        p.title.toLowerCase().includes(term) ||
+                        p.category.toLowerCase().includes(term) ||
+                        p.excerpt.toLowerCase().includes(term) ||
+                        p.content.toLowerCase().includes(term)
+                    );
+                }
+
+                filteredPosts = posts;
+                renderPosts(posts);
+                renderCategories(blogPosts);
+            }
+
+            function changePage(page) {
+                const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+                if (page < 1 || page > totalPages) return;
+                currentPage = page;
+                renderPosts(filteredPosts);
+                window.scrollTo({ top: document.querySelector('.blog-page').offsetTop - 100, behavior: 'smooth' });
+            }
+
+            function goToPost(postId) {
+                const post = blogPosts.find(p => p.id === postId);
+                if (post) {
+                    currentCategory = 'all';
+                    searchTerm = '';
+                    document.getElementById('searchInput').value = '';
+                    currentPage = 1;
+                    filteredPosts = [...blogPosts];
+                    renderPosts(filteredPosts);
+                    renderCategories(blogPosts);
+                    window.scrollTo({ top: document.querySelector('.blog-page').offsetTop - 100, behavior: 'smooth' });
+                }
+            }
+
+            function resetFilters() {
+                currentCategory = 'all';
+                searchTerm = '';
+                document.getElementById('searchInput').value = '';
+                currentPage = 1;
+                filteredPosts = [...blogPosts];
+                renderPosts(filteredPosts);
+                renderCategories(blogPosts);
+            }
+
+            // Exponer funciones globalmente
+            window.changePage = changePage;
+            window.goToPost = goToPost;
+            window.resetFilters = resetFilters;
+            window.blogPosts = blogPosts;
+
+            // ========================================
+            //  5. EVENT LISTENERS
+            // ========================================
+
+            // Búsqueda
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtnAction');
+
+            function performSearch() {
+                searchTerm = searchInput.value;
+                currentPage = 1;
+                applyFilters();
+            }
+
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            // Menú hamburguesa
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mainNav = document.getElementById('mainNav');
+
+            if (hamburgerBtn && mainNav) {
+                let menuOpen = false;
+
+                hamburgerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    menuOpen = !menuOpen;
+                    mainNav.classList.toggle('open', menuOpen);
+                    hamburgerBtn.textContent = menuOpen ? '✕' : '☰';
+                    hamburgerBtn.classList.toggle('active', menuOpen);
+                    hamburgerBtn.setAttribute('aria-label', menuOpen ? 'Cerrar menú' : 'Abrir menú');
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (menuOpen && window.innerWidth <= 992) {
+                        const isClickInside = mainNav.contains(e.target) || hamburgerBtn.contains(e.target);
+                        if (!isClickInside) {
+                            menuOpen = false;
+                            mainNav.classList.remove('open');
+                            hamburgerBtn.textContent = '☰';
+                            hamburgerBtn.classList.remove('active');
+                            hamburgerBtn.setAttribute('aria-label', 'Abrir menú');
+                        }
+                    }
+                });
+
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 992 && menuOpen) {
+                        menuOpen = false;
+                        mainNav.classList.remove('open');
+                        hamburgerBtn.textContent = '☰';
+                        hamburgerBtn.classList.remove('active');
+                        hamburgerBtn.setAttribute('aria-label', 'Abrir menú');
+                    }
+                });
+            }
+
+            // ========================================
+            //  6. INICIALIZACIÓN
+            // ========================================
+
+            // Renderizar todo
+            filteredPosts = [...blogPosts];
+            renderPosts(blogPosts);
+            renderCategories(blogPosts);
+            updateRecentPosts(blogPosts);
+
+            // ========================================
+            //  7. EFECTO DE HUMO FUCSIA
+            // ========================================
+
+            (function createSmokeEffect() {
+                'use strict';
+
+                const isMobile = window.innerWidth <= 768;
+                const isSmallMobile = window.innerWidth <= 480;
+                const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (isReducedMotion) return;
+
+                const canvas = document.createElement('canvas');
+                canvas.id = 'smokeEffectContainer';
+                canvas.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 9999;
+                `;
+                document.body.appendChild(canvas);
+                const ctx = canvas.getContext('2d');
+
+                let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+                function resizeCanvas() {
+                    canvas.width = window.innerWidth * dpr;
+                    canvas.height = window.innerHeight * dpr;
+                    canvas.style.width = window.innerWidth + 'px';
+                    canvas.style.height = window.innerHeight + 'px';
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                }
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+
+                let mouseX = window.innerWidth / 2;
+                let mouseY = window.innerHeight / 2;
+                let lastMoveTime = Date.now();
+                let hasMoved = false;
+
+                const strands = [];
+                const maxStrands = isSmallMobile ? 14 : (isMobile ? 22 : 34);
+                const baseHue = 322;
+
+                function spawnStrand(x, y) {
+                    if (strands.length >= maxStrands) strands.shift();
+                    strands.push({
+                        x: x + (Math.random() - 0.5) * 4,
+                        y: y + (Math.random() - 0.5) * 4,
+                        born: Date.now(),
+                        life: isSmallMobile ? 850 + Math.random() * 350 : 1100 + Math.random() * 550,
+                        drift: (Math.random() - 0.5) * 0.6,
+                        wobbleSpeed: 0.8 + Math.random() * 1.2,
+                        phase: Math.random() * Math.PI * 2,
+                        riseSpeed: isSmallMobile ? 18 + Math.random() * 10 : 22 + Math.random() * 14,
+                        hue: baseHue + (Math.random() - 0.5) * 14,
+                        width: isSmallMobile ? 1 + Math.random() * 0.8 : 1.3 + Math.random() * 1.1
+                    });
+                }
+
+                document.addEventListener('mousemove', function(e) {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    hasMoved = true;
+                    lastMoveTime = Date.now();
+                });
+
+                document.addEventListener('touchmove', function(e) {
+                    const touch = e.touches[0];
+                    if (touch) {
+                        mouseX = touch.clientX;
+                        mouseY = touch.clientY;
+                        hasMoved = true;
+                        lastMoveTime = Date.now();
+                    }
+                }, { passive: true });
+
+                document.addEventListener('touchstart', function(e) {
+                    const touch = e.touches[0];
+                    if (touch) {
+                        mouseX = touch.clientX;
+                        mouseY = touch.clientY;
+                        hasMoved = true;
+                        lastMoveTime = Date.now();
+                    }
+                }, { passive: true });
+
+                const emitInterval = isSmallMobile ? 90 : (isMobile ? 70 : 55);
+                setInterval(function() {
+                    if (!hasMoved) return;
+                    const now = Date.now();
+                    if (now - lastMoveTime > 4000) return;
+                    spawnStrand(mouseX, mouseY);
+                }, emitInterval);
+
+                function drawStrand(s, now) {
+                    const age = now - s.born;
+                    const t = age / s.life;
+                    if (t >= 1) return false;
+
+                    const steps = 18;
+                    ctx.beginPath();
+                    for (let i = 0; i <= steps; i++) {
+                        const st = (i / steps) * t;
+                        const rise = st * s.life * 0.001 * s.riseSpeed * 10;
+                        const wobble = Math.sin(st * Math.PI * 2.2 * s.wobbleSpeed + s.phase) * (6 + st * 14);
+                        const px = s.x + wobble + s.drift * rise * 0.4;
+                        const py = s.y - rise;
+
+                        if (i === 0) {
+                            ctx.moveTo(px, py);
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    }
+
+                    const fade = Math.sin(Math.min(t * 1.4, 1) * Math.PI);
+                    const opacity = fade * (isSmallMobile ? 0.4 : (isMobile ? 0.5 : 0.6));
+                    const lineWidth = s.width * (1 - t * 0.6);
+
+                    ctx.strokeStyle = `hsla(${s.hue}, 100%, 52%, ${opacity})`;
+                    ctx.lineWidth = Math.max(0.4, lineWidth);
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    ctx.shadowColor = `hsla(${s.hue}, 100%, 58%, ${opacity * 0.85})`;
+                    ctx.shadowBlur = isSmallMobile ? 3 : 6;
+                    ctx.stroke();
+
+                    return true;
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                    const now = Date.now();
+
+                    for (let i = strands.length - 1; i >= 0; i--) {
+                        const alive = drawStrand(strands[i], now);
+                        if (!alive) strands.splice(i, 1);
+                    }
+
+                    requestAnimationFrame(animate);
+                }
+
+                animate();
+
+                window.addEventListener('beforeunload', function() {
+                    if (canvas && canvas.parentNode) {
+                        canvas.parentNode.removeChild(canvas);
+                    }
+                });
+            })();
+
+            // ========================================
+            //  8. POLVO DE HADAS
+            // ========================================
+
+            (function createFairyDust() {
+                const isMobile = window.innerWidth <= 768;
+                const isSmallMobile = window.innerWidth <= 480;
+                const numParticles = isSmallMobile ? 8 : (isMobile ? 12 : 20);
+
+                const container = document.createElement('div');
+                container.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 9998;
+                    overflow: hidden;
+                `;
+                document.body.appendChild(container);
+
+                const dustParticles = [];
+
+                const colors = [
+                    'rgba(255, 182, 193, 0.6)',
+                    'rgba(176, 224, 230, 0.6)',
+                    'rgba(216, 191, 216, 0.6)',
+                    'rgba(255, 218, 185, 0.6)',
+                    'rgba(255, 228, 196, 0.6)',
+                    'rgba(188, 224, 238, 0.6)',
+                    'rgba(255, 192, 203, 0.6)',
+                    'rgba(201, 167, 235, 0.6)'
+                ];
+
+                for (let i = 0; i < numParticles; i++) {
+                    const dust = document.createElement('div');
+                    const size = isSmallMobile ? 2 + Math.random() * 3 : (isMobile ? 2.5 + Math.random() * 4 : 3 + Math.random() * 6);
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    dust.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        border-radius: 50%;
+                        background: ${color};
+                        box-shadow: 0 0 ${size * 2}px ${color};
+                        pointer-events: none;
+                        opacity: ${isSmallMobile ? 0.1 + Math.random() * 0.2 : (isMobile ? 0.15 + Math.random() * 0.3 : 0.2 + Math.random() * 0.4)};
+                        will-change: transform, opacity;
+                    `;
+                    container.appendChild(dust);
+
+                    dustParticles.push({
+                        el: dust,
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        vx: (Math.random() - 0.5) * (isSmallMobile ? 0.2 : (isMobile ? 0.35 : 0.5)),
+                        vy: (Math.random() - 0.5) * (isSmallMobile ? 0.2 : (isMobile ? 0.35 : 0.5)),
+                        size: size,
+                        color: color,
+                        phase: Math.random() * Math.PI * 2,
+                        speed: isSmallMobile ? 0.1 + Math.random() * 0.15 : (isMobile ? 0.15 + Math.random() * 0.2 : 0.2 + Math.random() * 0.3)
+                    });
+                }
+
+                function animateDust() {
+                    const time = Date.now() / 1000;
+
+                    dustParticles.forEach(p => {
+                        p.x += p.vx + Math.sin(time * p.speed + p.phase) * (isSmallMobile ? 0.1 : (isMobile ? 0.15 : 0.2));
+                        p.y += p.vy + Math.cos(time * p.speed * 0.7 + p.phase) * (isSmallMobile ? 0.1 : (isMobile ? 0.15 : 0.2));
+
+                        const floatY = Math.sin(time * 0.5 + p.phase) * (isSmallMobile ? 0.08 : (isMobile ? 0.1 : 0.15));
+                        p.y += floatY;
+
+                        if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
+                        if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
+
+                        const maxSpeed = isSmallMobile ? 0.5 : (isMobile ? 0.7 : 1);
+                        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                        if (speed > maxSpeed) {
+                            p.vx = (p.vx / speed) * maxSpeed;
+                            p.vy = (p.vy / speed) * maxSpeed;
+                        }
+
+                        const pulse = 0.5 + Math.sin(time * 1.5 + p.phase) * 0.5;
+                        p.el.style.opacity = (isSmallMobile ? 0.15 + Math.random() * 0.05 : (isMobile ? 0.2 + Math.random() * 0.08 : 0.3 + Math.random() * 0.1)) * pulse;
+                        p.el.style.transform = `translate(${p.x}px, ${p.y}px) scale(${0.8 + pulse * 0.3})`;
+                        
+                        const hue = Math.sin(time * 0.3 + p.phase) * 20 + 300;
+                        const intensity = isSmallMobile ? 0.15 + Math.sin(time * 0.5 + p.phase) * 0.1 : (isMobile ? 0.2 + Math.sin(time * 0.5 + p.phase) * 0.15 : 0.3 + Math.sin(time * 0.5 + p.phase) * 0.2);
+                        p.el.style.background = `hsla(${hue}, 100%, 70%, ${intensity * 0.4})`;
+                        p.el.style.boxShadow = `0 0 ${p.size * 2.5}px hsla(${hue}, 100%, 70%, ${intensity * 0.2})`;
+                    });
+
+                    requestAnimationFrame(animateDust);
+                }
+
+                animateDust();
+
+                window.addEventListener('resize', function() {
+                    dustParticles.forEach(p => {
+                        p.x = Math.min(p.x, window.innerWidth);
+                        p.y = Math.min(p.y, window.innerHeight);
+                    });
+                });
+            })();
+
+            // ========================================
+            //  9. CARRITO DE COMPRAS
+            // ========================================
+
+            const cart = {
+                items: [],
+                total: 0,
+                badge: document.getElementById('cartBadge'),
+
+                addItem(productName, price) {
+                    const existingItem = this.items.find(item => item.name === productName);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        this.items.push({
+                            name: productName,
+                            price: price,
+                            quantity: 1
+                        });
+                    }
+
+                    this.updateTotal();
+                    this.updateBadge();
+                    this.showMagicalNotification(`✨ ${productName} añadido al carrito ✨🔮`);
+                },
+
+                updateTotal() {
+                    this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                },
+
+                updateBadge() {
+                    const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+                    if (this.badge) {
+                        this.badge.textContent = totalItems;
+                        this.badge.classList.toggle('visible', totalItems > 0);
+                        
+                        if (totalItems > 0) {
+                            this.badge.style.transform = 'scale(1.4) rotate(10deg)';
+                            this.badge.style.boxShadow = '0 0 40px rgba(255, 0, 255, 0.5)';
+                            setTimeout(() => {
+                                this.badge.style.transform = 'scale(1) rotate(0deg)';
+                                this.badge.style.boxShadow = '0 0 30px rgba(255, 0, 255, 0.3)';
+                            }, 400);
+                        }
+                    }
+                },
+
+                showMagicalNotification(message) {
+                    const isMobile = window.innerWidth <= 480;
+                    
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        ${isMobile ? 'bottom: 16px; right: 16px; left: 16px;' : 'bottom: 30px; right: 30px;'}
+                        background: linear-gradient(135deg, #2E1A47, #4A2060, #2E1A47);
+                        background-size: 200% 200%;
+                        color: #FFFFFF;
+                        padding: ${isMobile ? '0.8rem 1.2rem' : '1.2rem 2rem'};
+                        border-radius: ${isMobile ? '16px' : '20px'};
+                        font-family: 'Quicksand', sans-serif;
+                        font-weight: 500;
+                        box-shadow: 0 12px 60px rgba(42, 26, 61, 0.5), 0 0 40px rgba(180, 138, 217, 0.1);
+                        z-index: 9999;
+                        transform: translateX(${isMobile ? '50px' : '150px'}) scale(0.8);
+                        opacity: 0;
+                        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                        border: 1px solid rgba(201, 167, 235, 0.15);
+                        backdrop-filter: blur(15px);
+                        font-size: ${isMobile ? '0.85rem' : '1rem'};
+                        animation: gradientShift 3s ease infinite;
+                        max-width: ${isMobile ? '100%' : '400px'};
+                        text-align: center;
+                    `;
+
+                    const icon = document.createElement('span');
+                    icon.textContent = '✨ ';
+                    icon.style.marginRight = '8px';
+                    notification.prepend(icon);
+
+                    const text = document.createElement('span');
+                    text.textContent = message;
+                    notification.appendChild(text);
+
+                    const sparkleCount = isMobile ? 3 : 8;
+                    for (let i = 0; i < sparkleCount; i++) {
+                        const sparkle = document.createElement('span');
+                        sparkle.textContent = '✦';
+                        sparkle.style.cssText = `
+                            position: absolute;
+                            font-size: ${0.3 + Math.random() * 0.6}rem;
+                            color: #C9A7EB;
+                            opacity: ${0.3 + Math.random() * 0.5};
+                            animation: sparkleFloat ${2 + Math.random() * 3}s ease-in-out infinite;
+                            animation-delay: ${Math.random() * 2}s;
+                            top: ${Math.random() * 100}%;
+                            left: ${Math.random() * 100}%;
+                            pointer-events: none;
+                        `;
+                        notification.appendChild(sparkle);
+                    }
+
+                    document.body.appendChild(notification);
+
+                    requestAnimationFrame(() => {
+                        notification.style.transform = 'translateX(0) scale(1)';
+                        notification.style.opacity = '1';
+                    });
+
+                    setTimeout(() => {
+                        notification.style.transform = `translateX(${isMobile ? '50px' : '150px'}) scale(0.8)`;
+                        notification.style.opacity = '0';
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 600);
+                    }, 3500);
+                },
+
+                viewCart() {
+                    if (this.items.length === 0) {
+                        this.showMagicalNotification('🛒 Tu carrito está vacío... ¡explora la tienda!');
+                        return;
+                    }
+
+                    const isMobile = window.innerWidth <= 480;
+
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        inset: 0;
+                        background: rgba(28, 15, 46, 0.88);
+                        backdrop-filter: blur(15px);
+                        z-index: 9998;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: fadeIn 0.4s ease;
+                        padding: ${isMobile ? '12px' : '20px'};
+                    `;
+
+                    const modalContent = document.createElement('div');
+                    modalContent.style.cssText = `
+                        background: linear-gradient(145deg, #FFFFFF, #F8F5FA);
+                        border-radius: ${isMobile ? '20px' : '30px'};
+                        padding: ${isMobile ? '1.2rem' : '2.5rem'};
+                        max-width: ${isMobile ? '100%' : '520px'};
+                        width: ${isMobile ? '100%' : '90%'};
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 60px rgba(180, 138, 217, 0.05);
+                        border: 1px solid rgba(214, 200, 224, 0.15);
+                        position: relative;
+                    `;
+
+                    const title = document.createElement('h2');
+                    title.innerHTML = '🛒 ✦ Tu Carrito Mágico ✦';
+                    title.style.cssText = `
+                        font-family: 'Playfair Display', serif;
+                        color: #3B1E54;
+                        font-size: ${isMobile ? '1.4rem' : '1.8rem'};
+                        margin-bottom: ${isMobile ? '1rem' : '1.5rem'};
+                        text-align: center;
+                        text-shadow: 0 0 40px rgba(180, 138, 217, 0.1);
+                    `;
+                    modalContent.appendChild(title);
+
+                    this.items.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.style.cssText = `
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: ${isMobile ? '0.5rem 0' : '0.8rem 0'};
+                            border-bottom: 1px solid rgba(214, 200, 224, 0.1);
+                            transition: all 0.3s ease;
+                            gap: ${isMobile ? '8px' : '0'};
+                        `;
+
+                        const itemInfo = document.createElement('div');
+                        itemInfo.innerHTML = `
+                            <strong style="color: #1C1C1E; font-size: ${isMobile ? '0.85rem' : '1rem'};">${item.name}</strong>
+                            <span style="color: #4A4A4E; font-size: ${isMobile ? '0.75rem' : '0.9rem'}; display: block;">✧ x${item.quantity}</span>
+                        `;
+
+                        const itemPrice = document.createElement('span');
+                        itemPrice.textContent = `€${(item.price * item.quantity).toFixed(2)}`;
+                        itemPrice.style.cssText = `
+                            font-weight: 600;
+                            background: linear-gradient(135deg, #C9A87C, #B48AD9);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                            font-size: ${isMobile ? '0.95rem' : '1.1rem'};
+                        `;
+
+                        itemDiv.appendChild(itemInfo);
+                        itemDiv.appendChild(itemPrice);
+                        modalContent.appendChild(itemDiv);
+                    });
+
+                    const totalDiv = document.createElement('div');
+                    totalDiv.style.cssText = `
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: ${isMobile ? '0.6rem 0' : '1rem 0'};
+                        margin-top: ${isMobile ? '0.5rem' : '1rem'};
+                        border-top: 2px solid rgba(201, 167, 235, 0.15);
+                        font-size: ${isMobile ? '1rem' : '1.2rem'};
+                    `;
+                    totalDiv.innerHTML = `
+                        <strong style="font-family: 'Playfair Display', serif; color: #3B1E54;">✦ Total ✦</strong>
+                        <span style="font-weight: 700; background: linear-gradient(135deg, #C9A87C, #B48AD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: ${isMobile ? '1.2rem' : '1.5rem'};">€${this.total.toFixed(2)}</span>
+                    `;
+                    modalContent.appendChild(totalDiv);
+
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.style.cssText = `
+                        display: flex;
+                        gap: ${isMobile ? '0.6rem' : '1rem'};
+                        margin-top: ${isMobile ? '1rem' : '1.5rem'};
+                        flex-direction: ${isMobile ? 'column' : 'row'};
+                    `;
+
+                    const closeBtn = document.createElement('button');
+                    closeBtn.textContent = '✧ Cerrar';
+                    closeBtn.style.cssText = `
+                        flex: 1;
+                        padding: ${isMobile ? '0.6rem' : '0.8rem'};
+                        border: 2px solid #2E1A47;
+                        border-radius: 50px;
+                        background: transparent;
+                        color: #2E1A47;
+                        font-family: 'Quicksand', sans-serif;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        font-size: ${isMobile ? '0.85rem' : '1rem'};
+                        min-height: 44px;
+                    `;
+                    closeBtn.onmouseover = function() {
+                        this.style.background = '#2E1A47';
+                        this.style.color = '#FFFFFF';
+                    };
+                    closeBtn.onmouseout = function() {
+                        this.style.background = 'transparent';
+                        this.style.color = '#2E1A47';
+                    };
+                    closeBtn.onclick = () => modal.remove();
+
+                    const checkoutBtn = document.createElement('button');
+                    checkoutBtn.textContent = '✦ Finalizar Compra ✦';
+                    checkoutBtn.style.cssText = `
+                        flex: 1;
+                        padding: ${isMobile ? '0.6rem' : '0.8rem'};
+                        border: none;
+                        border-radius: 50px;
+                        background: linear-gradient(135deg, #2E1A47, #4A2060);
+                        color: #FFFFFF;
+                        font-family: 'Quicksand', sans-serif;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 25px rgba(42, 26, 61, 0.3);
+                        font-size: ${isMobile ? '0.85rem' : '1rem'};
+                        min-height: 44px;
+                    `;
+                    checkoutBtn.onmouseover = function() {
+                        this.style.background = 'linear-gradient(135deg, #B48AD9, #C9A7EB)';
+                        this.style.color = '#1C1C1E';
+                        this.style.transform = 'scale(1.02)';
+                    };
+                    checkoutBtn.onmouseout = function() {
+                        this.style.background = 'linear-gradient(135deg, #2E1A47, #4A2060)';
+                        this.style.color = '#FFFFFF';
+                        this.style.transform = 'scale(1)';
+                    };
+                    checkoutBtn.onclick = () => {
+                        this.showMagicalNotification('✨ ¡Pedido realizado con éxito! ✨');
+                        this.items = [];
+                        this.total = 0;
+                        this.updateBadge();
+                        modal.remove();
+                    };
+
+                    actionsDiv.appendChild(closeBtn);
+                    actionsDiv.appendChild(checkoutBtn);
+                    modalContent.appendChild(actionsDiv);
+
+                    modal.appendChild(modalContent);
+                    document.body.appendChild(modal);
+
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            modal.remove();
+                        }
+                    });
+                }
+            };
+
+            // Botón del carrito
+            const cartButton = document.getElementById('cartBtn');
+            if (cartButton) {
+                cartButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1.2) rotate(15deg)';
+                    this.style.boxShadow = '0 0 60px rgba(255, 0, 255, 0.3)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1) rotate(0deg)';
+                        this.style.boxShadow = 'none';
+                    }, 300);
+                    cart.viewCart();
+                });
+            }
+
+            // Inicializar badge del carrito
+            cart.updateBadge();
+
+            // ========================================
+            //  10. BÚSQUEDA (header)
+            // ========================================
+
+            const searchButton = document.getElementById('searchBtn');
+            if (searchButton) {
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const isMobile = window.innerWidth <= 480;
+
+                    const overlay = document.createElement('div');
+                    overlay.style.cssText = `
+                        position: fixed;
+                        inset: 0;
+                        background: rgba(28, 15, 46, 0.92);
+                        backdrop-filter: blur(15px);
+                        z-index: 9998;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: fadeIn 0.3s ease;
+                        padding: ${isMobile ? '16px' : '20px'};
+                    `;
+
+                    const searchBox = document.createElement('div');
+                    searchBox.style.cssText = `
+                        background: linear-gradient(145deg, #FFFFFF, #F8F5FA);
+                        padding: ${isMobile ? '1.5rem' : '2.5rem'};
+                        border-radius: ${isMobile ? '20px' : '30px'};
+                        max-width: ${isMobile ? '100%' : '500px'};
+                        width: ${isMobile ? '100%' : '90%'};
+                        text-align: center;
+                        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4);
+                        border: 1px solid rgba(214, 200, 224, 0.15);
+                        position: relative;
+                        overflow: hidden;
+                    `;
+
+                    const glow = document.createElement('div');
+                    glow.style.cssText = `
+                        position: absolute;
+                        top: -2px;
+                        left: -2px;
+                        right: -2px;
+                        bottom: -2px;
+                        background: linear-gradient(135deg, #B48AD9, #C9A7EB, #B48AD9, #C9A7EB);
+                        background-size: 300% 300%;
+                        border-radius: ${isMobile ? '22px' : '32px'};
+                        z-index: -1;
+                        opacity: 0.3;
+                        animation: gradientShift 3s ease infinite;
+                    `;
+                    searchBox.appendChild(glow);
+
+                    searchBox.innerHTML += `
+                        <div style="font-size: ${isMobile ? '2.5rem' : '3.5rem'}; margin-bottom: ${isMobile ? '0.3rem' : '0.5rem'};">🔮</div>
+                        <h3 style="font-family: 'Playfair Display', serif; color: #3B1E54; margin-bottom: ${isMobile ? '0.3rem' : '0.5rem'}; font-size: ${isMobile ? '1.3rem' : '1.8rem'};">✦ Buscar en Esencia Violeta ✦</h3>
+                        <p style="color: #4A4A4E; margin-bottom: ${isMobile ? '1rem' : '1.5rem'}; font-size: ${isMobile ? '0.85rem' : '0.95rem'};">Encuentra mazos, amuletos y tesoros mágicos</p>
+                        <input type="text" 
+                               placeholder="¿Qué energía buscas?" 
+                               style="width: 100%; padding: ${isMobile ? '0.7rem 1rem' : '0.9rem 1.2rem'}; border: 2px solid rgba(214, 200, 224, 0.2); border-radius: 16px; font-family: 'Quicksand', sans-serif; font-size: ${isMobile ? '0.9rem' : '1rem'}; margin-bottom: ${isMobile ? '0.8rem' : '1rem'}; transition: all 0.3s ease; background: #FFFFFF;"
+                               autofocus 
+                               id="searchInputModal" />
+                        <button class="btn btn--primary" style="width: 100%; min-height: 44px;" id="searchBtnModal">✦ Buscar ✦</button>
+                        <button style="width: 100%; margin-top: ${isMobile ? '0.3rem' : '0.5rem'}; padding: ${isMobile ? '0.6rem' : '0.8rem'}; border: 2px solid rgba(214, 200, 224, 0.3); border-radius: 50px; background: transparent; color: #4A4A4E; font-family: 'Quicksand', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.3s ease; min-height: 44px; font-size: ${isMobile ? '0.85rem' : '1rem'};" id="closeSearchBtn">Cerrar</button>
+                    `;
+
+                    overlay.appendChild(searchBox);
+                    document.body.appendChild(overlay);
+
+                    const input = searchBox.querySelector('#searchInputModal');
+                    setTimeout(() => {
+                        if (input) input.focus();
+                    }, 100);
+
+                    const closeSearch = function() {
+                        overlay.remove();
+                    };
+
+                    searchBox.querySelector('#closeSearchBtn').addEventListener('click', closeSearch);
+                    overlay.addEventListener('click', function(e) {
+                        if (e.target === overlay) closeSearch();
+                    });
+
+                    const performSearch = function() {
+                        const query = input.value.trim();
+                        if (query) {
+                            cart.showMagicalNotification(`🔍 Buscando: "${query}" ✨`);
+                            setTimeout(closeSearch, 1500);
+                            // También actualizar la búsqueda en el sidebar
+                            document.getElementById('searchInput').value = query;
+                            searchTerm = query;
+                            currentPage = 1;
+                            applyFilters();
+                        } else {
+                            cart.showMagicalNotification('Por favor, escribe algo para buscar 🔮');
+                        }
+                    };
+
+                    searchBox.querySelector('#searchBtnModal').addEventListener('click', performSearch);
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') performSearch();
+                    });
+                });
+            }
+
+            // ========================================
+            //  11. NAVEGACIÓN SUAVE
+            // ========================================
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            console.log('%c✨✦✧ Esencia Violeta - Blog ✧✦✨', 'font-size: 24px; font-weight: bold; color: #2A1A3D; text-shadow: 0 0 40px rgba(180, 138, 217, 0.3);');
+            console.log('%c📖 Artículos y sabiduría esotérica ✨', 'font-size: 16px; color: #5B3A7A;');
+            console.log('%c🔮 Próximamente: conexión con Firebase 🌙', 'font-size: 14px; color: #B48AD9;');
+
+        });
+    </script>
+</body>
+</html>
